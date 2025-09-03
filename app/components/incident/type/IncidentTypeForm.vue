@@ -1,19 +1,26 @@
 <template>
-    <Card class="p-4">
-        <Label>
-            Código
-            <Input v-model="incident.code" /></Label>
-        <Label>
-            Nombre
-            <Input v-model="incident.name" /></Label>
-        <Label>
-            Descripción
-            <Input v-model="(incident as any).description" /></Label>
-        <Button @click="$emit('submit', incident)"> Submit</Button>
-    </Card>
+    <UCard class="mx-auto">
+        <div class="flex flex-col">
+            <ULabel>
+                Código
+                <UInput v-model="incident.code" />
+            </ULabel>
+            <ULabel>
+                Nombre
+                <UInput v-model="incident.name" />
+            </ULabel>
+            <ULabel>
+                Descripción
+                <UInput v-model="(incident as any).description" />
+            </ULabel>
+        </div>
+
+        <template #footer>
+            <UButton @click="$emit('submit', incident)"> Submit</UButton>
+        </template>
+    </UCard>
 </template>
 <script setup lang="ts">
-import type { IncidentType, IncidentTypeInsert } from '~/types';
 defineEmits<
     {
         (e: 'submit', payload: IncidentTypeInsert): void

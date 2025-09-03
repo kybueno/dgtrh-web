@@ -15,7 +15,7 @@ const navData = reactive({
         {
             title: 'Salario',
             url: '#',
-            icon: 'i-heroicons-currency-dollar',
+            icon: 'ic:round-attach-money',
             isActive: true,
             isOpen: false,
             items: [
@@ -32,41 +32,35 @@ const navData = reactive({
         {
             title: 'Personal',
             url: '/people',
-            icon: 'i-heroicons-users',
+            icon: 'mdi:user-group-outline',
             isActive: false,
             isOpen: false,
             items: [
                 {
                     title: 'Trabajadores',
                     url: '/people',
+                    icon: 'mdi:work-outline'
                 },
                 {
                     title: 'Grupos de Trabajo',
                     url: '/groups',
+                    icon: 'mdi:user-supervisor'
                 },
             ],
         },
         {
-            title: 'Hojas de firma',
-            url: '#',
-            icon: 'i-heroicons-book-open',
+            title: 'Documentos',
+            url: '/docs',
+            icon: 'mdi:file-document-multiple-outline',
             isActive: false,
             isOpen: false,
             items: [
                 {
-                    title: 'Introduction',
+                    title: 'Hojas de firma',
                     url: '#',
                 },
                 {
-                    title: 'Get Started',
-                    url: '#',
-                },
-                {
-                    title: 'Tutorials',
-                    url: '#',
-                },
-                {
-                    title: 'Changelog',
+                    title: 'Evaluación',
                     url: '#',
                 },
             ],
@@ -74,7 +68,7 @@ const navData = reactive({
         {
             title: 'Settings',
             url: '#',
-            icon: 'i-heroicons-cog-6-tooth',
+            icon: 'mdi:settings-outline',
             isActive: false,
             isOpen: false,
             items: [

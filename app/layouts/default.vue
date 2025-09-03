@@ -1,56 +1,170 @@
-<script lang="ts">
-export const description = "A sidebar that collapses to icons.";
-export const iframeHeight = "800px";
-export const containerClass = "w-full h-full";
-</script>
-
 <script setup lang="ts">
-import AppSidebar from "~/components/AppSidebar.vue";
-import { useAuthStore } from "~/stores/authStore";
+import type { NavigationMenuItem } from '@nuxt/ui'
 
-const authStore = useAuthStore();
-const sidebarCollapsed = ref(false);
+const route = useRoute()
+const toast = useToast()
 
-onMounted(authStore.fetchLoggedUserProfile);
+const open = ref(false)
 
-// Function to toggle sidebar state
-const toggleSidebar = () => {
-  sidebarCollapsed.value = !sidebarCollapsed.value;
-};
+const links = [[{
+  label: 'Panel principal',
+  icon: 'i-lucide-house',
+  to: '/dashboard',
+  onSelect: () => {
+    open.value = false
+  }
+}, {
+  label: 'Notificaciones',
+  icon: 'i-lucide-inbox',
+  to: '/inbox',
+  badge: '4',
+  onSelect: () => {
+    open.value = false
+  }
+},
+{
+  label: 'Salario',
+  icon: 'mdi:attach-money',
+  to: '/payroll',
+  defaultOpen: true,
+  type: 'trigger',
+  children: [
+    {
+      label: 'Prenómina',
+      icon: 'lucide:file-spreadsheet',
+      to: '/payroll',
+      onSelect: () => {
+        open.value = false
+      }
+    }, {
+      label: 'Catálogo de claves',
+      icon: 'lucide:file',
+      to: '/incident-types',
+      onSelect: () => {
+        open.value = false
+      }
+    }, {
+      label: 'Anexo 14-B',
+      icon: 'lucide:file',
+      to: '/people/salary',
+      onSelect: () => {
+        open.value = false
+      }
+    },
+  ]
+}, {
+  label: 'Personal',
+  to: '/people',
+  icon: 'lucide:users',
+  defaultOpen: true,
+  type: 'trigger',
+  children: [{
+    label: 'Trabajadores',
+    to: '/people',
+    exact: true,
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
+    label: 'Grupos de trabajo',
+    to: '/groups',
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
+    label: 'Hojas de Firma',
+    to: '/signsheets',
+    onSelect: () => {
+      open.value = false
+    }
+  }]
+}], [{
+  label: 'Directorio UCI',
+  icon: 'lucide:book-user',
+  to: 'https://directorio.uci.cu/',
+  target: '_blank'
+}, {
+  label: 'Correo UCI',
+  icon: 'lucide:mail',
+  to: 'https://correo.uci.cu/',
+  target: '_blank'
+}, {
+  label: 'Ayuda',
+  icon: 'lucide:info',
+  to: 'https://uci.cu',
+  target: '_blank'
+}]] satisfies NavigationMenuItem[][]
+
+const groups = computed(() => [{
+  id: 'links',
+  label: 'Go to',
+  items: links.flat()
+}, {
+  id: 'code',
+  label: 'Code',
+  items: [{
+    id: 'source',
+    label: 'View page source',
+    icon: 'i-simple-icons-github',
+    to: `https://github.com/nuxt-ui-pro/dashboard/blob/main/app/pages${route.path === '/' ? '/index' : route.path}.vue`,
+    target: '_blank'
+  }]
+}])
+
+onMounted(async () => {
+
+  useAuthStore().fetchLoggedUserProfile()
+
+  const cookie = useCookie('cookie-consent')
+  if (cookie.value === 'accepted') {
+    return
+  }
+
+  toast.add({
+    title: 'We use first-party cookies to enhance your experience on our website.',
+    duration: 0,
+    close: false,
+    actions: [{
+      label: 'Accept',
+      color: 'neutral',
+      variant: 'outline',
+      onClick: () => {
+        cookie.value = 'accepted'
+      }
+    }, {
+      label: 'Opt out',
+      color: 'neutral',
+      variant: 'ghost'
+    }]
+  })
+})
 </script>
 
 <template>
-  <div class="flex min-h-screen">
-    <!-- App Sidebar -->
-    <AppSidebar :collapsed="sidebarCollapsed" @toggle="toggleSidebar" />
+  <UDashboardGroup unit="rem">
+    <UDashboardSidebar id="default" v-model:open="open" collapsible resizable class="bg-elevated/25"
+      :ui="{ footer: 'lg:border-t lg:border-default' }">
+      <!-- <template #header="{ collapsed }">
+        <TeamsMenu :collapsed="collapsed" />
+      </template> -->
 
-    <!-- Main Content Area -->
-    <main class="flex-1 transition-all duration-300 ease-in-out" :class="[sidebarCollapsed ? 'ml-16' : 'ml-64']">
-      <header class="flex h-16 items-center bg-white border-b border-gray-200 px-4">
-        <div class="flex items-center gap-2">
-          <!-- Sidebar Toggle Button -->
-          <UButton icon="i-heroicons-bars-3" color="neutral" variant="ghost" class="-ml-1" @click="toggleSidebar" />
+      <template #default="{ collapsed }">
+        <UDashboardSearchButton :collapsed="collapsed" class="bg-transparent ring-default" />
 
-          <!-- Vertical Separator -->
-          <div class="w-px h-4 bg-gray-300 mr-2"></div>
+        <UNavigationMenu :collapsed="collapsed" :items="links[0]" orientation="vertical" tooltip popover />
 
-          <!-- Breadcrumb -->
-          <UBreadcrumb :links="[
-            { label: 'Prenóminas', to: '#' },
-            { label: '', to: '#' }
-          ]" class="hidden md:flex">
-            <template #divider>
-              <UIcon name="i-heroicons-chevron-right-20-solid" class="text-gray-400" />
-            </template>
-          </UBreadcrumb>
-        </div>
-      </header>
+        <UNavigationMenu :collapsed="collapsed" :items="links[1]" orientation="vertical" tooltip class="mt-auto" />
+      </template>
 
-      <div class="flex-1 flex flex-col gap-4 p-4">
-        <div class="bg-gray-50/50 rounded-xl min-h-[calc(100vh-8rem)] flex-1 p-4">
-          <NuxtPage />
-        </div>
-      </div>
-    </main>
-  </div>
+      <template #footer="{ collapsed }">
+        <UserMenu :collapsed="collapsed" />
+      </template>
+    </UDashboardSidebar>
+
+    <UDashboardSearch :groups="groups" />
+
+    <NuxtPage />
+
+    <NotificationsSlideover />
+  </UDashboardGroup>
 </template>

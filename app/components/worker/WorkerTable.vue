@@ -1,38 +1,76 @@
 <script setup lang="ts">
-import type { WorkerInfo } from '~/types';
+import { UCheckbox } from '#components';
+import type { TableColumn } from '@nuxt/ui';
+
 
 interface Props {
     data: WorkerInfo[]
 }
 const { data } = defineProps<Props>()
+
+const columns: TableColumn<WorkerInfo>[] = [
+    {
+        id: 'select',
+        header: ({ table }) => h(UCheckbox, {
+            'modelValue': table.getIsSomePageRowsSelected() ? 'indeterminate' : table.getIsAllPageRowsSelected(),
+            'onUpdate:modelValue': (value: boolean | 'indeterminate') => table.toggleAllPageRowsSelected(!!value),
+            'aria-label': 'Select all'
+        }),
+        cell: ({ row }) => h(UCheckbox, {
+            'modelValue': row.getIsSelected(),
+            'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
+            'aria-label': 'Select row'
+        }),
+        enableSorting: false,
+        enableHiding: false
+    },
+    {
+        header: "Expediente",
+        cell: ({ row }) => row.original.record_number
+    }, {
+        header: "Nombre y Apellidos",
+        cell: ({ row }) => h('span',{class:"cursor-pointer",onClick:()=>navigateTo('/people/'+row.original.email?.split('@').at(0))},`${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`)
+    }, {
+        header: "CI",
+        cell: ({ row }) => row.original.ci
+    }, {
+        header: "Teléfono",
+        cell: ({ row }) => h('a', { href: 'tel:' + row.original.tel }, row.original.tel ?? '')
+
+    }, {
+        header: "Email",
+        cell: ({ row }) => h('a', { href: 'mailto:' + row.original.email }, row.original.email ?? '')
+
+    }, {
+        header: "Padre",
+    }, {
+        header: "Padre",
+    }, {
+        header: "Madre",
+    }, {
+        header: "Dirección",
+    }, {
+        header: "Organizaciones de masa",
+    },
+
+
+]
 </script>
 <template>
-    <div class="border rounded-md overflow-auto">
-        <table>
-            <thead>
-                <tr class="border-b text-xs text-gray-600">
-                    <td class="p-1 ">Exp</td>
-                    <td class="p-1 ">Nombre</td>
-                    <td class="p-1 ">S Nombre</td>
-                    <td class="p-1 ">Apellido</td>
-                    <td class="p-1 ">S Apellido</td>
-                    <td class="p-1 ">Estado</td>
-                    <td class="p-1 ">Email</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr @click="navigateTo('people/' + worker.email?.split('@')[0])" :class="{ 'bg-gray-100': index % 2 }"
-                    class="h-14" v-for="worker, index in data" :key="worker.id">
-                    <td class="text-gray-400 font-bold text-lg text-center">{{ worker.record_number }}</td>
-                    <td class="ps-2">{{ worker.first_name }}</td>
-                    <td class="ps-2">{{ worker.middle_name }}</td>
-                    <td class="ps-2">{{ worker.last_name }}</td>
-                    <td class="ps-2">{{ worker.second_last_name }}</td>
-                    <td class="ps-2">{{ worker.status }}</td>
-                    <td class="ps-2">{{ worker.email }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <UCard>
+        <template #header>
 
-    </div>
+            <div class="flex justify-between">
+                <UInput placeholder="Busca.." />
+                <div class="flex gap-2">
+                    <UButton icon="i-lucide-plus">Añadir</UButton>
+                    <UButton variant="soft" color="neutral" icon="i-lucide-refresh-cw" />
+                </div>
+            </div>
+        </template>
+        <div class="">Universidad de Ciencias Informáticas</div>
+        <UTable :data="data" :columns="columns" sticky class="h-96" />
+
+    </UCard>
+    <DataTable />
 </template>

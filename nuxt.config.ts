@@ -17,6 +17,22 @@ export default defineNuxtConfig({
     // Auto-import pinia stores defined in `~/stores`
     dirs: ["stores"],
   },
+  icon: {
+    serverBundle: "local",
+    clientBundle: {
+      // list of icons to include in the client bundle
+      icons: ["mdi:add", "mdi:refresh"],
+
+      // scan all components in the project and include icons
+      scan: true,
+
+      // include all custom collections in the client bundle
+      includeCustomCollections: true,
+
+      // guard for uncompressed bundle size, will fail the build if exceeds
+      sizeLimitKb: 256,
+    },
+  },
   vite: { plugins: [tailwindcss()] },
   app: {
     head: {
@@ -28,7 +44,7 @@ export default defineNuxtConfig({
       login: "/auth/login",
       callback: "/confirm",
       include: undefined,
-      exclude: [],
+      exclude: ["*"],
       saveRedirectToCookie: false,
     },
     types: "./shared/types/database.types.ts",

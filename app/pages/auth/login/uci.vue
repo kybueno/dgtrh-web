@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import Button from '~/components/ui/button/Button.vue'
-import Input from '~/components/ui/input/Input.vue'
-
 const supabase = useSupabaseClient()
 const username = ref('')
 

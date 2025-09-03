@@ -22,16 +22,16 @@ export const useWorkerStore = defineStore("workerStore", {
       if (error) console.error(error);
     },
     getWorkerById(id: string) {
-      return this.workers.find((worker) => worker.id === id);
+      return this.workers.find((worker: { id: string; }) => worker.id === id);
     },
     getWorkerByRecordNumber(recordNumber: string) {
       return this.workers.find(
-        (worker) => worker.record_number === recordNumber
+        (worker: { record_number: string; }) => worker.record_number === recordNumber
       );
     },
     getWorkerByUsername(username: string) {
       return this.workers.find(
-        (worker) => worker.email?.split("@")[0] === username
+        (worker: { email: string; }) => worker.email?.split("@")[0] === username
       );
     },
   },

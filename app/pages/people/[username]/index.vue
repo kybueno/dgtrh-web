@@ -42,8 +42,6 @@
 import { useRoute } from 'vue-router';
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted, ref } from 'vue';
-import { User, Mail, Hash, CheckCircle, XCircle } from 'lucide-vue-next';
-import type { WorkerInfo } from '~/types';
 const supabase = useSupabaseClient()
 const route = useRoute();
 const username = route.params.username as string;

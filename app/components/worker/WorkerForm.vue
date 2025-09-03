@@ -54,9 +54,9 @@
 
                         <Input />
                     </LabelBlock>
-                    <Button type="submit">
+                    <UButton type="submit">
                         Añadir trabajador
-                    </Button>
+                    </UButton>
 
 
                 </fieldset>
@@ -68,7 +68,6 @@
 
 <script setup lang="ts">
 import { useWorkerStore } from '~/stores/workerStore';
-import type { WorkerInsert } from '~/types';
 const supabase = useSupabaseClient()
 const workerStore = useWorkerStore();
 const formData = ref<WorkerInsert>({
