@@ -3,6 +3,7 @@ import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
 
+
 interface Props {
     data: WorkerInfo[]
 }
@@ -29,7 +30,7 @@ const columns: TableColumn<WorkerInfo>[] = [
         cell: ({ row }) => row.original.record_number
     }, {
         header: "Nombre y Apellidos",
-        cell: ({ row }) => h('span',{class:"cursor-pointer",onClick:()=>navigateTo('/people/'+row.original.email?.split('@').at(0))},`${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`)
+        cell: ({ row }) => h('span', { class: "cursor-pointer", onClick: () => navigateTo('/people/' + row.original.email?.split('@').at(0)) }, `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`)
     }, {
         header: "CI",
         cell: ({ row }) => row.original.ci
@@ -41,8 +42,6 @@ const columns: TableColumn<WorkerInfo>[] = [
         header: "Email",
         cell: ({ row }) => h('a', { href: 'mailto:' + row.original.email }, row.original.email ?? '')
 
-    }, {
-        header: "Padre",
     }, {
         header: "Padre",
     }, {
@@ -63,7 +62,7 @@ const columns: TableColumn<WorkerInfo>[] = [
             <div class="flex justify-between">
                 <UInput placeholder="Busca.." />
                 <div class="flex gap-2">
-                    <UButton icon="i-lucide-plus">Añadir</UButton>
+                    <UButton icon="i-lucide-plus" @click="">Añadir</UButton>
                     <UButton variant="soft" color="neutral" icon="i-lucide-refresh-cw" />
                 </div>
             </div>

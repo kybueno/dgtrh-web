@@ -53,8 +53,9 @@
                     <LabelBlock text="Nivel de preparación">
 
                         <Input />
+
                     </LabelBlock>
-                    <UButton type="submit">
+                    <UButton type="submit" >
                         Añadir trabajador
                     </UButton>
 
