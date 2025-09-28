@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@compodium/nuxt",
     "@nuxt/ui",
+    "nuxt-pdfmake",
   ],
   css: ["~/assets/css/main.css"],
   imports: {

@@ -44,6 +44,7 @@ const columns: TableColumn<WorkerInfo>[] = [
 
     }, {
         header: "Padre",
+        cell: ({ row }) => row.original.padre
     }, {
         header: "Madre",
     }, {
