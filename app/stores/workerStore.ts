@@ -7,12 +7,14 @@ export const useWorkerStore = defineStore("workerStore", {
     workers: [] as WorkerInfo[],
   }),
   actions: {
-    async loadWorkers(supabase: SupabaseClient) {
-      if (this.workers.length > 0) return;
-      const { data, error } = await supabase.from("workers").select("*");
-      if (data) this.workers = data;
-      if (error) console.error(error);
-    },
+    //función 1 
+    async loadWorkers(supabase: SupabaseClient) {    //I
+      if (this.workers.length > 0) return;  //1 return //2
+      const { data, error } = await supabase.from("workers").select("*"); //3
+      if (data) this.workers = data;  //4
+      if (error) console.error(error); //5
+    }, //F
+    //función 2
     async createWorker(newWorkerData: WorkerInsert, supabase: SupabaseClient) {
       if (this.workers.length > 0) return;
       const { data, error } = await supabase
@@ -21,6 +23,7 @@ export const useWorkerStore = defineStore("workerStore", {
       if (data) this.workers.push(data);
       if (error) console.error(error);
     },
+    //función 3
     getWorkerById(id: string) {
       return this.workers.find((worker: { id: string; }) => worker.id === id);
     },

@@ -6,8 +6,6 @@ import { exportSignSheet, generateSignSheet } from './signSheetUtils';
 const supabase = useSupabaseClient()
 const workerStore = useWorkerStore();
 
-
-
 onMounted(async () => {
   await workerStore.loadWorkers(supabase);
 });

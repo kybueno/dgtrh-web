@@ -8,6 +8,11 @@
     "tailwindCSS.classAttributes": ["class", "ui"],
     "tailwindCSS.experimental.classRegex": [
       ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+    ],
+    "cSpell.words": [
+      "exportprenominate",
+      "generateprenomine",
+      "prenominate"
     ]
   }
   

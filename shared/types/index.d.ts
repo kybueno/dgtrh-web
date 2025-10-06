@@ -3,6 +3,10 @@ type EmailAddress = `${string}@${string}.${string}` | string;
 
 interface Profile extends Tables<"profiles"> {}
 interface WorkerInfo extends Tables<"workers"> {
+    first_name: any;
+    second_last_name: string;
+    last_name: any;
+    middle_name: any;
     padre: any;
 }
 interface WorkerInsert extends TablesInsert<"workers"> {}
