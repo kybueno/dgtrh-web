@@ -12,7 +12,9 @@
     "cSpell.words": [
       "exportprenominate",
       "generateprenomine",
-      "prenominate"
+      "getprenomine",
+      "prenominate",
+      "prenominedocument"
     ]
   }
   

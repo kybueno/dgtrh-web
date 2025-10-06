@@ -1,4 +1,12 @@
-const documentDefinition = {
+import { defaultRhTableStyles } from "~/lib/documents-generation/styles";
+
+export const exportprenomine = (
+  worker: WorkerInfo,
+  date: Date = new Date()
+) => {
+  const month = date.getMonth();
+  const monthName = date.toLocaleDateString("es-US", { month: "long" });
+const prenominedocumentDefinition = {
   pageSize: 'A4',
   pageOrientation: 'landscape',
   content: [
@@ -300,3 +308,40 @@ const documentDefinition = {
     font: 'Arial'
   }
 };
+}
+
+export function generateprenomine(worker: WorkerInfo, date: Date = new Date()) {
+  usePDFMake().createPdf(prenominedocumentDefinition(worker, date)).open();
+}
+const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
+  const monthName = date
+    .toLocaleDateString("es-ES", { month: "long" })
+    .toUpperCase();
+  const year = date.getFullYear();
+
+  // Column widths matching the original HTML structure
+  const columnWidths = [
+    28, // Day number
+    41.8, // Morning Entry
+    41.8, // Morning Exit
+    57.65, // Afternoon Entry
+    45.9, // Afternoon Exit
+    40.4, // Overtime Start
+    91.4, // Overtime End
+    41.86, // Signature
+
+    // Right side (days 17-31)
+    22.56, // Day number
+    25.89, // Morning Entry
+    34.9, // Morning Exit
+    48.75, // Afternoon Entry
+    39.25, // Afternoon Exit
+    34.2, // Overtime Start
+    77.25, // Overtime End
+    62.8, // Signature
+  ];
+
+function prenominedocumentDefinition(worker: WorkerInfo, date: Date): import("pdfmake/interfaces").TDocumentDefinitions {
+    throw new Error("Function not implemented.");
+  }
+}
