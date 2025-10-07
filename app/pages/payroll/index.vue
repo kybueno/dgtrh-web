@@ -2,7 +2,7 @@
 
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted } from 'vue';
-import { exportgenerateprenomine, prenomine } from './prenomine';
+
 
 const workerStore = useWorkerStore();
 

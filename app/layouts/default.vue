@@ -66,6 +66,13 @@ const links = [[{
       open.value = false
     }
   }, {
+    label: 'Nuevo Trabajador',
+    to: '/neworker',
+    exact: true,
+    onSelect: () => {
+      open.value = false
+    }
+  },{
     label: 'Grupos de trabajo',
     to: '/groups',
     onSelect: () => {
@@ -77,7 +84,7 @@ const links = [[{
     onSelect: () => {
       open.value = false
     }
-  }]
+  }, ]
 }], [{
   label: 'Directorio UCI',
   icon: 'lucide:book-user',

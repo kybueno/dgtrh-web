@@ -1,60 +1,72 @@
 <template>
-    <form @submit.prevent="handleAddWorker()">
+    <UFormField @submit.prevent="handleAddWorker()" class="center flex flex-col w-full max-w-sm gap-2">
         <Card>
             <CardHeader>
-                <CardTitle>Registrar nuevo Trabajador</CardTitle>
-                <CardDescription>Los campos marcados con (*) son requeridos.</CardDescription>
+                <CardTitle>Registrar nuevo Trabajador</CardTitle>   
             </CardHeader>
             <CardContent>
                 <fieldset class="flex flex-col w-full max-w-sm gap-1.5">
+                    <div class="flex flex-col gap-2">
 
-                    <LabelBlock text="Primer nombre">
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock text="Segundo Nombre">
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock text="Sexo">
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock text="Expediente">
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock text="Carnet de identidad">
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock type="phone" text="Teléfono">
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock text="Correo UCI">
-                        <Input type="email" list="emailList" />
-                    </LabelBlock>
+                    <label> Primer Nombre:
+                        <UInput  placeholder="Introduzca el nombre" v-model="formData.first_name"/>
+                    </label>
 
-                    <LabelBlock text="Nombre del Padre">
+                    <label> Segundo Nombre:
+                        <UInput  placeholder="Segundo nombre"/>
+                    </label>
 
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock text="Nombre de la Madre">
+                    <label> Primer Apellidos:
+                        <UInput  placeholder="Apellidos" v-model="formData.last_name"/>
+                    </label>
 
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock text="Dirección">
+                    <label> Segundo Apellidos:
+                        <UInput  placeholder="Apellidos" v-model="formData.second_last_name"/>
+                    </label>
 
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock text="Cargo a ocupar">
+                    <label > Carnet de Identidad:
+                        <UInput  placeholder="CI" v-model="formData.ci"/>
+                    </label>
 
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock text="Organizaciones de Masas">
+                    <label > Número de expediente:
+                        <UInput  placeholder="Expediente laboral" v-model="formData.record_number"/>
+                    </label>
 
-                        <Input />
-                    </LabelBlock>
-                    <LabelBlock text="Nivel de preparación">
+                    <label > Dirección:
+                        <UInput  placeholder="Dirección particular"/>
+                    </label>
 
-                        <Input />
+                    <label > Sexo:
+                        <UCheckbox  label="Femenino" />
+                        <UCheckbox  label="Masculino" />
+                    </label>
 
-                    </LabelBlock>
+                    <label > Correo:
+                        <UInput trailing-icon="i-lucide-at-sign" placeholder="Enter email" size="md" v-model="formData.email"/>
+                    </label>
+
+                    <label > Madre:
+                        <UInput  placeholder="Nombre y apellido de la madre"/>
+                    </label>
+
+                    <label > Padre:
+                        <UInput  placeholder="Nombre y apellido del padre"/>
+                    </label>
+
+                    <label > Número de teléfono:
+                        <UInput  placeholder="tel:" />
+                    </label>
+
+                    <label > Cargo a ocupar:
+                        <UInput  placeholder="Cargo que va a ocupar el trabajador"/>
+                    </label>
+
+                    <label > Organizaciones de masa:
+                        <UInput  placeholder="Organizaciones de masa a la que pertenece"/>
+                    </label>
+                    </div>                    
+                    
+                    <CardDescription>Los campos marcados con (*) son requeridos.</CardDescription>
                     <UButton type="submit" >
                         Añadir trabajador
                     </UButton>
@@ -62,9 +74,11 @@
 
                 </fieldset>
             </CardContent>
+
         </Card>
 
-    </form>
+    </UFormField>
+
 </template>
 
 <script setup lang="ts">

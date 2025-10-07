@@ -1,4 +1,4 @@
-import { defaultRhTableStyles } from "~/lib/documents-generation/styles";
+
 
 export const exportprenomine = (
   worker: WorkerInfo,
@@ -345,3 +345,7 @@ function prenominedocumentDefinition(worker: WorkerInfo, date: Date): import("pd
     throw new Error("Function not implemented.");
   }
 }
+function prenominedocumentDefinition(worker: WorkerInfo, date: Date): import("pdfmake/interfaces").TDocumentDefinitions {
+  throw new Error("Function not implemented.");
+}
+
