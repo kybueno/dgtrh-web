@@ -65,13 +65,6 @@ const links = [[{
     onSelect: () => {
       open.value = false
     }
-  }, {
-    label: 'Nuevo Trabajador',
-    to: '/neworker',
-    exact: true,
-    onSelect: () => {
-      open.value = false
-    }
   },{
     label: 'Grupos de trabajo',
     to: '/groups',

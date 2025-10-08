@@ -23,9 +23,9 @@ const handleCreateIncidentType = async (newIncidentTypeData: IncidentTypeInsert)
       <h1> Catálogo de Claves de Ausencias </h1>
       <div class="flex gap-2">
 
-        <Button @click="incidentTypeStore.loadIncidentTypes">
+        <UButton @click="incidentTypeStore.loadIncidentTypes">
           Refrescar claves
-        </Button>
+        </UButton>
       </div>
     </div>
 

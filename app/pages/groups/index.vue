@@ -13,48 +13,49 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 border border-b-emerald-200">
-            <div>
+
+        <UCard>
+        <div class="grid grid-cols-2 gap-4 border">
+
                 <h2 class="text-xl font-semibold mb-2">Grupo de Asistencia Técnica</h2>
-                <p>{{}}</p>
-                <Button> Añadir</Button>
+                <UButton> Añadir</UButton>
             </div>
-
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 border border-b-emerald-200">
-            <div>
+        </UCard>
+           
+            <UCard>
+            <div class="grid grid-cols-2 gap-4 border">
                 <h2 class="text-xl font-semibold mb-2">Operadores</h2>
-                <Button> Añadir</Button>
+                <UButton> Añadir</UButton>
+        
             </div>
+        </UCard>
 
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 border border-b-emerald-200">
-            <div>
+             <UCard>
+             <div class="grid grid-cols-2 gap-4 border">
                 <h2 class="text-xl font-semibold mb-2">Telefonía</h2>
-                <Button> Añadir</Button>
+                <UButton> Añadir</UButton>
+            
             </div>
+        </UCard>
 
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 border border-b-emerald-200">
-            <div>
-                <h2 class="text-xl font-semibold mb-2">Grupo de Asistencia Tecnológica</h2>
-                <Button> Añadir</Button>
+                <UCard>
+                    <div class="grid grid-cols-2 gap-4 border">
+                <h2 class="text-xl font-semibold mb-2">Aseguramiento</h2>
+                <UButton> Añadir</UButton>
+        
             </div>
+        </UCard>
 
-        </div>
+                <UCard>
+                    <div class="grid grid-cols-2 gap-4 border">
+                <h2 class="text-xl font-semibold mb-2">Economía</h2>
+                <UButton> Añadir</UButton>
 
-        <div class="grid grid-cols-2 gap-4 border border-b-emerald-200">
-            <div>
-                <h2 class="text-xl font-semibold mb-2">Grupo de Asistencia Tecnológica</h2>
-                <Button> Añadir</Button>
             </div>
-
-        </div>
+        </UCard>
+        
     </div>
-
+    
 </template>
 <script setup lang="ts">
 

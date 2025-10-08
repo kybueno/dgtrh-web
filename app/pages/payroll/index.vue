@@ -2,10 +2,9 @@
 
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted } from 'vue';
-
+//import { exportprenomine, generateprenomine } from './prenomine';
 
 const workerStore = useWorkerStore();
-
 const supabase = useSupabaseClient()
 const email = ref('')
 
@@ -18,8 +17,14 @@ onMounted(() => {
 })
 </script>
 <template>
-  < class="flex flex-col gap-8">
     <h1> Prenómina </h1>
+
+ 
+    <div>
+      
+    </div>
+
+
     <div class="flex gap-2">
 
       <Input v-model="email" type="email" />

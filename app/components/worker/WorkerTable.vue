@@ -63,7 +63,7 @@ const columns: TableColumn<WorkerInfo>[] = [
             <div class="flex justify-between">
                 <UInput placeholder="Busca.." />
                 <div class="flex gap-2">
-                    <UButton icon="i-lucide-plus" to="worker/WorkerForm.vue" >Añadir</UButton>
+                    <UButton icon="i-lucide-plus" to="neworker" >Añadir</UButton>
                     <UButton variant="soft" color="neutral" icon="i-lucide-refresh-cw"/>
                 </div>
             </div>
