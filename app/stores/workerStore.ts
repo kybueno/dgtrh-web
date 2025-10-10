@@ -4,24 +4,27 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const useWorkerStore = defineStore("workerStore", {
   state: () => ({
-    workers: [] as WorkerInfo[],
+    workers: [] as WorkerInfo[],//primero esta vacio y al cargar la pagina se llena de los trabajadores
   }),
   actions: {
     //función 1 
     async loadWorkers(supabase: SupabaseClient) {    //I
-      if (this.workers.length > 0) return;  //1 return //2
+   //1 return //2//si hay trabajadires no va a cargar trabajadores
       const { data, error } = await supabase.from("workers").select("*"); //3
       if (data) this.workers = data;  //4
       if (error) console.error(error); //5
     }, //F
     //función 2
     async createWorker(newWorkerData: WorkerInsert, supabase: SupabaseClient) {
-      if (this.workers.length > 0) return;
-      const { data, error } = await supabase
+    
+
+      const { data, error } = await supabase//van a devolver error y data, si la creo sin problema error va a ser nulo y el data va a ser algo, y viveversa
         .from("workers")
         .insert(newWorkerData);
-      if (data) this.workers.push(data);
+
+      if (data) this.workers.push(data[0]);
       if (error) console.error(error);
+      
     },
     //función 3
     getWorkerById(id: string) {

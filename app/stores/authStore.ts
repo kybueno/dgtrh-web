@@ -6,6 +6,7 @@ export const useAuthStore = () => {
     "logged-user-profile",
     () => null
   );
+  
 
   const supabase = useSupabaseClient();
   const loggedUser = useSupabaseUser();

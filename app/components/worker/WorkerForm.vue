@@ -1,5 +1,5 @@
 <template>
-    <UFormField @submit.prevent="handleAddWorker()" class="center flex flex-col w-full max-w-sm gap-2">
+    <div  class="center flex flex-col w-full max-w-sm gap-2">
         <Card>
             <CardHeader>
                 <CardTitle>Registrar nuevo Trabajador</CardTitle>   
@@ -67,7 +67,7 @@
                     </div>                    
                     
                     <CardDescription>Los campos marcados con (*) son requeridos.</CardDescription>
-                    <UButton type="submit" >
+                    <UButton @click="handleAddWorker()" >
                         Añadir trabajador
                     </UButton>
 
@@ -77,7 +77,7 @@
 
         </Card>
 
-    </UFormField>
+    </div>
 
 </template>
 
