@@ -14,6 +14,7 @@ const data = ref([
 </script>
 
 <template>
+    <div>Registro de Vacaciones</div>
   <UTable :data="data" class="flex-1" />
   <div>
   <UButton>Añadir</UButton>

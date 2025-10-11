@@ -8,6 +8,7 @@ const data = ref([
     hasta:'20/10/2025',
     días_disponibles: '14',
     incorporacion:'22/10/25',
+    firma:'',
     enfermedad:'',
     inicial_cont:'',
     días_prenómina:'',
@@ -16,6 +17,7 @@ const data = ref([
 </script>
 
 <template>
+    <div>Anexo E: Registro de Certificado Médico</div>
   <UTable :data="data" class="flex-1" />
   <div>
   <UButton>Añadir</UButton>
