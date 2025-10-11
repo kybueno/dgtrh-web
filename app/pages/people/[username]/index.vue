@@ -26,8 +26,8 @@
                     <p><strong>No. Expediente:</strong> #{{ worker.record_number }}</p>
                     <p><strong>Teléfono:</strong>{{ worker.tel }}</p>
                     <p><strong>Grupo de trabajo:</strong></p>
-                    <Button> Añadir</Button>
-                    <Button variant="destructive"> Dar baja</Button>
+                    <UButton> Añadir</UButton>
+                    <UButton variant="outline"> Dar baja</UButton>
                 </div>
             </div>
         </div>

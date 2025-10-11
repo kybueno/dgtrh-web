@@ -46,7 +46,7 @@ const links = [[{
     }, {
       label: 'Anexo 14-B',
       icon: 'lucide:file',
-      to: '/people/salary',
+      to: '/people/14-B',
       onSelect: () => {
         open.value = false
       }
@@ -71,9 +71,53 @@ const links = [[{
     onSelect: () => {
       open.value = false
     }
+  },{
+    label: 'Evaluación de desempeño',
+    to: '/evaluations/evaldesemp',
+    onSelect: () => {
+      open.value = false
+    }
   }, {
     label: 'Hojas de Firma',
     to: '/signsheets',
+    onSelect: () => {
+      open.value = false
+    }
+  }, ]
+}, {
+  label: 'Reportes',
+  to: '/',
+  icon: 'lucide:users',
+  defaultOpen: true,
+  type: 'trigger',
+  children: [{
+    label: 'Trabajo Extraordinario',
+    to: '/extra',
+    exact: true,
+    onSelect: () => {
+      open.value = false
+    }
+  },{
+    label: 'Vacaciones',
+    to: '/holidays',
+    onSelect: () => {
+      open.value = false
+    }
+  },{
+    label: 'Certificados Médicos',
+    to: '/medical',
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
+    label: 'Licencia sin sueldo',
+    to: '/sin-sueldo',
+    onSelect: () => {
+      open.value = false
+    }
+  },{
+    label: 'Licencia de maternidad',
+    to: '/maternidad',
     onSelect: () => {
       open.value = false
     }

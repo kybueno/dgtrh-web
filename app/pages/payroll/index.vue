@@ -2,7 +2,7 @@
 
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted } from 'vue';
-//import { exportprenomine, generateprenomine } from './prenomine';
+import { PrenominePreNomine } from '#components';
 
 const workerStore = useWorkerStore();
 const supabase = useSupabaseClient()
@@ -18,12 +18,6 @@ onMounted(() => {
 </script>
 <template>
     <h1> Prenómina </h1>
-
- 
-    <div>
-      
-    </div>
-
 
     <div class="flex gap-2">
 
@@ -57,6 +51,10 @@ onMounted(() => {
           </SelectItem>
         </SelectContent>
       </Select>
+    </div>
+
+    <div>
+      <PrenominePreNomine/>
     </div>
 
   </template>

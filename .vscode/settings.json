@@ -10,6 +10,7 @@
       ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
     ],
     "cSpell.words": [
+      "Desemp",
       "exportprenominate",
       "generateprenomine",
       "getprenomine",
@@ -19,6 +20,7 @@
       "neworker",
       "prenominate",
       "prenominatedocument",
+      "Prenomine",
       "prenominedocument"
     ]
   }

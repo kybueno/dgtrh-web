@@ -1,4 +1,4 @@
-import { defaultRhTableStyles } from "~/lib/documents-generation/styles";
+
 
 
 const prenominedocumentDefinition = {
