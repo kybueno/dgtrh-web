@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import WorkerForm from '~/components/worker/WorkerForm.vue';
 // Puedes agregar lógica adicional aquí si es necesario
 </script>
 

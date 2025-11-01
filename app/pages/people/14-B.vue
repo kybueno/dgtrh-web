@@ -1,6 +1,12 @@
 <script lang="ts" setup>
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
+import { useWorkerStore } from '~/stores/workerStore'
+const supabase = useSupabaseClient()
+
+const workerStore = useWorkerStore()
+
+onMounted(() => workerStore.loadWorkers(supabase))
 
 
 interface Props {
@@ -84,13 +90,13 @@ const columns: TableColumn<WorkerInfo>[] = [
 
         <div class="flex justify-between">
           <UInput placeholder="Busca.." />
-          <UButton icon="mdi:add">Añadir</UButton>
         </div>
       </template>
       <strong class="flex justify-center">Anexo No.14-B</strong>
       <div class="flex justify-center">De la Plantilla de cargos y registro de trabajadores</div>
       <div>Empresa: Universidad de Ciencias Informáticas</div>
-      <UTable :data="data" :columns="columns" sticky class="h-96" />
+      <UTable :data="workerStore.workers" :columns="columns" sticky class="h-96" />
+      
 
     </UCard>
   </div>

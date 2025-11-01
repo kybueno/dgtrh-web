@@ -169,7 +169,7 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
             ],
             [
               {
-                text: `Área:  `,
+                text: `Área: `,
                 style: "orgInfo",
                 border: [true, false, true, true],
               },

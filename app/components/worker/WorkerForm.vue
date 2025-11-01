@@ -61,6 +61,10 @@
                         <UInput  placeholder="Cargo que va a ocupar el trabajador"/>
                     </label>
 
+                    <label > Grupo de Trabajo a pertenecer:
+                        <UInput  placeholder="Grupo de Trabajo al que va a pertenecer el trabajador"/>
+                    </label>
+
                     <label > Organizaciones de masa:
                         <UInput  placeholder="Organizaciones de masa a la que pertenece"/>
                     </label>

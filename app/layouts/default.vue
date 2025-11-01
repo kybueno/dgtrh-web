@@ -122,6 +122,22 @@ const links = [[{
       open.value = false
     }
   }, ]
+
+}, {
+  label: 'Modelos',
+  to: '/',
+  icon: 'lucide:users',
+  defaultOpen: true,
+  type: 'trigger',
+  children: [{
+    label: 'Modelo de Vacaciones',
+    to: '/model',
+    exact: true,
+    onSelect: () => {
+      open.value = false
+    }
+  }, ]
+
 }], [{
   label: 'Directorio UCI',
   icon: 'lucide:book-user',
