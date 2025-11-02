@@ -16,10 +16,8 @@
                         <label> Nombre y Apellidos:
                         <UInput  placeholder="Nombre del trabajador"/>
                     </label>
-
-                    <label> Área:
-                        <UInput  placeholder="Área a la que pertenece"/>
-                    </label>
+                    
+                    <h2>1ra.Prenatal</h2>
 
                     <label> Desde:
                         <UInput  placeholder=""/>
@@ -29,17 +27,48 @@
                         <UInput  placeholder=""/>
                     </label>
 
-                    <label> Tiempo:
-                        <UInput  placeholder="Días"/>
+                    <label> Pago en:
+                        <UInput  placeholder=""/>
                     </label>
 
-                    <label> Incorporación:
+                    <h2>1ra.Posnatal</h2>
+
+<label> Desde:
+    <UInput  placeholder=""/>
+</label>
+
+<label> Hasta:
+    <UInput  placeholder=""/>
+</label>
+
+<label> Pago en:
+    <UInput  placeholder=""/>
+</label>
+
+
+<h2>2da.Posnatal</h2>
+
+<label> Desde:
+    <UInput  placeholder=""/>
+</label>
+
+<label> Hasta:
+    <UInput  placeholder=""/>
+</label>
+
+<label> Pago en:
+    <UInput  placeholder=""/>
+</label>
+
+<h2>Presentación Social</h2>
+                    <label> Desde:
                         <UInput  placeholder="Fecha de incorporación"/>
                     </label>
 
-                    <label> Motivo:
+                    <label> Hasta:
                         <UInput  placeholder=""/>
                     </label>
+
 
                     
 

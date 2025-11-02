@@ -136,6 +136,13 @@ const links = [[{
     onSelect: () => {
       open.value = false
     }
+  },{
+    label: 'Modelo de certificado',
+    to: '/model/certificado',
+    exact: true,
+    onSelect: () => {
+      open.value = false
+    }
   }, ]
 
 }], [{

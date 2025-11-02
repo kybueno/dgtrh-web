@@ -95,6 +95,7 @@ const formData = ref<WorkerInsert>({
     last_name: '',
     record_number: '',
     second_last_name: ''
+    
 })
 
 async function handleAddWorker() {

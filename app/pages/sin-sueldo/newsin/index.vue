@@ -17,10 +17,6 @@
                         <UInput  placeholder="Nombre del trabajador"/>
                     </label>
 
-                    <label> Área:
-                        <UInput  placeholder="Área a la que pertenece"/>
-                    </label>
-
                     <label> Desde:
                         <UInput  placeholder=""/>
                     </label>
@@ -29,15 +25,12 @@
                         <UInput  placeholder=""/>
                     </label>
 
-                    <label> Tiempo:
-                        <UInput  placeholder="Días"/>
+                    <label> Causas:
+                        <UInput  placeholder=""/>
                     </label>
 
-                    <label> Incorporación:
-                        <UInput  placeholder="Fecha de incorporación"/>
-                    </label>
 
-                    <label> Motivo:
+                    <label> Clave de incidencias:
                         <UInput  placeholder=""/>
                     </label>
 

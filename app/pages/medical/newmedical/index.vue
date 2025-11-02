@@ -17,8 +17,8 @@
                         <UInput  placeholder="Nombre del trabajador"/>
                     </label>
 
-                    <label> Área:
-                        <UInput  placeholder="Área a la que pertenece"/>
+                    <label> Inicio:
+                        <UInput  placeholder="Inicial/Cont"/>
                     </label>
 
                     <label> Desde:
@@ -29,15 +29,19 @@
                         <UInput  placeholder=""/>
                     </label>
 
-                    <label> Tiempo:
+                    <label> Enfermedad:
                         <UInput  placeholder="Días"/>
                     </label>
 
-                    <label> Incorporación:
+                    <label> Entrada:
                         <UInput  placeholder="Fecha de incorporación"/>
                     </label>
 
-                    <label> Motivo:
+                    <label> Firma:
+                        <UInput  placeholder=""/>
+                    </label>
+
+                    <label> Dias en prenomina:
                         <UInput  placeholder=""/>
                     </label>
 
