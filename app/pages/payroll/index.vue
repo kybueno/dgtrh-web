@@ -5,6 +5,8 @@ import { onMounted } from 'vue';
 
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
+import {usePrenominaPDF} from './PreNomine'
+
 
 
 const workerStore = useWorkerStore();
@@ -83,7 +85,8 @@ const columns: TableColumn<WorkerInfo>[] = [
         <div class="flex justify-between">
           <UInput placeholder="Busca.." />
           <UButton icon="mdi:add" to="payroll/newprenomine">Añadir</UButton>
-          <UButton icon="mdi:print" to="">Imprimir</UButton>
+          <UButton icon="mdi:print" @click="usePrenominaPDF(worker)" v-for="worker in workerStore.workers" class="p-4 flex gap-4 cursor-pointer hover:scale-105 transition-all active:scale-100">{{
+        getProfileDisplayName(worker) }}>Imprimir</UButton>
         </div>
       </template>
       <strong class="flex justify-center">Prenómina de mes</strong>

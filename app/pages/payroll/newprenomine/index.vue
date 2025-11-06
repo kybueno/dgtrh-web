@@ -1,7 +1,7 @@
 <script lang="ts">
-import PreNomine from '~/components/prenomine/PreNomine.vue';
+import PreNomine from '~/pages/payroll/PreNomine';
 </script>
 
 <template>
- <PreNomine></PreNomine>
+    <PreNomine></PreNomine>
 </template>
