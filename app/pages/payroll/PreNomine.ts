@@ -175,7 +175,7 @@ export class PdfService {
 }
 
 
-export const usePrenominaPDF = (worker: WorkerInfo, date: Date = new Date(), date: Date, p0: Date) => {
+export const usePrenominaPDF = (worker: WorkerInfo, date: Date = new Date(), p0: Date) => {
   const { generatePrenominaPDF } = usePrenominaPDF(worker);
   
   const generatePDF = () => {
@@ -183,7 +183,7 @@ export const usePrenominaPDF = (worker: WorkerInfo, date: Date = new Date(), dat
   };
   usePDFMake().createPdf(generatePrenominaPDF(worker, date)).open();
 }
-  const getPrenominaPDF = = (worker: WorkerInfo, date = new Date()) =>  {
+  const getPrenominaPDF = (worker: WorkerInfo, date = new Date()) =>  {
     // Datos de ejemplo basados en la imagen
     const prenominaData: PrenominaData = {
       organismo: 'MES',
@@ -232,9 +232,9 @@ export const usePrenominaPDF = (worker: WorkerInfo, date: Date = new Date(), dat
     }
   };
 
-  return {
-    generatePrenominaPDF
-  };
+  // return {
+  //   generatePrenominaPDF
+  // };
 
 
 
