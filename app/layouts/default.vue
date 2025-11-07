@@ -205,6 +205,7 @@ onMounted(async () => {
     }]
   })
 })
+const loggedUser = useSupabaseUser()
 </script>
 
 <template>
@@ -216,9 +217,9 @@ onMounted(async () => {
       </template> -->
 
       <template #default="{ collapsed }">
-        <UDashboardSearchButton :collapsed="collapsed" class="bg-transparent ring-default" />
+        <UDashboardSearchButton v-if="loggedUser"  :collapsed="collapsed" class="bg-transparent ring-default" />
 
-        <UNavigationMenu :collapsed="collapsed" :items="links[0]" orientation="vertical" tooltip popover />
+        <UNavigationMenu v-if="loggedUser" :collapsed="collapsed" :items="links[0]" orientation="vertical" tooltip popover />
 
         <UNavigationMenu :collapsed="collapsed" :items="links[1]" orientation="vertical" tooltip class="mt-auto" />
       </template>
