@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const supabase = useSupabaseClient()
+const mode = ref<'login' | 'signup'>('login') // 'login' or 'signup'
 const username = ref('')
+const password = ref('')
 const loading = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
+const showPassword = ref(false)
 const router = useRouter()
 const handleAuth = async () => {
   loading.value = true
@@ -15,21 +18,34 @@ const handleAuth = async () => {
   const email = `${username.value}@uci.cu`
 
   try {
-    
-      // Log in existing user
-      const { data, error } = await supabase.auth.signInWithOtp({
-    email: username.value + '@uci.cu',
-    options: {
-      emailRedirectTo: 'http://localhost:3004/',
-    }
-  })
+    if (mode.value === 'signup') {
+      // Sign up new user
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password: password.value
+      })
 
       if (error) throw error
 
-      successMessage.value = '¡Inicio de sesión exitoso! Redirigiendo...'
+      if(data.user && !data.session) successMessage.value = '¡Registro exitoso! Por favor verifica tu correo electrónico para completar el proceso.'
+      if(data.user && data.session) successMessage.value = '¡Registro exitoso! Está autenticado.'
+    } else {
+      // Log in existing user
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password: password.value
+      })
+
+      if (error) throw error
+
+      if(data) {
+        if(data.session) {
+        successMessage.value = '¡Inicio de sesión exitoso! Redirigiendo..'
       // Redirect to dashboard after successful login
-      navigateTo('/dashboard')
-    
+      navigateTo('/dashboard')}
+      
+    }
+    }
   } catch (error) {
     console.error('Authentication error:', error)
     errorMessage.value = (error as Error).message || 'Ocurrió un error. Por favor inténtalo de nuevo.'
@@ -38,60 +54,86 @@ const handleAuth = async () => {
   }
 }
 
+const toggleMode = () => {
+  mode.value = mode.value === 'signup' ? 'login' : 'signup'
+  username.value = ''
+  password.value = ''
+  errorMessage.value = ''
+  successMessage.value = ''
+}
 const loggedUser = useSupabaseUser()
 </script>
 
 <template>
-  <div class="flex items-center justify-center p-4 m-auto">
-    <UCard variant="soft" v-if="!loggedUser" class="w-full max-w-md shadow-lg rounded-2xl overflow-hidden">
+  <div class=" flex items-center justify-center p-4 mx-auto">
+    <UCard v-if="!loggedUser" class="w-full max-w-md shadow-lg rounded-2xl overflow-hidden">
       <template #header>
-
-          <h1 class="text-center text-2xl">
-            Le damos la bienvenida
+        <div class="">
+          <h1 class="text-center">
+            {{ mode === 'signup' ? 'Registro' : 'Inicio de Sesión' }}
           </h1>
-<p class="text-center text-muted">Al sistema de gestión de recursos humanos</p>
-
+        </div>
       </template>
 
       <div class="p-6">
-        <!-- Error/Success Messages -->
-        <Alert v-if="errorMessage" variant="destructive" class="mb-6">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{{ errorMessage }}</AlertDescription>
-        </Alert>
-
-        <Alert v-if="successMessage" class="mb-6">
-          <AlertTitle>Éxito</AlertTitle>
-          <AlertDescription>{{ successMessage }}</AlertDescription>
-        </Alert>
+       
 
         <!-- Auth Form -->
         <form @submit.prevent="handleAuth" class="space-y-6">
           <div class="space-y-4 flex flex-col items-center">
-              <!-- <Label for="username" class="block">Nombre de usuario UCI</Label> -->
-                <UInput id="username" v-model="username" 
-                  placeholder="jperez" required>
-                  <template #trailing>
-                    <span class="text-gray-500">@uci.cu</span>
-                  </template>
-                </UInput>
-          </div>
 
-          <div class="m-auto w-fit">
-            <UButton type="submit" class="w-full" :loading="loading">
-              Iniciar sesión
+            <UFormField label="Nombre de usuario" help="Use el nombre de usuario UCI.">
+              <UInput v-model="username" placeholder="Enter your email" class="w-full" />
+            </UFormField>
+
+            <UFormField label="Contraseña" :error="errorMessage.toLowerCase().includes('password') && errorMessage">
+              <UInput v-model="password" placeholder="Password" :type="showPassword ? 'text' : 'password'"
+                class="w-full" :ui="{ trailing: 'pe-1' }" required>
+                <template #trailing>
+                  <UButton color="neutral" variant="link" size="sm"
+                    :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                    :aria-label="showPassword ? 'Hide password' : 'Show password'" :aria-pressed="showPassword"
+                    aria-controls="password" @click="showPassword = !showPassword" />
+                </template>
+              </UInput>
+            </UFormField>
+
+
+            <UButton class="mt-4" :loading="loading" type="submit" >
+
+              {{ mode === 'signup' ? 'Registrarse' : 'Iniciar Sesión' }}
+
             </UButton>
           </div>
+           <!-- Error/Success Messages -->
+        <UAlert v-if="errorMessage" color="error" variant="subtle" title="¡Error!" :description="errorMessage"
+          icon="lucide-user" />
+        <UAlert v-if="successMessage" color="success" variant="subtle" title="¡Éxito!" :description="successMessage"
+          icon="lucide-user" />
         </form>
 
+
+
        
-        <div class="mt-20 text-center">
-          <p class="text-sm text-muted-foreground">
-            ¿Problemas para acceder?
-            <a href="#" class="text-primary hover:underline">Contactar a Recursos Humanos</a>
-          </p>
-        </div>
       </div>
+      <template #footer>
+        <div class="py-2 space-y-2">
+          <div class=" text-center text-sm">
+            <p>
+              {{ mode === 'signup' ? '¿Ya tienes una cuenta?' : '¿No tienes una cuenta?' }}
+              <UButton variant="link" @click="toggleMode">
+                {{ mode === 'signup' ? 'Inicia sesión aquí' : 'Regístrate aquí' }}
+              </UButton>
+            </p>
+          </div>
+          <div class=" text-center">
+            <p class="text-sm text-muted-foreground">
+              ¿Problemas para acceder?
+              <a href="#" class="text-primary hover:underline">Contactar a Recursos Humanos</a>
+            </p>
+          </div>
+        </div>
+      </template>
     </UCard>
     <template v-else>
       <NuxtLink href="/dashboard">

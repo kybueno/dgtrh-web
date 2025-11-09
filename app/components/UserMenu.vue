@@ -4,13 +4,12 @@ import type { DropdownMenuItem } from '@nuxt/ui'
 defineProps<{
   collapsed?: boolean
 }>()
-
 const colorMode = useColorMode()
 const appConfig = useAppConfig()
 
 const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']
 const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
-
+const supabase = useSupabaseClient()
 const authStore = useAuthStore()
 const worker = computed(()=> authStore.loggedUserProfile.value?.worker)
 const items = computed<DropdownMenuItem[][]>(() => ([[{
@@ -19,10 +18,12 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   avatar: {
     alt: worker.value?.first_name
   },
-}], [{
-  label: 'Profile',
-  icon: 'i-lucide-user'
-}, {
+}], [
+//   {
+//   label: 'Profile',
+//   icon: 'i-lucide-user'
+// },
+ {
   label: 'Billing',
   icon: 'i-lucide-credit-card'
 }, {
@@ -141,7 +142,10 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   target: '_blank'
 }], [{
   label: 'Log out',
-  icon: 'i-lucide-log-out'
+  icon: 'i-lucide-log-out',
+  onSelect:()=>{
+    supabase.auth.signOut()
+  }
 }]]))
 </script>
 
@@ -163,7 +167,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
         trailingIcon: 'text-dimmed'
       }"
     />
-
+{{ authStore.loggedUserProfile.value }}
     <template #chip-leading="{ item }">
       <span
         :style="{
