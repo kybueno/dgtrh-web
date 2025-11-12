@@ -13,7 +13,7 @@
                     </label>
 
                     <label> Segundo Nombre:
-                        <UInput  placeholder="Segundo nombre"/>
+                        <UInput  placeholder="Segundo nombre" v-model="formData.middle_name"/>
                     </label>
 
                     <label> Primer Apellidos:
@@ -33,7 +33,7 @@
                     </label>
 
                     <label > Dirección:
-                        <UInput  placeholder="Dirección particular"/>
+                        <UInput  placeholder="Dirección particular" v-model="formData.address"/>
                     </label>
 
                     <label > Sexo:
@@ -54,7 +54,7 @@
                     </label>
 
                     <label > Número de teléfono:
-                        <UInput  placeholder="tel:" />
+                        <UInput  placeholder="tel:" v-model="formData.tel"/>
                     </label>
 
                     <label > Cargo a ocupar:
@@ -94,7 +94,10 @@ const formData = ref<WorkerInsert>({
     first_name: '',
     last_name: '',
     record_number: '',
-    second_last_name: ''
+    second_last_name: '',
+    ci:'',
+
+    
     
 })
 
@@ -107,7 +110,8 @@ async function handleAddWorker() {
             first_name: '',
             last_name: '',
             record_number: '',
-            second_last_name: ''
+            second_last_name: '',
+            ci:'',
 
         };
     } catch (error) {
