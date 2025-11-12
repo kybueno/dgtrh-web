@@ -23,7 +23,7 @@ onMounted(() => {
 
 
 onMounted(async () => {
-  await workerStore.loadWorkers(supabase);
+  await workerStore.loadWorkers();
 });
 
 interface Props {

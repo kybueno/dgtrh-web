@@ -49,7 +49,7 @@ const workerStore = useWorkerStore();
 const worker = ref<WorkerInfo | null>(null);
 
 onMounted(async () => {
-    await workerStore.loadWorkers(supabase);
+    await workerStore.loadWorkers();
     worker.value = workerStore.getWorkerByUsername(username) || null;
 });
 </script>

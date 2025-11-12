@@ -1,52 +1,72 @@
 <script setup lang="ts">
-import { useWorkerStore } from '~/stores/workerStore'
-const supabase = useSupabaseClient()
-const workerStore = useWorkerStore()
+import { useWorkerStore } from "~/stores/workerStore";
+const supabase = useSupabaseClient();
+const workerStore = useWorkerStore();
 
+onMounted(loadGroups);
 
-onMounted(loadGroups)
-
-
-
-
-
+function handleDeleteGroup(group:WorkGroupInfo){
+    if(confirm(`¿Está seguro de que desea eliminar el grupo ${group.name}? (Tiene ${group.workers.length} miembros)`)) deleteGroup(group.id)
+}
 </script>
 
 <template>
-  <div class="flex flex-col min-h-screen bg-gray-50">
-  <div class="max-w-6xl mx-auto p-6 w-full">
+    <div class="flex flex-col bg-gray-50 w-full">
+        <div class="max-w-6xl mx-auto p-6 w-full">
+            <!-- Encabezado -->
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-lg font-semibold">Grupos de trabajo</h2>
+                <div class="space-x-2">
+                    <UButton
+                        icon="mdi:refresh"
+                        variant="ghost"
+                        @click="loadGroups()"
+                        :disabled="groupsPending"
+                    ></UButton>
+                    <UButton icon="mdi:add" to="/groups/new" variant="subtle"
+                        >Crear nuevo grupo</UButton
+                    >
+                </div>
+            </div>
 
-    <!-- Encabezado -->
-    <div class="flex items-center justify-between mb-8">
-      <h2 class="text-3xl font-bold flex-1 text-center flex items-center justify-center gap-2">
-        <User class="w-8 h-8 text-blue-600" />
-        Grupos de trabajo
-      </h2>
-      <UButton icon="i-lucide-plus" to="/groups/newgroup">Añadir grupo</UButton>
+            <!-- Contenedor de grupos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <template v-if="groupsPending">
+                    <USkeleton v-for="i in 6" class="h-52" />
+                </template>
+
+                <template v-for="group in workGroups" :key="group.id" >
+                    <UCard variant="subtle" @click="navigateTo('/groups/'+group.id)" class="cursor-pointer">
+                        <template #header>
+                            <strong>{{ group.name }}</strong>
+                            <p class="text-muted text-sm">
+                                Jefe: {{ getProfileDisplayName(group.leader) }}
+                            </p>
+                        </template>
+                            <div class="flex justify-between items-center mb-1">
+                                <p class="text-sm font-semibold">Miembros</p>
+                                <!-- <UButton icon="mdi:add" variant="ghost" color="neutral" /> -->
+                            </div>
+                            <div class="space-y-1">
+                                <template v-for="member in group.workers">
+                                    <UButton class="block w-full text-start" variant="soft" color="neutral">{{ getProfileDisplayName(member) }}</UButton>
+                                </template>
+                            </div>
+                        <template #footer >
+                            <div class="flex justify-end">
+                                <UButton
+                                    @click="handleDeleteGroup(group)"
+                                    icon="mdi:delete"
+                                    color="neutral"
+                                    variant="ghost"
+                                    size="sm"
+                                    label="Eliminar grupo"
+                                />
+                            </div>
+                        </template>
+                    </UCard>
+                </template>
+            </div>
+        </div>
     </div>
-
-    <!-- Contenedor de grupos -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-    <UCard v-for="group in workGroups" variant="soft">
-      <template #header>
-      <strong>{{ group.name }}</strong>
-    </template>
-
-    <li v-for="member in group.workers">{{ member.first_name }}</li>
-
-
-    <template #footer>
-    <strong>Jefe: {{group.leader.first_name}}</strong>
-    </template>
-      
-    </UCard>
-
-
-
-    </div>
-  </div>
-</div>
-
-    
 </template>

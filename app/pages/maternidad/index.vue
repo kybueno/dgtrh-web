@@ -8,7 +8,7 @@ const supabase = useSupabaseClient()
 
 const workerStore = useWorkerStore()
 
-onMounted(() => workerStore.loadWorkers(supabase))
+onMounted(() => workerStore.loadWorkers())
 
 const columns: TableColumn<WorkerInfo>[] = [
   {

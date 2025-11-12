@@ -4,7 +4,7 @@ const supabase = useSupabaseClient()
 
 const workerStore = useWorkerStore()
 
-onMounted(() => workerStore.loadWorkers(supabase))
+onMounted(() => workerStore.loadWorkers())
 
 </script>
 <template>

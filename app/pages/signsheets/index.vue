@@ -7,7 +7,7 @@ const supabase = useSupabaseClient()
 const workerStore = useWorkerStore();
 
 onMounted(async () => {
-  await workerStore.loadWorkers(supabase);
+  await workerStore.loadWorkers();
 });
 
 
@@ -18,7 +18,7 @@ onMounted(async () => {
 
   <div class="p-4 space-y-4">
     <div class="flex items-center gap-4">
-      <UButton icon="lucide:refresh-cw" @click="workerStore.loadWorkers(supabase)"></UButton>
+      <UButton icon="lucide:refresh-cw" @click="workerStore.loadWorkers()"></UButton>
     </div>
 
     <UCard @click="generateSignSheet(worker)" v-for="worker in workerStore.workers"

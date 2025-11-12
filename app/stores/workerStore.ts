@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import type { WorkerInfo, WorkerInsert } from "~/types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const useWorkerStore = defineStore("workerStore", {
@@ -8,8 +7,9 @@ export const useWorkerStore = defineStore("workerStore", {
   }),
   actions: {
     //función 1 
-    async loadWorkers(supabase: SupabaseClient) {    //I
+    async loadWorkers() {    //I
    //1 return //2//si hay trabajadores no va a cargar trabajadores
+      const supabase = useSupabaseClient()
       const { data, error } = await supabase.from("workers").select("*"); //3
       if (data) this.workers = data;  //4
       if (error) console.error(error); //5
