@@ -12,4 +12,15 @@ export const useIncidentStore = defineStore("incidentStore", {
       if (error) console.error(error);
     },
   },
+   async createIncident(newIncidentData: IncidentType, supabase: SupabaseClient) {
+      
+  
+        const { data, error } = await supabase 
+          .from("incident_types")
+          .insert(newIncidentData);
+  
+        if (data) this.incidents.push(data[0]);
+        if (error) console.error(error);
+        
+      },
 });

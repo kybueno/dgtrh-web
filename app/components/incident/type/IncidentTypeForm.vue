@@ -16,7 +16,7 @@
         </div>
 
         <template #footer>
-            <UButton @click="$emit('submit', incident)"> Submit</UButton>
+            <UButton @click="$emit('submit', incident)"> Añadir Nueva Incidencia</UButton>
         </template>
     </UCard>
 </template>

@@ -167,7 +167,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
         trailingIcon: 'text-dimmed'
       }"
     />
-{{ authStore.loggedUserProfile.value }}
+
     <template #chip-leading="{ item }">
       <span
         :style="{

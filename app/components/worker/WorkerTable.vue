@@ -2,7 +2,9 @@
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
-
+const selectedRows = ref<WorkerInfo[]>([])
+const showConfirm = ref(false)
+const workerToDelete = ref<WorkerInfo | null>(null)
 
 interface Props {
     data: WorkerInfo[]
@@ -44,17 +46,20 @@ const columns: TableColumn<WorkerInfo>[] = [
 
     }, {
         header: "Padre",
-        cell: ({ row }) => row.original.padre
+        cell: ({ row }) => row.original.parent1_name
     }, {
         header: "Madre",
+        cell: ({ row }) => row.original.parent2_name
     }, {
         header: "Dirección",
+        cell: ({ row }) => row.original.address
     }, {
         header: "Organizaciones de masa",
+        cell: ({ row }) => row.original.organization_codes
     },
-
-
 ]
+
+
 </script>
 <template>
     <UCard>
@@ -65,12 +70,44 @@ const columns: TableColumn<WorkerInfo>[] = [
                 <div class="flex gap-2">
                     <UButton icon="i-lucide-plus" to="people/neworker" >Añadir</UButton>
                     <UButton variant="soft" color="neutral" icon="i-lucide-refresh-cw"/>
+
+
+
                 </div>
             </div>
         </template>
-        <div class="">Universidad de Ciencias Informáticas</div>
+        <div class="p-6 space-y-6">
+	  <h1 class="text-center text-xl font-bold">
+		UNIVERSIDAD DE LAS CIENCIAS INFORMÁTICAS
+	  </h1>
+	  <h2 class="text-center font-semibold">
+		Listado de Trabajadores
+	  </h2>
+        </div>
         <UTable :data="data" :columns="columns" sticky class="h-96" />
 
+        <UModal v-model="showConfirm">
+      <UCard>
+        <template #header>
+          <h3 class="text-center text-lg font-semibold text-red-600">
+            Confirmar eliminación
+          </h3>
+        </template>
+
+        <p class="text-center">
+          ¿Estás segura de eliminar al trabajador
+          <strong>{{ workerToDelete?.first_name }} {{ workerToDelete?.last_name }}</strong>?
+        </p>
+
+        <template #footer>
+          <div class="flex justify-center gap-4 mt-4">
+            <UButton  >Aceptar</UButton>
+            <UButton  @click="showConfirm = false">Cancelar</UButton>
+          </div>
+        </template>
+      </UCard>
+    </UModal>
+
     </UCard>
-    <DataTable />
+    
 </template>

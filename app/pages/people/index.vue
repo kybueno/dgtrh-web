@@ -11,8 +11,6 @@ onMounted(() => workerStore.loadWorkers(supabase))
     <div class="flex flex-col gap-8 p-4">
         <div class="flex justify-between">
 
-            <h1> Listado de Trabajadores</h1>
-
         </div>
 
         <WorkerTable :data="workerStore.workers" />

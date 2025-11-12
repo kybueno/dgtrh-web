@@ -26,8 +26,8 @@
                     <p><strong>No. Expediente:</strong> #{{ worker.record_number }}</p>
                     <p><strong>Teléfono:</strong>{{ worker.tel }}</p>
                     <p><strong>Grupo de trabajo:</strong></p>
-                    <UButton> Añadir</UButton>
-                    <UButton variant="outline"> Dar baja</UButton>
+                    <UButton to="neworker"> Añadir</UButton>
+    
                 </div>
             </div>
         </div>
@@ -54,6 +54,3 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
-/* Add any additional styling here if needed */
-</style>

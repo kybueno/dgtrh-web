@@ -91,13 +91,6 @@ const links = [[{
   defaultOpen: true,
   type: 'trigger',
   children: [{
-    label: 'Trabajo Extraordinario',
-    to: '/extra',
-    exact: true,
-    onSelect: () => {
-      open.value = false
-    }
-  },{
     label: 'Vacaciones',
     to: '/holidays',
     onSelect: () => {

@@ -59,7 +59,7 @@ const columns: TableColumn<WorkerInfo>[] = [
     cell: ({ row }) => row.original.ci
   }, {
     header: "Cargo",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.position_code
 
   }, {
     header: "Incidencias del tiempo no laborado",
@@ -76,8 +76,6 @@ const columns: TableColumn<WorkerInfo>[] = [
 ]
 </script>
 <template>
-    <h1> Prenómina </h1>
-
     <div>
     <UCard>
       <template #header>
@@ -85,8 +83,7 @@ const columns: TableColumn<WorkerInfo>[] = [
         <div class="flex justify-between">
           <UInput placeholder="Busca.." />
           <UButton icon="mdi:add" to="payroll/newprenomine">Añadir</UButton>
-          <UButton icon="mdi:print" @click="usePrenominaPDF(worker)" v-for="worker in workerStore.workers" class="p-4 flex gap-4 cursor-pointer hover:scale-105 transition-all active:scale-100">{{
-        getProfileDisplayName(worker) }}>Imprimir</UButton>
+          <UButton icon="mdi:print">Imprimir</UButton>
         </div>
       </template>
       <strong class="flex justify-center">Prenómina de mes</strong>
@@ -97,39 +94,9 @@ const columns: TableColumn<WorkerInfo>[] = [
   </div>
 
 
-    <div class="flex gap-2">
+    
 
-      <Input v-model="email" type="email" />
-      <Button @click="incidentStore.loadIncidents(supabase)">
-        <Search />
-      </Button>
-    </div>
-
-    <div class="flex flex-col gap-2">
-      <template v-for="incident in incidentStore.incidents" :key="incident.id">
-
-        <Card class="p-4 border rounded">
-          {{ incident.worker_id }}
-          <CardTitle>{{ incident.description }}</CardTitle>
-          <CardDescription class="flex gap-2">
-            <span>{{ incident.start_date }}</span> - <span>{{ incident.end_date }}</span>
-          </CardDescription>
-        </Card>
-
-      </template>
-    </div>
-    <div @mouseenter="incidentTypeStore.loadIncidentTypes(supabase)">
-      <Select>
-        <SelectTrigger class="w-[180px]">
-          <SelectValue placeholder="Tipo (clave)" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem v-for="type in incidentTypeStore.incidentTypes" :key="type['code']" value="apple">
-            {{ type.name }}
-          </SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+     
 
    
   

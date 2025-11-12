@@ -35,7 +35,7 @@ const columns: TableColumn<WorkerInfo>[] = [
     
   }, {
     header: "Órganos y Cargos",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.position_code
   }, {
     header: "CO",
     cell: ({ row }) => row.original
@@ -47,11 +47,11 @@ const columns: TableColumn<WorkerInfo>[] = [
     cell: ({ row }) => row.original.ci
   }, {
     header: "Sexo",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.gender
 
   }, {
     header: "Nivel de Preparación",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.level
 
   }, {
     header: "Grupo Escala",

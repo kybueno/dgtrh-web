@@ -62,8 +62,14 @@ const columns: TableColumn<WorkerInfo>[] = [
 </script>
 
 <template>
-    <div>Anexo E: Registro de Certificado Médico</div>
-  <UTable class="flex-1" />
+    <div class="p-6 space-y-6">
+	  <h1 class="text-center text-xl font-bold">
+		UNIVERSIDAD DE LAS CIENCIAS INFORMÁTICAS
+	  </h1>
+	  <h2 class="text-center font-semibold">
+		Anexo E: REGISTRO DE Certificados Médicos
+	  </h2></div>
+  <UTable :data="workerStore.workers" :columns="columns" />
   <div>
   <UButton to="/medical/newmedical">Añadir</UButton>
   </div>
