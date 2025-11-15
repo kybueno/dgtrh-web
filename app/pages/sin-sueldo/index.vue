@@ -60,9 +60,9 @@ const columns: TableColumn<WorkerInfo>[] = [
 	  <h2 class="text-center font-semibold">
 		Anexo G: Registro de Licencia sin sueldo
 	  </h2>
-  </div>
+
+    <UButton to="/sin-sueldo/newsin">Añadir</UButton>
   <UTable :data="workerStore.workers" :columns="columns" />
-  <div>
-  <UButton to="/sin-sueldo/newsin">Añadir</UButton>
+
   </div>
 </template>

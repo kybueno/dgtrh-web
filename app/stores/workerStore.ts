@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 export const useWorkerStore = defineStore("workerStore", {
   state: () => ({
@@ -26,6 +26,7 @@ export const useWorkerStore = defineStore("workerStore", {
       if (error) console.error(error);
       
     },
+
     //función 3
     getWorkerById(id: string) {
       return this.workers.find((worker: { id: string; }) => worker.id === id);

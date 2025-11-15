@@ -41,105 +41,122 @@ async function handleAddWorker() {
 </script>
 
 <template>
-    <div  class="center flex flex-col w-full max-w-sm gap-2">
-        <Card>
-            <CardHeader>
-                <CardTitle>Registrar nuevo Trabajador</CardTitle>   
-            </CardHeader>
-            <CardContent>
-                <fieldset class="flex flex-col w-full max-w-sm gap-1.5">
-                    <div class="flex flex-col gap-2">
-
-                    <label> Primer Nombre:
-                        <UInput  placeholder="Introduzca el nombre" v-model="formData.first_name"/>
-                    </label>
-
-                    <label> Segundo Nombre:
-                        <UInput  placeholder="Segundo nombre" v-model="formData.middle_name"/>
-                    </label>
-
-                    <label> Primer Apellidos:
-                        <UInput  placeholder="Apellidos" v-model="formData.last_name"/>
-                    </label>
-
-                    <label> Segundo Apellidos:
-                        <UInput  placeholder="Apellidos" v-model="formData.second_last_name"/>
-                    </label>
-
-                    <label > Carnet de Identidad:
-                        <UInput  placeholder="CI" v-model="formData.ci"/>
-                    </label>
-
-                    <label > Número de expediente:
-                        <UInput  placeholder="Expediente laboral" v-model="formData.record_number"/>
-                    </label>
-
-                    <label > Dirección:
-                        <UInput  placeholder="Dirección particular" v-model="formData.address"/>
-                    </label>
-
-                    
-                     <label>Sexo:
-                     <UInput v-model="formData.gender" /> 
-                      </label>
-
-                    <label > Correo:
-                        <UInput trailing-icon="i-lucide-at-sign" placeholder="Enter email" size="md" v-model="formData.email"/>
-                    </label>
-
-                    <label > Madre:
-                        <UInput  placeholder="Nombre y apellido de la madre" v-model="formData.parent1_name"/>
-                    </label>
-
-                    <label > Padre:
-                        <UInput  placeholder="Nombre y apellido del padre" v-model="formData.parent2_name"/>
-                    </label>
-
-                    <label > Número de teléfono:
-                        <UInput  placeholder="tel:" v-model="formData.tel"/>
-                    </label>
-
-                    <label class="block font-medium mb-1">Cargo a ocupar:</label>
-                    <select v-model="formData.position_code" class="border rounded-md p-2 w-full"> 
-    
-                      <option v-for="position in workerStore.workers" 
-                            :key="position.id" 
-                           :value="position.position_code">
-                            {{ position.position_code }}
-                               </option>
-                    </select>
-
-
-                    <label > Grupo de Trabajo a pertenecer:
-                        <UInput  placeholder="Grupo de Trabajo al que va a pertenecer el trabajador" v-model="formData.group_id"/>
-                    </label>
-
-                    <label class="block font-medium mb-1">Organización de masas:</label>
-                    <select v-model="formData.organization_codes" class="w-full border rounded-md p-2">
-                     
-                    <option 
-                       v-for="masa in workerStore.workers" 
-                       :key="masa.id" 
-                       :value="masa.organization_codes"
-                         >
-                            {{ masa.organization_codes }}
-                     </option>
-                    </select>
-
-                    </div>                    
-                    
-                    <CardDescription>Los campos marcados con (*) son requeridos.</CardDescription>
-                    <UButton @click="handleAddWorker()" >
-                        Añadir trabajador
-                    </UButton>
-
-
-                </fieldset>
-            </CardContent>
-
-        </Card>
-
+    <div class="flex flex-col w-full max-w-2xl mx-auto">
+      <Card class="shadow-xl rounded-2xl p-6">
+        <CardHeader>
+          <CardTitle class="text-xl font-semibold">Nuevo Trabajador</CardTitle>
+          <CardDescription>Complete el formulario para registrar un nuevo trabajador</CardDescription>
+        </CardHeader>
+  
+        <CardContent>
+          <form class="grid grid-cols-2 gap-4">
+            <!-- Primer Nombre -->
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">Primer Nombre *</label>
+              <UInput placeholder="Introduzca el nombre" v-model="formData.first_name" />
+            </div>
+  
+            <!-- Segundo Nombre -->
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">Segundo Nombre</label>
+              <UInput placeholder="Segundo nombre" v-model="formData.middle_name" />
+            </div>
+  
+            <!-- Primer Apellido -->
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">Primer Apellido *</label>
+              <UInput placeholder="Apellidos" v-model="formData.last_name" />
+            </div>
+  
+            <!-- Segundo Apellido -->
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">Segundo Apellido</label>
+              <UInput placeholder="Apellidos" v-model="formData.second_last_name" />
+            </div>
+  
+            <!-- CI -->
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">Carnet de Identidad *</label>
+              <UInput placeholder="CI" v-model="formData.ci" />
+            </div>
+  
+            <!-- Número expediente -->
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">Número de expediente</label>
+              <UInput placeholder="Expediente laboral" v-model="formData.record_number" />
+            </div>
+  
+            <!-- Dirección -->
+            <div class="flex flex-col gap-1 col-span-2">
+              <label class="font-medium">Dirección</label>
+              <UInput placeholder="Dirección particular" v-model="formData.address" />
+            </div>
+  
+            <!-- Sexo -->
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">Sexo</label>
+              <UInput v-model="formData.gender" />
+            </div>
+  
+            <!-- Correo -->
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">Correo *</label>
+              <UInput trailing-icon="i-lucide-at-sign" placeholder="Email" v-model="formData.email" />
+            </div>
+  
+            <!-- Madre -->
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">Madre</label>
+              <UInput placeholder="Nombre y apellido" v-model="formData.parent1_name" />
+            </div>
+  
+            <!-- Padre -->
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">Padre</label>
+              <UInput placeholder="Nombre y apellido" v-model="formData.parent2_name" />
+            </div>
+  
+            <!-- Teléfono -->
+            <div class="flex flex-col gap-1 col-span-2">
+              <label class="font-medium">Número de teléfono</label>
+              <UInput placeholder="tel:" v-model="formData.tel" />
+            </div>
+  
+            <!-- Cargo -->
+            <div class="flex flex-col gap-1 col-span-2">
+              <label class="font-medium">Cargo a ocupar *</label>
+              <select v-model="formData.position_code" class="border rounded-lg p-2 w-full">
+                <option v-for="position in workerStore.workers" :key="position.id" :value="position.position_code">
+                  {{ position.position_code }}
+                </option>
+              </select>
+            </div>
+  
+            <!-- Grupo de trabajo -->
+            <div class="flex flex-col gap-1 col-span-2">
+              <label class="font-medium">Grupo de Trabajo *</label>
+              <UInput placeholder="Grupo de trabajo" v-model="formData.group_id" />
+            </div>
+  
+            <!-- Organización de masas -->
+            <div class="flex flex-col gap-1 col-span-2">
+              <label class="font-medium">Organización de masas</label>
+              <select v-model="formData.organization_codes" class="border rounded-lg p-2 w-full">
+                <option v-for="masa in workerStore.workers" :key="masa.id" :value="masa.organization_codes">
+                  {{ masa.organization_codes }}
+                </option>
+              </select>
+            </div>
+          </form>
+  
+          <CardDescription class="mt-4">Los campos marcados con (*) son requeridos.</CardDescription>
+  
+          <div class="flex justify-end gap-3 mt-6">
+            <UButton color="gray">Cancelar</UButton>
+            <UButton @click="handleAddWorker" color="primary">Registrar Trabajador</UButton>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-
-</template>
-
+  </template>
+  

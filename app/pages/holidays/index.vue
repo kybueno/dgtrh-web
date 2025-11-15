@@ -66,10 +66,8 @@ const columns: TableColumn<WorkerInfo>[] = [
 	  <h2 class="text-center font-semibold">
 		REGISTRO DE Vacaciones
 	  </h2>
-    </div>
-  <UTable :data="workerStore.workers" class="flex-1" :columns="columns"/>
-  <div>
-  <UButton to="holidays/newholidays">Añadir</UButton>
+    <UButton to="holidays/newholidays">Añadir</UButton>
+    <UTable :data="workerStore.workers" class="flex-1" :columns="columns"/>
   </div>
 
 
