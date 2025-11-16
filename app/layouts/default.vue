@@ -77,6 +77,12 @@ const links = [[{
     onSelect: () => {
       open.value = false
     }
+  },{
+    label: 'Evaluación de anual',
+    to: '/evaluations',
+    onSelect: () => {
+      open.value = false
+    }
   }, {
     label: 'Hojas de Firma',
     to: '/signsheets',
