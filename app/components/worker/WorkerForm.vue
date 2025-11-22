@@ -44,7 +44,6 @@ async function handleAddWorker() {
     <div class="flex flex-col w-full max-w-2xl mx-auto">
       <Card class="shadow-xl rounded-2xl p-6">
         <CardHeader>
-          <CardTitle class="text-xl font-semibold">Nuevo Trabajador</CardTitle>
           <CardDescription>Complete el formulario para registrar un nuevo trabajador</CardDescription>
         </CardHeader>
   
@@ -152,7 +151,7 @@ async function handleAddWorker() {
           <CardDescription class="mt-4">Los campos marcados con (*) son requeridos.</CardDescription>
   
           <div class="flex justify-end gap-3 mt-6">
-            <UButton color="gray">Cancelar</UButton>
+            <UButton>Cancelar</UButton>
             <UButton @click="handleAddWorker" color="primary">Registrar Trabajador</UButton>
           </div>
         </CardContent>

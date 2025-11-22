@@ -2,6 +2,6 @@
     <IncidentTypeForm/>
     </template>
 
-    <script lang="ts">
+    <script setup lang="ts">
     import IncidentTypeForm from '~/components/incident/type/IncidentTypeForm.vue';
 </script>

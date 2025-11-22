@@ -16,16 +16,15 @@ export const useWorkerStore = defineStore("workerStore", {
     }, //F
     //función 2
     async createWorker(newWorkerData: WorkerInsert, supabase: SupabaseClient) {
-    
-
       const { data, error } = await supabase //van a devolver error y data, si la creo sin problema error va a ser nulo y el data va a ser algo, y viceversa
         .from("workers")
         .insert(newWorkerData);
 
       if (data) this.workers.push(data[0]);
-      if (error) console.error(error);
-      
+      if (error) console.error(error);   
     },
+    
+    
 
     //función 3
     getWorkerById(id: string) {

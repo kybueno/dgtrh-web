@@ -2,6 +2,8 @@
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
+
+
 const selectedRows = ref<WorkerInfo[]>([])
 const showConfirm = ref(false)
 const workerToDelete = ref<WorkerInfo | null>(null)
@@ -60,6 +62,7 @@ const columns: TableColumn<WorkerInfo>[] = [
 ]
 
 
+
 </script>
 <template>
     <UCard>
@@ -101,7 +104,7 @@ const columns: TableColumn<WorkerInfo>[] = [
 
         <template #footer>
           <div class="flex justify-center gap-4 mt-4">
-            <UButton  >Aceptar</UButton>
+            <UButton>Aceptar</UButton>
             <UButton  @click="showConfirm = false">Cancelar</UButton>
           </div>
         </template>

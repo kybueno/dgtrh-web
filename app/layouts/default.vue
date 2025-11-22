@@ -72,12 +72,6 @@ const links = [[{
       open.value = false
     }
   },{
-    label: 'Evaluación de desempeño',
-    to: '/evaluations/evaldesemp',
-    onSelect: () => {
-      open.value = false
-    }
-  },{
     label: 'Evaluación de anual',
     to: '/evaluations',
     onSelect: () => {
