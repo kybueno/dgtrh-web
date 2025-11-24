@@ -26,10 +26,14 @@
                     <p><strong>No. Expediente:</strong> #{{ worker.record_number }}</p>
                     <p><strong>Teléfono:</strong>{{ worker.tel }}</p>
                     <p><strong>Grupo de trabajo:</strong></p>
-                    <UButton to="neworker"> Añadir</UButton>
+                    <div class="flex gap-4 justify-end mt-4">
+                        <UButton to="neworker"> Añadir</UButton>
+                        <UButton @click="handleDelete()" variant="subtle" color="error" > Eliminar</UButton>
+                    </div>
     
                 </div>
             </div>
+            <UAlert v-if="errorMessage" variant="subtle" color="error" title="Error" :description="errorMessage">Error: {{ errorMessage }}</UAlert>
         </div>
 
         <div v-else class="text-center text-gray-500 mt-20">
@@ -47,6 +51,15 @@ const route = useRoute();
 const username = route.params.username as string;
 const workerStore = useWorkerStore();
 const worker = ref<WorkerInfo | null>(null);
+const errorMessage = ref<string>('')
+
+async function handleDelete(){
+    if(!worker.value?.id || !confirm("Seguro de que desea eliminar permanentemente a @"+ username )) return
+
+    const response = await workerStore.deleteWorker(worker.value.id)
+    errorMessage.value = response.error?.details || ''
+
+}
 
 onMounted(async () => {
     await workerStore.loadWorkers();
