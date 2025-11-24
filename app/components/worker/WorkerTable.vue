@@ -89,27 +89,8 @@ const columns: TableColumn<WorkerInfo>[] = [
         </div>
         <UTable :data="data" :columns="columns" sticky class="h-96" />
 
-        <UModal v-model="showConfirm">
-      <UCard>
-        <template #header>
-          <h3 class="text-center text-lg font-semibold text-red-600">
-            Confirmar eliminación
-          </h3>
-        </template>
-
-        <p class="text-center">
-          ¿Estás segura de eliminar al trabajador
-          <strong>{{ workerToDelete?.first_name }} {{ workerToDelete?.last_name }}</strong>?
-        </p>
-
-        <template #footer>
-          <div class="flex justify-center gap-4 mt-4">
-            <UButton>Aceptar</UButton>
-            <UButton  @click="showConfirm = false">Cancelar</UButton>
-          </div>
-        </template>
-      </UCard>
-    </UModal>
+        
+      
 
     </UCard>
     

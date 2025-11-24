@@ -198,7 +198,41 @@ onMounted(async () => {
     }]
   })
 })
+
 const loggedUser = useSupabaseUser()
+
+// === ROLES PERMITIDOS ===
+const roles = ['director', 'system_admin', 'hr_manager', 'worker'] as const
+
+// Acceso del rol actual
+const userRole = computed(() => loggedUser.value?.user_metadata?.role || 'worker')
+
+// === MENÚ FILTRADO POR ROL ===
+// Rutas visibles solo para workers
+const workerAllowedRoutes = ['/people', '/groups', '/signsheets']
+
+// Función general para filtrar items
+function filterMenu(items: NavigationMenuItem[]) {
+  // Si el usuario es admin total → ve todo
+  if (['director', 'system_admin', 'hr_manager'].includes(userRole.value)) {
+    return items
+  }
+
+  // Si es worker → filtrar
+  return items
+    .map(item => ({
+      ...item,
+      children: item.children?.filter(child =>
+        workerAllowedRoutes.includes(child.to)
+      )
+    }))
+    .filter(item =>
+    
+      (item.children && item.children.length > 0)
+    )
+}
+
+
 </script>
 
 <template>
