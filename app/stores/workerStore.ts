@@ -24,7 +24,15 @@ export const useWorkerStore = defineStore("workerStore", {
       if (error) console.error(error);   
     },
     
+    async deleteWorker(id: UUID) {
+      const supabase = useSupabaseClient()
     
+      const response = await supabase.from("workers").delete().eq('id', id)
+      const {error} = response
+      if (error) console.error(error)
+      
+      return response
+    },
 
     //función 3
     getWorkerById(id: string) {
