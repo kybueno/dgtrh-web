@@ -30,7 +30,7 @@ const handleCreateIncidentType = async (newIncidentTypeData: IncidentTypeInsert)
     </div>
 
     <IncidentTypeTable :data="incidentTypeStore.incidentTypes" />
-    <IncidentTypeForm @submit="handleCreateIncidentType" />
+    <!-- <IncidentTypeForm @submit="handleCreateIncidentType" /> -->
     <div @mouseenter="incidentTypeStore.loadIncidentTypes(supabase)">
       <Select>
         <SelectTrigger class="w-[180px]">

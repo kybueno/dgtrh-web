@@ -88,7 +88,7 @@ const links = [[{
       open.value = false
     }
   },{
-    label: 'Evaluación de anual',
+    label: 'Evaluación de desempeño',
     to: '/evaluations',
     role:"['director', 'system_admin', 'hr_manager']",
     onSelect: () => {
