@@ -5,6 +5,7 @@ const route = useRoute()
 const toast = useToast()
 
 const open = ref(false)
+const roles = ['director', 'system_admin', 'hr_manager', 'worker']
 
 const links = [[{
   label: 'Panel principal',
@@ -23,9 +24,18 @@ const links = [[{
   }
 },
 {
+  label: 'Perfiles',
+  icon: 'i-lucide',
+  to: '/profile',
+  onSelect: () => {
+    open.value = false
+  }
+},
+{
   label: 'Salario',
   icon: 'mdi:attach-money',
   to: '/payroll',
+  role:"['director', 'system_admin', 'hr_manager']",
   defaultOpen: true,
   type: 'trigger',
   children: [
@@ -33,6 +43,7 @@ const links = [[{
       label: 'Prenómina',
       icon: 'lucide:file-spreadsheet',
       to: '/payroll',
+      role:"['director', 'system_admin', 'hr_manager']",
       onSelect: () => {
         open.value = false
       }
@@ -40,6 +51,7 @@ const links = [[{
       label: 'Catálogo de claves',
       icon: 'lucide:file',
       to: '/incident-types',
+      role:"['hr_manager']",
       onSelect: () => {
         open.value = false
       }
@@ -47,6 +59,7 @@ const links = [[{
       label: 'Anexo 14-B',
       icon: 'lucide:file',
       to: '/people/14-B',
+      role:"['hr_manager']",
       onSelect: () => {
         open.value = false
       }
@@ -55,12 +68,14 @@ const links = [[{
 }, {
   label: 'Personal',
   to: '/people',
+  role:"['hr_manager', 'system_admin']",
   icon: 'lucide:users',
   defaultOpen: true,
   type: 'trigger',
   children: [{
     label: 'Trabajadores',
     to: '/people',
+    role:"['hr_manager', 'system_admin']",
     exact: true,
     onSelect: () => {
       open.value = false
@@ -68,18 +83,21 @@ const links = [[{
   },{
     label: 'Grupos de trabajo',
     to: '/groups',
+    role:"['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
   },{
     label: 'Evaluación de anual',
     to: '/evaluations',
+    role:"['director', 'system_admin', 'hr_manager']",
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Hojas de Firma',
     to: '/signsheets',
+    role:"['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
@@ -87,30 +105,35 @@ const links = [[{
 }, {
   label: 'Reportes',
   to: '/',
+  role:"['hr_manager', 'system_admin']",
   icon: 'lucide:users',
   defaultOpen: true,
   type: 'trigger',
   children: [{
     label: 'Vacaciones',
     to: '/holidays',
+    role:"['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
   },{
     label: 'Certificados Médicos',
     to: '/medical',
+    role:"['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Licencia sin sueldo',
     to: '/sin-sueldo',
+    role:"['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
   },{
     label: 'Licencia de maternidad',
     to: '/maternidad',
+    role:"['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
@@ -119,12 +142,14 @@ const links = [[{
 }, {
   label: 'Modelos',
   to: '/',
+  role:"['hr_manager', 'system_admin']",
   icon: 'lucide:users',
   defaultOpen: true,
   type: 'trigger',
   children: [{
     label: 'Modelo de Vacaciones',
     to: '/model',
+    role:"['hr_manager', 'system_admin']",
     exact: true,
     onSelect: () => {
       open.value = false
@@ -132,6 +157,7 @@ const links = [[{
   },{
     label: 'Modelo de certificado',
     to: '/model/certificado',
+    role:"['hr_manager', 'system_admin']",
     exact: true,
     onSelect: () => {
       open.value = false
@@ -201,36 +227,6 @@ onMounted(async () => {
 
 const loggedUser = useSupabaseUser()
 
-// === ROLES PERMITIDOS ===
-const roles = ['director', 'system_admin', 'hr_manager', 'worker'] as const
-
-// Acceso del rol actual
-const userRole = computed(() => loggedUser.value?.user_metadata?.role || 'worker')
-
-// === MENÚ FILTRADO POR ROL ===
-// Rutas visibles solo para workers
-const workerAllowedRoutes = ['/people', '/groups', '/signsheets']
-
-// Función general para filtrar items
-function filterMenu(items: NavigationMenuItem[]) {
-  // Si el usuario es admin total → ve todo
-  if (['director', 'system_admin', 'hr_manager'].includes(userRole.value)) {
-    return items
-  }
-
-  // Si es worker → filtrar
-  return items
-    .map(item => ({
-      ...item,
-      children: item.children?.filter(child =>
-        workerAllowedRoutes.includes(child.to)
-      )
-    }))
-    .filter(item =>
-    
-      (item.children && item.children.length > 0)
-    )
-}
 
 
 </script>

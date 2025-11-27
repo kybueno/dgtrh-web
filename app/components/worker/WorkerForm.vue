@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { id } from '@nuxt/ui/runtime/locale/index.js';
 import { useWorkerStore } from '~/stores/workerStore';
 const supabase = useSupabaseClient()
 const workerStore = useWorkerStore();
+
+
 const formData = ref<WorkerInsert>({
     email: 'jeduardo@uci.cu',
     first_name: 'Jose',
@@ -16,7 +19,8 @@ const formData = ref<WorkerInsert>({
     level:'Tecnico',
     address:'Calle 51/ 5ta y 7ma',
     gender:'Masculino',
-    tel:'55555555',   
+    tel:'55555555', 
+    position_code: 0,  
     
 })
 
@@ -38,10 +42,14 @@ async function handleAddWorker() {
 
     }
 }
+
+loadGroups()
+
+
 </script>
 
 <template>
-    <div class="flex flex-col w-full max-w-2xl mx-auto">
+    <div class="flex flex-col w-full max-w-2xl mx-auto justify-center">
       <Card class="shadow-xl rounded-2xl p-6">
         <CardHeader>
           <CardDescription>Complete el formulario para registrar un nuevo trabajador</CardDescription>
@@ -124,27 +132,20 @@ async function handleAddWorker() {
             <!-- Cargo -->
             <div class="flex flex-col gap-1 col-span-2">
               <label class="font-medium">Cargo a ocupar *</label>
-              <select v-model="formData.position_code" class="border rounded-lg p-2 w-full">
-                <option v-for="position in workerStore.workers" :key="position.id" :value="position.position_code">
-                  {{ position.position_code }}
-                </option>
-              </select>
+              <USelect v-model="formData.position_code" :items="positions" class="w-48" value-key="codigo" label-key="descripcion"/>
             </div>
   
             <!-- Grupo de trabajo -->
             <div class="flex flex-col gap-1 col-span-2">
-              <label class="font-medium">Grupo de Trabajo *</label>
-              <UInput placeholder="Grupo de trabajo" v-model="formData.group_id" />
-            </div>
+              <label class="font-medium">Grupo de Trabajo</label>
+              <USelect v-model="formData.group_id" :items="workGroups" class="w-48" value-key="id" label-key="name"/>
+              </div>
   
             <!-- Organización de masas -->
             <div class="flex flex-col gap-1 col-span-2">
-              <label class="font-medium">Organización de masas</label>
-              <select v-model="formData.organization_codes" class="border rounded-lg p-2 w-full">
-                <option v-for="masa in workerStore.workers" :key="masa.id" :value="masa.organization_codes">
-                  {{ masa.organization_codes }}
-                </option>
-              </select>
+              <label class="font-medium">Organizaciones de masas</label>
+              <USelect v-model="formData.organization_codes" :items="organizations" class="w-48" value-key="code" label-key="acronym"/>
+      
             </div>
           </form>
   

@@ -243,11 +243,43 @@ export type Database = {
         }
         Relationships: []
       }
+      payroll: {
+        Row: {
+          created_at: string
+          id: number
+          incident: number
+          observations: string
+          work_estra: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          incident: number
+          observations: string
+          work_estra: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          incident?: number
+          observations?: string
+          work_estra?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_incident_fkey"
+            columns: ["incident"]
+            isOneToOne: true
+            referencedRelation: "incident_types"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
       position: {
         Row: {
           cant: number
           category: string
-          code: number[]
+          code: number
           created_at: string
           description: string
           group_escale: string
@@ -257,7 +289,7 @@ export type Database = {
         Insert: {
           cant: number
           category: string
-          code: number[]
+          code: number
           created_at?: string
           description: string
           group_escale: string
@@ -267,7 +299,7 @@ export type Database = {
         Update: {
           cant?: number
           category?: string
-          code?: number[]
+          code?: number
           created_at?: string
           description?: string
           group_escale?: string
@@ -435,7 +467,7 @@ export type Database = {
           organization_codes: string[] | null
           parent1_name: string | null
           parent2_name: string | null
-          position_code: number[] | null
+          position_code: number | null
           record_number: string
           second_last_name: string
           status: Database["public"]["Enums"]["worker_status"]
@@ -457,7 +489,7 @@ export type Database = {
           organization_codes?: string[] | null
           parent1_name?: string | null
           parent2_name?: string | null
-          position_code?: number[] | null
+          position_code?: number | null
           record_number: string
           second_last_name: string
           status?: Database["public"]["Enums"]["worker_status"]
@@ -479,7 +511,7 @@ export type Database = {
           organization_codes?: string[] | null
           parent1_name?: string | null
           parent2_name?: string | null
-          position_code?: number[] | null
+          position_code?: number | null
           record_number?: string
           second_last_name?: string
           status?: Database["public"]["Enums"]["worker_status"]
@@ -493,6 +525,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "groups"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workers_position_code_fkey"
+            columns: ["position_code"]
+            isOneToOne: false
+            referencedRelation: "position"
+            referencedColumns: ["code"]
           },
         ]
       }

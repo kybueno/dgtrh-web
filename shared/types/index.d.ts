@@ -11,3 +11,5 @@ interface Incident extends Tables<"incidents"> {}
 interface IncidentTypeInsert extends TablesInsert<"incident_types"> {}
 interface GroupInsert extends TablesInsert<"groups">{}
 interface GroupInfo extends Tables<"groups">{}
+interface PayrollInsert extends TablesInsert<"payroll">{}
+interface PositionInsert extends TablesInsert <"positions">{}

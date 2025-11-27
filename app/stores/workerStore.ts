@@ -4,6 +4,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 export const useWorkerStore = defineStore("workerStore", {
   state: () => ({
     workers: [] as WorkerInfo[],//primero esta vacío y al cargar la pagina se llena de los trabajadores
+    
   }),
   actions: {
     //función 1 

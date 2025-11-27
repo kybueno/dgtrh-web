@@ -5,6 +5,8 @@ export interface WorkGroupInfo extends Tables<"groups"> {leader: WorkerInfo, wor
 export const workGroups = ref<WorkGroupInfo[]>([]);
 export const groupsPending = ref(false)
 
+
+
 export async function addGroup(group: TablesInsert<"groups">) {
   const supabase = useSupabaseClient()
 

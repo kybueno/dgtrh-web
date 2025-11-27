@@ -105,6 +105,8 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
     const dayLeft = i + 1;
     const dayRight = i + 17;
 
+    
+
     dayRows.push([
       { text: dayLeft.toString(), style: "dayCell" },
       { text: "", style: "timeCell" },
@@ -169,7 +171,7 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
             ],
             [
               {
-                text: `Área: `,
+                text: `Área:  `,
                 style: "orgInfo",
                 border: [true, false, true, true],
               },

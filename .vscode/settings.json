@@ -10,6 +10,9 @@
       ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
     ],
     "cSpell.words": [
+      "categoria",
+      "codigo",
+      "descripcion",
       "Desemp",
       "exportprenominate",
       "fkey",
@@ -28,7 +31,8 @@
       "prenominatedocument",
       "prenomine",
       "Prenomine",
-      "prenominedocument"
+      "prenominedocument",
+      "preparacion"
     ]
   }
   
