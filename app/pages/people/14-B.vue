@@ -94,7 +94,6 @@ const columns: TableColumn<WorkerInfo>[] = [
       </template>
       <strong class="flex justify-center">Anexo No.14-B</strong>
       <div class="flex justify-center">De la Plantilla de cargos y registro de trabajadores</div>
-      <div>Empresa: Universidad de Ciencias Informáticas</div>
       <UTable :data="workerStore.workers" :columns="columns" sticky class="h-96" />
       
 

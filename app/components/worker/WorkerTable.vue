@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { page } from '#build/ui';
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
@@ -7,6 +8,11 @@ import type { TableColumn } from '@nuxt/ui';
 const selectedRows = ref<WorkerInfo[]>([])
 const showConfirm = ref(false)
 const workerToDelete = ref<WorkerInfo | null>(null)
+
+
+
+
+
 
 interface Props {
     data: WorkerInfo[]
@@ -47,17 +53,20 @@ const columns: TableColumn<WorkerInfo>[] = [
         cell: ({ row }) => h('a', { href: 'mailto:' + row.original.email }, row.original.email ?? '')
 
     }, {
-        header: "Padre",
-        cell: ({ row }) => row.original.parent1_name
+        header: "Grupo de Trabajo",
+        cell: ({ row }) => row.original.group_id
     }, {
-        header: "Madre",
-        cell: ({ row }) => row.original.parent2_name
+        header: "Cargo",
+        cell: ({ row }) => row.original.position_code
     }, {
         header: "Dirección",
         cell: ({ row }) => row.original.address
     }, {
-        header: "Organizaciones de masa",
-        cell: ({ row }) => row.original.organization_codes
+        header: "Organizaciones",
+        cell: ({ row }) => row.original.organizations_codes.join(", ").toUpperCase()
+    },{
+        header: "Nivel de preparación",
+        cell: ({ row }) => row.original.level
     },
 ]
 
@@ -65,33 +74,23 @@ const columns: TableColumn<WorkerInfo>[] = [
 
 </script>
 <template>
-    <UCard>
-        <template #header>
-
-            <div class="flex justify-between">
-                <UInput placeholder="Busca.." />
+    
+            <div class="flex items-center justify-between p-2 overflow-y-auto">
+                <h3 class="font-semibold text-lg">Listado de Empleados</h3>
                 <div class="flex gap-2">
-                    <UButton icon="i-lucide-plus" to="people/neworker" >Añadir</UButton>
-                    <UButton variant="soft" color="neutral" icon="i-lucide-refresh-cw"/>
-
-
-
+                    <UButton icon="i-lucide-plus" to="people/neworker">Añadir</UButton>
+                    <UButton variant="soft" color="neutral" icon="i-lucide-refresh-cw" />
                 </div>
             </div>
-        </template>
-        <div class="p-6 space-y-6">
-	  <h1 class="text-center text-xl font-bold">
-		UNIVERSIDAD DE LAS CIENCIAS INFORMÁTICAS
-	  </h1>
-	  <h2 class="text-center font-semibold">
-		Listado de Trabajadores
-	  </h2>
-        </div>
-        <UTable :data="data" :columns="columns" sticky class="h-96" />
+   
 
+          <div class="px-4 pb-4 ">
+            <UInput  placeholder="Buscar trabajador..." class="mb-4" />
+          </div>
+       
+            <UTable :data="data" :columns="columns" class="w-full h-full" :paginate="true" :page-size="10" />
+            <div class="flex justify-center py-4">
+                <UPagination v-model="page" :total="data.length" :page-size="10" />
+            </div>
         
-      
-
-    </UCard>
-    
 </template>

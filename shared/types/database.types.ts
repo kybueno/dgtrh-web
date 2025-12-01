@@ -215,51 +215,45 @@ export type Database = {
       }
       organizations: {
         Row: {
-          acronym: string
-          code: number
-          created_at: string
-          description: string
+          acronym: string | null
+          code: string | null
+          description: string | null
           id: number
-          img: string
-          name: string
+          img: string | null
+          name: string | null
         }
         Insert: {
-          acronym: string
-          code: number
-          created_at?: string
-          description: string
+          acronym?: string | null
+          code?: string | null
+          description?: string | null
           id?: number
-          img: string
-          name: string
+          img?: string | null
+          name?: string | null
         }
         Update: {
-          acronym?: string
-          code?: number
-          created_at?: string
-          description?: string
+          acronym?: string | null
+          code?: string | null
+          description?: string | null
           id?: number
-          img?: string
-          name?: string
+          img?: string | null
+          name?: string | null
         }
         Relationships: []
       }
       payroll: {
         Row: {
-          created_at: string
           id: number
           incident: number
           observations: string
           work_estra: number
         }
         Insert: {
-          created_at?: string
           id?: number
           incident: number
           observations: string
           work_estra: number
         }
         Update: {
-          created_at?: string
           id?: number
           incident?: number
           observations?: string
@@ -275,7 +269,7 @@ export type Database = {
           },
         ]
       }
-      position: {
+      positions: {
         Row: {
           cant: number
           category: string
@@ -365,46 +359,6 @@ export type Database = {
         }
         Relationships: []
       }
-      worker_organizations: {
-        Row: {
-          created_at: string | null
-          organization_code: number
-          worker_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          organization_code: number
-          worker_id: string
-        }
-        Update: {
-          created_at?: string | null
-          organization_code?: number
-          worker_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_worker_org_organization"
-            columns: ["organization_code"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "fk_worker_org_worker"
-            columns: ["worker_id"]
-            isOneToOne: false
-            referencedRelation: "workers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_worker_org_worker"
-            columns: ["worker_id"]
-            isOneToOne: false
-            referencedRelation: "workers_with_roles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       worker_roles: {
         Row: {
           created_at: string | null
@@ -464,7 +418,7 @@ export type Database = {
           last_name: string
           level: string | null
           middle_name: string | null
-          organization_codes: string[] | null
+          organizations_codes: string[]
           parent1_name: string | null
           parent2_name: string | null
           position_code: number | null
@@ -486,7 +440,7 @@ export type Database = {
           last_name: string
           level?: string | null
           middle_name?: string | null
-          organization_codes?: string[] | null
+          organizations_codes?: string[]
           parent1_name?: string | null
           parent2_name?: string | null
           position_code?: number | null
@@ -508,7 +462,7 @@ export type Database = {
           last_name?: string
           level?: string | null
           middle_name?: string | null
-          organization_codes?: string[] | null
+          organizations_codes?: string[]
           parent1_name?: string | null
           parent2_name?: string | null
           position_code?: number | null
@@ -530,7 +484,7 @@ export type Database = {
             foreignKeyName: "workers_position_code_fkey"
             columns: ["position_code"]
             isOneToOne: false
-            referencedRelation: "position"
+            referencedRelation: "positions"
             referencedColumns: ["code"]
           },
         ]

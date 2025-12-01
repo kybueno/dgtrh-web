@@ -64,3 +64,5 @@ export const positions = [
         "categoria_ocupacional": "T"
       }
     ]
+   
+   

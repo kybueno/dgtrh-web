@@ -55,7 +55,15 @@ const links = [[{
       onSelect: () => {
         open.value = false
       }
-    }, {
+    },{
+    label: 'Anexo 14',
+    icon: 'lucide:file',
+    to: '/positions',
+    role:"['hr_manager', 'system_admin']",
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
       label: 'Anexo 14-B',
       icon: 'lucide:file',
       to: '/people/14-B',
@@ -95,8 +103,8 @@ const links = [[{
       open.value = false
     }
   }, {
-    label: 'Hojas de Firma',
-    to: '/signsheets',
+    label: 'Organizaciones',
+    to: '/organizations',
     role:"['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
@@ -106,10 +114,17 @@ const links = [[{
   label: 'Reportes',
   to: '/',
   role:"['hr_manager', 'system_admin']",
-  icon: 'lucide:users',
+  icon: 'lucide:file',
   defaultOpen: true,
   type: 'trigger',
   children: [{
+    label: 'Hojas de Firma',
+    to: '/signsheets',
+    role:"['hr_manager', 'system_admin']",
+    onSelect: () => {
+      open.value = false
+    }
+  },{
     label: 'Vacaciones',
     to: '/holidays',
     role:"['hr_manager', 'system_admin']",

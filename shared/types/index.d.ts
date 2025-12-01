@@ -9,7 +9,10 @@ interface ProfileInsert extends TablesInsert<"profiles"> {}
 interface IncidentType extends Tables<"incident_types"> {}
 interface Incident extends Tables<"incidents"> {}
 interface IncidentTypeInsert extends TablesInsert<"incident_types"> {}
-interface GroupInsert extends TablesInsert<"groups">{}
-interface GroupInfo extends Tables<"groups">{}
-interface PayrollInsert extends TablesInsert<"payroll">{}
-interface PositionInsert extends TablesInsert <"positions">{}
+interface GroupInsert extends TablesInsert<"groups"> {}
+interface GroupInfo extends Tables<"groups"> {}
+interface PayrollInsert extends TablesInsert<"payroll"> {}
+interface PositionInsert extends TablesInsert <"positions"> {}
+interface PositionInfo extends Tables <"positions"> {}
+interface OrganizationInsert extends TablesInsert<"organizations"> {}
+interface OrganizationInfo extends Tables<"organizations"> {}
