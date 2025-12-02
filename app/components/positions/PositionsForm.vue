@@ -41,7 +41,7 @@
           </form>
         </CardContent>
 
-        <UButton  color="primary">Guardar posición</UButton>
+        <UButton @click="addPositions()" color="primary">Guardar posición</UButton>
 
       </Card>
     
@@ -59,7 +59,8 @@ const formData = ref<PositionInsert>({
   category: '',
   cant: 0,
   group_escale: '',
-  level: ''
+  level: '',
+  value: []
 })
 
 </script>

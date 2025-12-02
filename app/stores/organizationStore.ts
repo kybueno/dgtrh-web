@@ -25,4 +25,47 @@ export const organizations = [
   }
 ]
 
+ export const organizationsPending = ref(false)
+    export interface OrganizationInfo extends Tables<"organizations"> {}
 
+    export async function loadOrganizations() {
+      const supabase = useSupabaseClient() // funcion que devuelve el cliente de supabase
+      
+       organizationsPending.value = true
+        const response = await supabase.from("organizations").select("*");
+        const {data,error} = response
+        organizationsPending.value = false //antes de buscar en la base de datos lo pone en true y después lo busca
+        if (data) organizations.value = data;
+        if (error) console.error(error);
+      
+        return response
+    }
+
+      export async function addOrganizations(organization: TablesInsert<"organizations">) {
+          const supabase = useSupabaseClient()
+        
+          const response = await supabase
+            .from("organizations")
+            .insert([organization])
+            .select();
+        
+          const { data, error } = response;
+        
+          if (data) console.log(data);
+          if (error) console.error(error);
+        
+          return response
+        }
+    
+        export async function deleteOrganization(id: number) {
+          const supabase = useSupabaseClient()
+        
+          const { error } = await supabase.from("organizations").delete().eq('id', id)
+          if (error) console.error(error)
+          
+          return error
+        }
+    
+        export function getOrganizationById(code:number){
+        return positions.value.find(position => position.code===code)
+        }

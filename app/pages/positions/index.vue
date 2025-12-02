@@ -3,7 +3,11 @@ import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
 
+onMounted(loadPositions);
 
+function handleDeletePosition(position:PositionInfo){
+    if(confirm(`¿Está seguro de que desea eliminar el cargo ${position.description}?`)) deleteGroup(position.code)
+}
 
 
 interface Props {
@@ -50,6 +54,14 @@ const columns: TableColumn<PositionInfo>[] = [
 </script>
 
 <template>
+    <UButton
+                        icon="mdi:refresh"
+                        variant="ghost"
+                        @click="loadPositions()"
+                        :disabled="positionsPending"
+                    ></UButton>
+    <p v-if="positionsPending">Cargando cargos</p>
+   
   <div class="flex items-center justify-between p-2">
                 <h3 class="font-semibold text-lg">Anexo 14</h3>
             </div>

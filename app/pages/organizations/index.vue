@@ -5,15 +5,24 @@
                     <UButton icon="i-lucide-plus" to="/organizations/new">Añadir</UButton>
                 </div>
             </div>
-
-    <UTable :data="data" :columns="columns" class="w-full h-full" />
+            <UButton
+                        icon="mdi:refresh"
+                        variant="ghost"
+                        @click="loadOrganizations()"
+                        :disabled="organizationsPending"
+                    ></UButton>
+    <UTable :data="organizations" :columns="columns" class="w-full h-full" />
 </template>
 
 <script lang="ts" setup>
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
+onMounted(loadOrganizations);
 
+function handleDeleteOrganization(organization:OrganizationInfo){
+    if(confirm(`¿Está seguro de que desea eliminar el cargo ${organization.name}?`)) deleteGroup(organization.id)
+}
 
 interface Props {
     data: OrganizationInfo[]
