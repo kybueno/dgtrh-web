@@ -1,4 +1,4 @@
-export const organizations = [
+export const organizations = ref( [
   {
     "code": "CTC",
     "name": "CTC",
@@ -23,7 +23,7 @@ export const organizations = [
     "acronym": "PCC",
     "description": "Partido Comunista de Cuba"
   }
-]
+])
 
  export const organizationsPending = ref(false)
     export interface OrganizationInfo extends Tables<"organizations"> {}
@@ -41,7 +41,7 @@ export const organizations = [
         return response
     }
 
-      export async function addOrganizations(organization: TablesInsert<"organizations">) {
+      export async function addOrganization(organization: TablesInsert<"organizations">) {
           const supabase = useSupabaseClient()
         
           const response = await supabase

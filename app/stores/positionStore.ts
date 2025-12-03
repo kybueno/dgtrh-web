@@ -81,7 +81,7 @@ export const positions = ref([
         return response
     }
 
-    export async function addPositions(position: TablesInsert<"positions">) {
+    export async function addPosition(position: TablesInsert<"positions">) {
       const supabase = useSupabaseClient()
     
       const response = await supabase

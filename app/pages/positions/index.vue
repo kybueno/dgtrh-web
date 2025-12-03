@@ -51,6 +51,9 @@ const columns: TableColumn<PositionInfo>[] = [
         cell: ({ row }) => row.original.group_escale
     },
 ]
+
+
+
 </script>
 
 <template>
