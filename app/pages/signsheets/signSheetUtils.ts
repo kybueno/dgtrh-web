@@ -97,6 +97,31 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
     77.25, // Overtime End
     62.8, // Signature
   ];
+ 
+  const HOLIDAYS = [
+    // Formato: MM-DD
+    "01-01", // Año Nuevo
+    "05-01", // Día del Trabajador
+    "07-26", // Día de la Rebeldía Nacional
+    "10-10", // Inicio de las guerras de independencia
+    "12-25", // Navidad
+  ];
+  
+  function isHoliday(date: Date) {
+    const mmdd = date.toISOString().slice(5, 10);
+    return HOLIDAYS.includes(mmdd);
+  }
+  
+  function isWeekend(date: Date) {
+    const d = date.getDay(); // 0 domingo, 6 sábado
+    return d === 0 || d === 6;
+  }
+
+  function getBackgroundForDay(date: Date) {
+    if (isHoliday(date)) return "#FFD7D7"; // rojo claro para feriados
+    if (isWeekend(date)) return "#E0E0E0"; // gris para fin de semana
+    return null;
+  }
   
 
   // Create day rows (1-16 on left, 17-31 on right)
@@ -105,25 +130,30 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
     const dayLeft = i + 1;
     const dayRight = i + 17;
 
-    
+    const leftDate = new Date(date.getFullYear(), date.getMonth(), dayLeft);
+    const rightDate =
+      dayRight <= 31 ? new Date(date.getFullYear(), date.getMonth(), dayRight) : null;
+  
+    const bgLeft = getBackgroundForDay(leftDate);
+    const bgRight = rightDate ? getBackgroundForDay(rightDate) : null;   
 
     dayRows.push([
-      { text: dayLeft.toString(), style: "dayCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "timeCell" },
+      { text: dayLeft.toString(), style: "dayCell", fillColor: bgLeft },
+      { text: "", style: "timeCell", fillColor: bgLeft },
+      { text: "", style: "timeCell", fillColor: bgLeft },
+      { text: "", style: "timeCell", fillColor: bgLeft },
+      { text: "", style: "timeCell", fillColor: bgLeft },
+      { text: "", style: "timeCell", fillColor: bgLeft },
+      { text: "", style: "timeCell", fillColor: bgLeft },
       { text: "", style: "signatureCell" },
-      { text: dayRight <= 31 ? dayRight.toString() : "", style: "dayCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "timeCell" },
-      { text: "", style: "signatureCell" },
+      { text: dayRight <= 31 ? dayRight.toString() : "", style: "dayCell",  fillColor: bgRight },
+      { text: "", style: "timeCell", fillColor: bgRight },
+      { text: "", style: "timeCell",  fillColor: bgRight },
+      { text: "", style: "timeCell",  fillColor: bgRight },
+      { text: "", style: "timeCell",  fillColor: bgRight },
+      { text: "", style: "timeCell",  fillColor: bgRight },
+      { text: "", style: "timeCell",  fillColor: bgRight },
+      { text: "", style: "signatureCell",  fillColor: bgRight },
     ]);
   }
 
