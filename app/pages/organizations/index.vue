@@ -1,7 +1,7 @@
 <template>
-  <div class="flex items-center justify-between p-2 overflow-y-auto">
+  <div class="flex items-center justify-between mb-6">
                 <h3 class="font-semibold text-lg">Lista de organizaciones</h3>
-                <div class="flex gap-2">
+                <div class="flex items-center gap-2">
                     <UButton icon="i-lucide-plus" to="/organizations/new">Añadir</UButton>
                 </div>
             </div>

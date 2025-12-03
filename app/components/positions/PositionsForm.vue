@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col w-full max-w-2xl mx-auto justify-center">
-    <Card class="shadow-xl rounded-2xl p-6">
+  <div class="fw-full h-screen flex justify-center items-center">
+    <Card class="shadow-xl rounded-2xl p-6 w-[600px]">
       <CardHeader>
         <CardDescription>Nuevo Cargo</CardDescription>
       </CardHeader>

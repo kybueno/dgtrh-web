@@ -29,17 +29,46 @@
             </div>
           </form>
         </CardContent>
-        <UButton @click="addOrganizations" color="primary">Guardar organización</UButton>
+        <UButton @click="handleAddOrganization" color="primary">Guardar organización</UButton>
     </Card>
   </div>
 </template>
 
 <script lang="ts" setup>
-const formData = ref<OrganizationInsert>({
+const formData = ref<TablesInsert<"organizations">>({
   name:"",
   code:"",
   description:"",
   acronym:"",
 })
+
+const pending = ref(false)
+const errorMessage = ref<string | null>(null)
+const description = ref('')
+const code = ref('')
+
+const toast = useToast()
+
+async function handleAddOrganization() {
+  const response = await addOrganization(formData.value)
+  pending.value = false
+
+  if (response.data) {
+    toast.add({
+      title: 'Guardado con éxito',
+      icon: 'mdi:check'
+    })
+    navigateTo('/organizations')
+  }
+  if (response.error) {
+    toast.add({
+      title: 'Hubo un error al guardar',
+      description: response.error.message,
+      color: 'error',
+      icon: 'mdi:error'
+    })
+    errorMessage.value = response.error.message
+  }
+}
 </script>
 
