@@ -1,36 +1,28 @@
 <template>
   <div>
-    <Card class="shadow-xl rounded-2xl p-6">
-        <CardHeader>
-          <CardDescription>Nueva Organización</CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <form class="grid grid-cols-2 gap-4">
-            
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Nombre:</label>
+    
+          <h2 class="font-bold flex items-center">Nueva Organización</h2>
+      
+         
+          <UForm  class="grid grid-cols-2 gap-4">
+            <UFormField label="Nombre:" >
               <UInput placeholder="Introduzca el nombre de la nueva organización" v-model="formData.name" error="Please enter a valid name." />
-            </div>
+            </UFormField>
 
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Descripción:</label>
-              <UInput placeholder="Introduzca la descripción del cargo" v-model="formData.description" error="Please enter a valid description." />
-            </div>
+            <UFormField label="Descripción:" >
+             <UInput placeholder="Introduzca la descripción del cargo" v-model="formData.description" error="Please enter a valid description."/>
+            </UFormField>
 
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Código:</label>
+            <UFormField label="Código:" >
               <UInput placeholder="Ejemplo de código: ctc" v-model="formData.code" error="Please enter a valid code." />
-            </div>
+            </UFormField>
 
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Acronym:</label>
+            <UFormField label="Abreviatura:" >
               <UInput placeholder="Introduzca el acrónimo de la organización" v-model="formData.acronym" error="Please enter a valid acronym." />
-            </div>
-          </form>
-        </CardContent>
+            </UFormField>
+        
         <UButton @click="handleAddOrganization" color="primary">Guardar organización</UButton>
-    </Card>
+      </UForm>
   </div>
 </template>
 

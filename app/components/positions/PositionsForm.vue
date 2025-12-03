@@ -1,54 +1,38 @@
 <template>
   <div class="fw-full h-screen flex justify-center items-center">
-    <Card class="shadow-xl rounded-2xl p-6 w-[600px]">
-      <CardHeader>
-        <CardDescription>Nuevo Cargo</CardDescription>
-      </CardHeader>
+        <h2 class="font-bold flex items-center">Nuevo Cargo</h2>
+    
+        <UForm class="grid grid-cols-2 gap-4">
+         
+          <UFormField label="Código:" name="code" >
+            <UInput placeholder="Introduzca el código del nuevo cargo" v-model="formData.code" error="Please enter a valid code."/>
+          </UFormField>
 
-      <CardContent>
-        <form class="grid grid-cols-2 gap-4">
+          <UFormField label="Descripción:" name="description" >
+            <UInput placeholder="Introduzca la descripción del cargo" v-model="formData.description" error="Please enter a valid description."/>
+           </UFormField>
 
-          <div class="flex flex-col gap-1">
-            <label class="font-medium">Código:</label>
-            <UInput placeholder="Introduzca el código del nuevo cargo" v-model="formData.code"
-              error="Please enter a valid code." />
-          </div>
+          <UFormField label="Categoría:" name="category" >
+            <UInput placeholder="Introduzca la categoría" v-model="formData.category" error="Please enter a valid category." />
+           </UFormField>
 
-          <div class="flex flex-col gap-1">
-            <label class="font-medium">Descripción:</label>
-            <UInput placeholder="Introduzca la descripción del cargo" v-model="formData.description"
-              error="Please enter a valid description." />
-          </div>
+        <UFormField label="Cantidad :" name="cant" >
+           <UInput placeholder="Introduzca la cantidad de personas con ese cargo" v-model="formData.cant" error="Please enter a valid cant."/>
+          </UFormField>
 
-          <div class="flex flex-col gap-1">
-            <label class="font-medium">Categoría:</label>
-            <UInput placeholder="Introduzca la categoría" v-model="formData.category"
-              error="Please enter a valid category." />
-          </div>
+         <UFormField label="Nivel de estudio:" name="level" >
+          <UInput placeholder="Introduzca el nivel" v-model="formData.level" error="Please enter a valid level." />
+         </UFormField>
 
-          <div class="flex flex-col gap-1">
-            <label class="font-medium">Cantidad :</label>
-            <UInput placeholder="Introduzca la cantidad de personas con ese cargo" v-model="formData.cant"
-              error="Please enter a valid cant." />
-          </div>
+         <UFormField label="Grupo/Escala:" name="group_escale" >
+          <UInput placeholder="Introduzca la escala a la que pertenece" v-model="formData.group_escale" error="Please enter a valid escale."/>
+        </UFormField>
+            <UButton @click="handleAddPosition" color="primary">Guardar posición</UButton>
+        </UForm>
+   
 
-          <div class="flex flex-col gap-1">
-            <label class="font-medium">Nivel de estudio:</label>
-            <UInput placeholder="Introduzca el nivel" v-model="formData.level" error="Please enter a valid level." />
-          </div>
+    
 
-          <div class="flex flex-col gap-1">
-            <label class="font-medium">Grupo/Escala:</label>
-            <UInput placeholder="Introduzca la escala a la que pertenece" v-model="formData.group_escale"
-              error="Please enter a valid escale." />
-          </div>
-
-        </form>
-      </CardContent>
-
-      <UButton @click="handleAddPosition" color="primary">Guardar posición</UButton>
-
-    </Card>
 
   </div>
 </template>
