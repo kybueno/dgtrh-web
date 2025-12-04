@@ -7,12 +7,12 @@ export const groupsPending = ref(false)
 
 
 
-export async function addGroup(group: TablesInsert<"groups">) {
+export async function addGroup(newWorkGroupData: TablesInsert<"groups">) {
   const supabase = useSupabaseClient()
 
   const response = await supabase
     .from("groups")
-    .insert([group])
+    .insert([newWorkGroupData])
     .select();
 
   const { data, error } = response;

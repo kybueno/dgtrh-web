@@ -9,7 +9,6 @@ const UCheckbox = resolveComponent('UCheckbox')
 const UBadge = resolveComponent('UBadge')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
-const toast = useToast()
 const { copy } = useClipboard()
 
 type Payment = {
@@ -224,11 +223,7 @@ const columns: TableColumn<Payment>[] = [{
       onSelect() {
         copy(row.original.id)
 
-        toast.add({
-          title: 'Payment ID copied to clipboard!',
-          color: 'success',
-          icon: 'i-lucide-circle-check'
-        })
+        notifySuccess({title: 'Payment ID copied to clipboard!'})
       }
     }, {
       label: row.getIsExpanded() ? 'Collapse' : 'Expand',

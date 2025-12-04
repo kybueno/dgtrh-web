@@ -46,11 +46,8 @@ async function handleAddOrganization() {
   pending.value = false
 
   if (response.data) {
-    toast.add({
-      title: 'Guardado con éxito',
-      icon: 'mdi:check'
-    })
-    navigateTo('/organizations')
+    notifySuccess({title: 'Guardado con éxito' })
+    useRouter().back()
   }
   if (response.error) {
     toast.add({

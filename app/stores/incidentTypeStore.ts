@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
-import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const useIncidentTypeStore = defineStore("incidentTypeStore", {
   state: () => ({
     incidentTypes: [] as IncidentType[],
   }),
   actions: {
-    async loadIncidentTypes(supabase: SupabaseClient) {
+    async loadIncidentTypes() {
+      const supabase = useSupabaseClient()
       if (this.incidentTypes.length > 0) return;
       const { data, error } = await supabase.from("incident_types").select("*");
       if (data) this.incidentTypes = data;
