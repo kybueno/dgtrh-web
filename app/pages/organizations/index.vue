@@ -1,17 +1,15 @@
 <template>
-  <div class="flex items-center justify-between mb-6">
-                <h3 class="font-semibold text-lg">Lista de organizaciones</h3>
-                <div class="flex items-center gap-2">
-                    <UButton icon="i-lucide-plus" to="/organizations/new">Añadir</UButton>
-                </div>
+    <div class="flex flex-col w-full p-4">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-semibold text-lg">Lista de organizaciones</h3>
+            <div class="flex items-center gap-2">
+        <UButton icon="mdi:refresh" variant="ghost" @click="loadOrganizations()" :disabled="organizationsPending">
+        </UButton>
+                <UButton icon="i-lucide-plus" to="/organizations/new">Añadir</UButton>
             </div>
-            <UButton
-                        icon="mdi:refresh"
-                        variant="ghost"
-                        @click="loadOrganizations()"
-                        :disabled="organizationsPending"
-                    ></UButton>
-    <UTable :data="organizations" :columns="columns" class="w-full h-full" />
+        </div>
+        <UTable :data="organizations" :columns="columns" class="w-full h-full" />
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -20,8 +18,8 @@ import type { TableColumn } from '@nuxt/ui';
 
 onMounted(loadOrganizations);
 
-function handleDeleteOrganization(organization:OrganizationInfo){
-    if(confirm(`¿Está seguro de que desea eliminar el cargo ${organization.name}?`)) deleteGroup(organization.id)
+function handleDeleteOrganization(organization: OrganizationInfo) {
+    if (confirm(`¿Está seguro de que desea eliminar el cargo ${organization.name}?`)) deleteGroup(organization.id)
 }
 
 interface Props {
@@ -57,6 +55,6 @@ const columns: TableColumn<OrganizationInfo>[] = [
     }, {
         header: "Siglas",
         cell: ({ row }) => row.original.acronym
-    }, 
+    },
 ]
 </script>
