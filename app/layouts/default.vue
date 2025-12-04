@@ -23,14 +23,14 @@ const links = [[{
     open.value = false
   }
 },
-{
-  label: 'Perfiles',
-  icon: 'i-lucide',
-  to: '/profile',
-  onSelect: () => {
-    open.value = false
-  }
-},
+// { 
+//   label: 'Perfiles',
+//   icon: 'i-lucide',
+//   to: '/profile',
+//   onSelect: () => {
+//     open.value = false
+//   }
+// },
 {
   label: 'Salario',
   icon: 'mdi:attach-money',

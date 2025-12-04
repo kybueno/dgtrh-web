@@ -5,8 +5,8 @@ import type { TableColumn } from '@nuxt/ui';
 
 onMounted(loadPositions);
 
-function handleDeletePosition(position:PositionInfo){
-    if(confirm(`¿Está seguro de que desea eliminar el cargo ${position.description}?`)) deleteGroup(position.code)
+function handleDeletePosition(position: PositionInfo) {
+    if (confirm(`¿Está seguro de que desea eliminar el cargo ${position.description}?`)) deleteGroup(position.code)
 }
 
 
@@ -57,26 +57,18 @@ const columns: TableColumn<PositionInfo>[] = [
 </script>
 
 <template>
-    <UButton
-                        icon="mdi:refresh"
-                        variant="ghost"
-                        @click="loadPositions()"
-                        :disabled="positionsPending"
-                    ></UButton>
-    <p v-if="positionsPending">Cargando cargos</p>
-   
-  <div class="flex items-center justify-between p-2">
-                <h3 class="font-semibold text-lg">Anexo 14</h3>
-            </div>
-                <div class="flex gap-2">
-                    <UButton icon="i-lucide-plus" to="/positions/new">Añadir</UButton>             
-            </div>
- <UTable :data="positions" :columns="columns" class="w-full h-full" /> 
+    <div class="flex flex-col p-8 w-full">
+        <div class="flex items-center justify-between p-2 ">
+            <h3 class="font-semibold text-lg">Anexo 14</h3>
 
-    
-  
-  
+            <div class="flex gap-2">
+                <UButton icon="mdi:refresh" variant="ghost" @click="loadPositions()" :disabled="positionsPending">
+                </UButton>
+
+                <UButton icon="i-lucide-plus" to="/positions/new">Añadir</UButton>
+            </div>
+        </div>
+        <UTable :data="positions" :columns="columns" class="w-full h-full" />
+
+    </div>
 </template>
-
-
-

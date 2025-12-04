@@ -46,6 +46,11 @@ const navData = reactive({
                     url: '/groups',
                     icon: 'mdi:user-supervisor'
                 },
+                // {
+                //     title: 'Cargos',
+                //     url: '/positions',
+                //     icon: 'mdi:user-supervisor'
+                // },
             ],
         },
         {
