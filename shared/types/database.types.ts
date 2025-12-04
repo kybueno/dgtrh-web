@@ -281,7 +281,6 @@ export type Database = {
           level: string
         }
         Insert: {
-          value: globalThis.PositionInfo[]
           cant: number
           category: string
           code: number
