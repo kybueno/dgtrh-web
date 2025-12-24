@@ -86,8 +86,7 @@ const columns: TableColumn<WorkerInfo>[] = [
           <UButton icon="mdi:print">Imprimir</UButton>
         </div>
       </template>
-      <strong class="flex justify-center">Prenómina de mes</strong>
-      <div>Empresa: Universidad de Ciencias Informáticas</div>
+      <strong class="flex justify-center font-bold">Prenómina</strong>
       <UTable :data="workerStore.workers" :columns="columns" sticky class="h-96" />
 
     </UCard>

@@ -3,7 +3,18 @@
 import type { TDocumentDefinitions, TableCell } from 'pdfmake/interfaces';
 //import { PrenominaData } from '~/types/prenomina';
 
+const workerStore = useWorkerStore();
+const supabase = useSupabaseClient()
+const incidentStore = useIncidentStore()
 
+onMounted(() => {
+  incidentStore.loadIncidents(supabase)
+})
+
+
+onMounted(async () => {
+  await workerStore.loadWorkers();
+});
 
 export interface PrenominaEmpleado {
   noEx: string;

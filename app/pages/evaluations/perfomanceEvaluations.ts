@@ -1,3 +1,5 @@
+import { defaultRhTableStyles } from "~/lib/documents-generation/styles";
+
 export const getEvaluationReportDefinition = () => {
   return {
     pageSize: "A4",

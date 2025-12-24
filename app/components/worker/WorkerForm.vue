@@ -165,7 +165,7 @@ loadGroups()
 
   
           <div class="flex justify-end gap-3 mt-6">
-            <UButton>Cancelar</UButton>
+            <UButton to="/people">Cancelar</UButton>
             <UButton @click="handleAddWorker" color="primary">Registrar Trabajador</UButton>
           </div>
         </CardContent>
