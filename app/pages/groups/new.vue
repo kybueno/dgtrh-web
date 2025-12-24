@@ -26,7 +26,7 @@
 
             <template #footer>
                 <div class="flex gap-3 justify-between">
-                    <UButton variant="subtle" color="neutral">
+                    <UButton to="/groups" variant="subtle" color="neutral">
                         Cancelar
                     </UButton>
                     <UButton @click="handleAddGroup">

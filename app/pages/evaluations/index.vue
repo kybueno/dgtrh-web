@@ -16,16 +16,20 @@
             </label>
 
             <label>2.2- Total que debían ser evaluados
-              <UInput v-model="form.totalDebianEvaluarse"/>
+              <UInput v-model="form.totalDebianEvaluarse" type="number" min="0" :max="form.totalTrabajadores"/>
+              <span>{{percentShouldEvaluate}}</span>
             </label>
            
             <label>2.3- Total evaluados
-              <UInput v-model="form.totalEvaluados"/>
+              <UInput v-model="form.totalEvaluados" type="number" min="0" :max="form.totalDebianEvaluarse" />
+              <span>{{percentEvaluated }}</span>
               <p>(Reflejar cifra y % que representan del total que debió ser evaluado).</p>
             </label>
 
             <label>2.4- Total no evaluados
-              <UInput v-model="form.totalNoEvaluados"/>
+              <span>{{ form.totalDebianEvaluarse - form.totalEvaluados }}</span>
+              <span>{{percentNoEvaluated}}</span>
+
               <p>(Reflejar cifra y % que representan del total que debió ser evaluado)</p>
             </label>
             <p>(NOTA: LA CIFRA DEL TOTAL DE TRABAJADORES QUE DEBIAN SER EVALUADOS DEBE SER ES IGUAL A LA SUMA DE LOS EVALUADOS Y LOS NO EVALUADOS).</p>
@@ -70,7 +74,7 @@
             <span>(Reflejar cifra y % que representan del total que debió ser evaluado)</span>
             <label>3.2.1- Administrativos:<UInput v-model="form.catEval.admin" /></label>
             <label>3.2.2- Servicios:<UInput v-model="form.catEval.serv" /></label>
-            <label>3.2.3- Operarios:><UInput v-model="form.catEval.oper" /></label>
+            <label>3.2.3- Operarios:<UInput v-model="form.catEval.oper" /></label>
             <label>3.2.4- Técnicos:<UInput v-model="form.catEval.tec" /></label>
             <p>NOTA: LA SUMA DE ESTAS CATEGORIAS DE NO EVALUADOS DEBE SER IGUAL AL TOTAL DE TRABAJADORES NO EVALUADOS. 
             </p>
@@ -124,22 +128,23 @@
         
         <!-- Generar PDF -->
         <div class="mt-8 flex justify-end">
-          <UButton color="primary" @click="getEvaluationReportDefinition">Imprimir</UButton>
+          <UButton color="primary" @click="handlePrint">Imprimir</UButton>
         </div>
     </div>
   </template>
 
-<script setup>
+<script setup lang="ts">
+import { ref } from 'vue';
 import { getEvaluationReportDefinition } from "./perfomanceEvaluations";
+import type { Style } from '#components';
 
 
  
- const form = reactive({
+ const form = ref({
    acciones: "",
    totalTrabajadores: 0,
    totalDebianEvaluarse: 0,
    totalEvaluados: 0,
-   totalNoEvaluados: 0,
    causas: {
      no70: 0,
      medico: 0,
@@ -157,6 +162,14 @@ import { getEvaluationReportDefinition } from "./perfomanceEvaluations";
    accionesDeficiente: "",
    valoracion: ""
  });
+
+const percentShouldEvaluate = computed(()=>Intl.NumberFormat(undefined, {style:"percent"}).format(form.value.totalDebianEvaluarse/ form.value.totalTrabajadores))
+const percentEvaluated = computed(()=>Intl.NumberFormat(undefined, {style:"percent"}).format(form.value.totalEvaluados/ form.value.totalDebianEvaluarse))
+const percentNoEvaluated = computed(()=>Intl.NumberFormat(undefined, {style:"percent"}).format((form.value.totalDebianEvaluarse - form.value.totalEvaluados) / form.value.totalDebianEvaluarse))
+
+ const handlePrint = () => {
+  generateEvaluationReport(form.value);
+};
  
 
  </script>
