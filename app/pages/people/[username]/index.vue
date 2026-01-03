@@ -35,7 +35,7 @@
                     <p><strong>Cargo que ocupa:</strong>{{ worker.position_code }}</p>
                     <p><strong>Organizaciones a las que pertenece:</strong>{{ worker.organizations_codes }}</p>
                     <div class="flex gap-4 justify-end mt-4">
-                        <UButton to="neworker"> Editar</UButton>
+                        <UButton to="/people/new"> Editar</UButton>
                         <UButton @click="handleDelete()" variant="subtle" color="error" > Eliminar</UButton>
                     </div>
     

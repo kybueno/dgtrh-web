@@ -7,11 +7,10 @@
         <UCard v-if="group" @click="navigateTo('/groups/' + group.id)" class="cursor-pointer">
             <template #header>
                 <strong>{{ group.name }}</strong>
-
-                <p class="text-muted text-sm">
-                <div>Jefe: {{ getProfileDisplayName(group.leader) }}</div>
-                <div>{{ group.leader.email }}</div>
-                </p>
+                <div class="text-muted text-sm">
+                    <p>Jefe: {{ getProfileDisplayName(group.leader) }}</p>
+                    <p>{{ group.leader.email }}</p>
+                </div>
             </template>
             <div class="flex justify-between items-center mb-1">
                 <p class="text-sm font-semibold">Miembros</p>
@@ -19,8 +18,10 @@
             </div>
             <UFormField class="mb-2" label="Añadir nuevo miembro">
                 <div class="flex gap-1">
-                    <USelect class="w-full" label-key="first_name" value-key="id" v-model="newMemberId" :items="workersNotMembers" />
-                    <UButton v-if="newMemberId" variant="subtle" color="neutral" @click="handleAddNewMember()">Añadir</UButton>
+                    <USelect class="w-full" label-key="first_name" value-key="id" v-model="newMemberId"
+                        :items="workersNotMembers" />
+                    <UButton v-if="newMemberId" variant="subtle" color="neutral" @click="handleAddNewMember()">Añadir
+                    </UButton>
                 </div>
             </UFormField>
             <div class="space-y-1">
@@ -46,7 +47,7 @@
 <script setup lang="ts">
 const group = ref<WorkGroupInfo | undefined>()
 const route = useRoute()
-const newMemberId = ref<UUID|undefined>()
+const newMemberId = ref<UUID | undefined>()
 const workerStore = useWorkerStore()
 const workersNotMembers = computed(() => {
     if (!group.value) return
@@ -59,14 +60,14 @@ onMounted(async () => {
     if (isNaN(paramId)) return
     if (!workGroups.value.length) await loadGroups()
     group.value = getGroupById(paramId)
-    if(!workerStore.workers.length) workerStore.loadWorkers()
+    if (!workerStore.workers.length) workerStore.loadWorkers()
 })
 
 function handleDeleteGroup(group: WorkGroupInfo) {
     if (confirm(`¿Está seguro de que desea eliminar el grupo ${group.name}? (Tiene ${group.workers.length} miembros)`)) deleteGroup(group.id)
 }
 
-async function handleAddNewMember(){
+async function handleAddNewMember() {
     // workerStore TODO: Update worker with the new group and refetch group
 }
 </script>

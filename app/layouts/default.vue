@@ -34,6 +34,7 @@ const links = [[{
 {
   label: 'Salario',
   icon: 'mdi:attach-money',
+  color: 'green',
   to: '/payroll',
   role:"['director', 'system_admin', 'hr_manager']",
   defaultOpen: true,
@@ -78,6 +79,7 @@ const links = [[{
   to: '/people',
   role:"['hr_manager', 'system_admin']",
   icon: 'lucide:users',
+  color: 'blue',
   defaultOpen: true,
   type: 'trigger',
   children: [{
@@ -115,6 +117,7 @@ const links = [[{
   to: '/',
   role:"['hr_manager', 'system_admin']",
   icon: 'lucide:file',
+  color: "amber",
   defaultOpen: true,
   type: 'trigger',
   children: [{
@@ -159,6 +162,7 @@ const links = [[{
   to: '/',
   role:"['hr_manager', 'system_admin']",
   icon: 'lucide:users',
+  color: 'teal',
   defaultOpen: true,
   type: 'trigger',
   children: [{
@@ -250,11 +254,16 @@ const loggedUser = useSupabaseUser()
   <UDashboardGroup unit="rem">
     <UDashboardSidebar id="default" v-model:open="open" collapsible resizable class="bg-elevated/25"
       :ui="{ footer: 'lg:border-t lg:border-default' }">
-      <!-- <template #header="{ collapsed }">
-        <TeamsMenu :collapsed="collapsed" />
-      </template> -->
+      <template #header="{ collapsed }">
+        <div class="flex items-center gap-6">
+          <UAvatar class="bg-primary-50 text-primary-900"><UIcon name="game-icons:abstract-042"/></UAvatar>
+          <h1 class="tracking-wider font-black">DGTRH</h1>
+        </div>
+        <!-- <TeamsMenu :collapsed="collapsed" /> -->
+      </template>
 
       <template #default="{ collapsed }">
+        
         <UDashboardSearchButton v-if="loggedUser"  :collapsed="collapsed" class="bg-transparent ring-default" />
 
         <UNavigationMenu v-if="loggedUser" :collapsed="collapsed" :items="links[0]" orientation="vertical" tooltip popover />

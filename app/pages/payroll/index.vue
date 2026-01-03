@@ -5,7 +5,7 @@ import { onMounted } from 'vue';
 
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
-import {usePrenominaPDF} from './PreNomine'
+import {usePrenominaPDF} from './payrollHelpers'
 
 
 
@@ -52,11 +52,8 @@ const columns: TableColumn<WorkerInfo>[] = [
      cell: ({ row }) => `${row.original.record_number}`
     
   }, {
-    header: "Nombre y Apellidos del trabajador",
+    header: "Nombre y Apellidos",
     cell: ({ row }) => `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`
-  }, {
-    header: "CI",
-    cell: ({ row }) => row.original.ci
   }, {
     header: "Cargo",
     cell: ({ row }) => row.original.position_code
@@ -82,7 +79,7 @@ const columns: TableColumn<WorkerInfo>[] = [
 
         <div class="flex justify-between">
           <UInput placeholder="Busca.." />
-          <UButton icon="mdi:add" to="payroll/newprenomine">Añadir</UButton>
+          <UButton icon="mdi:add" to="payroll/new">Añadir</UButton>
           <UButton icon="mdi:print">Imprimir</UButton>
         </div>
       </template>

@@ -1,7 +1,7 @@
 
 
 
-const prenominedocumentDefinition = {
+const payrollDocumentDefinition = {
   pageSize: 'A4',
   pageOrientation: 'landscape',
   content: [

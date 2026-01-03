@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useWorkerStore } from '~/stores/workerStore'
-const supabase = useSupabaseClient()
 
 const workerStore = useWorkerStore()
 
@@ -12,16 +11,8 @@ onMounted(() => workerStore.loadWorkers())
         <div class="flex justify-between">
 
         </div>
-<div class="overflow-auto max-w-6xl">
-    
+        <div class="overflow-auto max-w-6xl">
             <WorkerTable :data="workerStore.workers" />
-</div>
-
-
-
-
-
-
+        </div>
     </div>
-
 </template>

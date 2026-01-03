@@ -1,6 +1,6 @@
 import { defaultRhTableStyles } from "~/lib/documents-generation/styles";
 
-export const getEvaluationReportDefinition = () => {
+export const getEvaluationReportDefinition = (data: PerformanceEvaluationReportOpts) => {
   return {
     pageSize: "A4",
     pageMargins: [40, 40, 40, 40],
@@ -37,7 +37,7 @@ export const getEvaluationReportDefinition = () => {
         style: "paragraph",
         margin: [0, 5, 0, 5],
         stack: [
-          "2.1- Total de trabajadores: __35 48%__",
+          `2.1- Total de trabajadores: __${data.totalTrabajadores} 4%__`,
           "2.2- Total de trabajadores que debían ser evaluados: ___35 100 %_",
           "2.3- Total de trabajadores evaluados: ___32 91.42 %__\n(Reflejar cifra y % que representan del total que debió ser evaluado).",
           "2.4- Total de trabajadores no evaluados: _3 8.57%_\n(Reflejar cifra y % que representan del total que debió ser evaluado)",
@@ -192,3 +192,29 @@ export const getEvaluationReportDefinition = () => {
     },
   };
 };
+
+export interface PerformanceEvaluationReportOpts {
+  acciones: string,
+  totalTrabajadores: number,
+  totalDebianEvaluarse: number,
+  totalEvaluados: number,
+  causas: {
+    no70: number,
+    medico: number,
+    maternidad: number,
+    peritaje: number,
+    mision: number,
+    sinSueldo: number,
+    deportiva: number,
+    movilizacion: number,
+    prestacion: number,
+    otras: number,
+  },
+  catEval: { admin: number, serv: number, oper: number, tec: number },
+  eval: { superior: number, adecuado: number, deficiente: number },
+  accionesDeficiente: "",
+  valoracion: "",
+}
+export function generatePerformanceEvaluation(data: PerformanceEvaluationReportOpts) {
+  usePDFMake().createPdf(getEvaluationReportDefinition(data)).open();
+}
