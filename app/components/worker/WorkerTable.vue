@@ -74,20 +74,6 @@ const columns: TableColumn<WorkerInfo>[] = [
 
 </script>
 <template>
-    
-            <div class="flex items-center justify-between p-2 overflow-y-auto">
-                <h3 class="font-semibold text-lg">Listado de Empleados</h3>
-                <div class="flex gap-2">
-                    <UButton icon="i-lucide-plus" to="people/new">Añadir</UButton>
-                    <UButton variant="soft" color="neutral" icon="i-lucide-refresh-cw" />
-                </div>
-            </div>
-   
-
-          <div class="px-4 pb-4 ">
-            <UInput  placeholder="Buscar trabajador..." class="mb-4" />
-          </div>
-       
             <UTable :data="data" :columns="columns" class="w-full h-full" :paginate="true" :page-size="10" />
             <div class="flex justify-center py-4">
                 <UPagination v-model="page" :total="data.length" :page-size="10" />
