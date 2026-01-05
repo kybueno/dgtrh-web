@@ -1,15 +1,20 @@
 /**
  * Education levels aligned with Cuban education system
  * and ISCED (CINE) international standard.
+ *
+ * Notes:
+ * - Primary education is excluded (not a valid employable level).
+ * - All education in Cuba is free.
+ * - Secundaria Básica is mandatory.
  */
 
 /* ==============================
    DB / API CODES (PERSISTED)
 ================================ */
 export enum EducationLevelCode {
-  BASIC = 'BAS',        // Primaria + Secundaria Básica
+  BASIC = 'BAS',        // Secundaria Básica
   TECHNIC = 'TEC',     // Técnico Medio
-  MEDIUM = 'MED',      // Preuniversitario / Media Superior
+  MEDIUM = 'MED',      // Preuniversitario
   SUPERIOR = 'SUP'     // Universidad y Posgrado
 }
 
@@ -17,8 +22,6 @@ export enum EducationLevelCode {
    ISCED / CINE LEVELS
 ================================ */
 export enum IscedLevel {
-  CINE_0 = 0,
-  CINE_1 = 1,
   CINE_2 = 2,
   CINE_3 = 3,
   CINE_4 = 4,
@@ -34,8 +37,8 @@ export interface EducationLevel {
   code: EducationLevelCode;
   label: string;
   description: string;
-  order: number; // allows comparisons & sorting
-  isced: IscedLevel | IscedLevel[];
+  order: number;
+  isced: readonly IscedLevel[];
 }
 
 /* ==============================
@@ -45,9 +48,9 @@ export const EDUCATION_LEVELS = [
   {
     code: EducationLevelCode.BASIC,
     label: 'Básico',
-    description: 'Educación primaria y secundaria básica',
+    description: 'Secundaria Básica',
     order: 1,
-    isced: [IscedLevel.CINE_1, IscedLevel.CINE_2]
+    isced: [IscedLevel.CINE_2]
   },
   {
     code: EducationLevelCode.TECHNIC,
@@ -61,7 +64,7 @@ export const EDUCATION_LEVELS = [
     label: 'Medio Superior',
     description: 'Preuniversitario',
     order: 3,
-    isced: IscedLevel.CINE_3
+    isced: [IscedLevel.CINE_3]
   },
   {
     code: EducationLevelCode.SUPERIOR,
@@ -77,13 +80,13 @@ export const EDUCATION_LEVELS = [
 ] as const satisfies readonly EducationLevel[];
 
 /* ==============================
-   DERIVED TYPES (AUTO-SYNCED)
+   DERIVED TYPES
 ================================ */
 export type EducationLevelValue =
   typeof EDUCATION_LEVELS[number]['code'];
 
 /* ==============================
-   FORM SELECT OPTIONS
+   FORM OPTIONS
 ================================ */
 export interface EducationLevelOption {
   value: EducationLevelValue;
