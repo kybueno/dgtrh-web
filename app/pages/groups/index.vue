@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Grupos de trabajo'
+})
+
 import { useWorkerStore } from "~/stores/workerStore";
 const supabase = useSupabaseClient();
 const workerStore = useWorkerStore();

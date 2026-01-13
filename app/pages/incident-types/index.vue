@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Catálogo de Claves de Ausencias'
+})
+
 const supabase = useSupabaseClient()
 
 const incidentTypeStore = useIncidentTypeStore()

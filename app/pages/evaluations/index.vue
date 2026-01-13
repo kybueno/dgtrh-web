@@ -245,6 +245,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: 'Evaluación de Desempeño'
+})
+
 import {
   generatePerformanceEvaluation,
   type PerformanceEvaluationReportOpts,

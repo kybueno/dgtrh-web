@@ -15,7 +15,9 @@
 </template>
 
 <script lang="ts" setup>
-
+definePageMeta({
+  title: 'Perfil'
+})
 
 const loggedUserProfile = useState<WorkerProfile | null>(
     "logged-user-profile",

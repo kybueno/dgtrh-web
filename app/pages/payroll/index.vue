@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Prenómina'
+})
 
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted } from 'vue';

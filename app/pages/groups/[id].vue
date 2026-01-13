@@ -45,6 +45,9 @@
     </div>
 </template>
 <script setup lang="ts">
+definePageMeta({
+  title: 'Detalles del Grupo'
+})
 const group = ref<WorkGroupInfo | undefined>()
 const route = useRoute()
 const newMemberId = ref<UUID | undefined>()

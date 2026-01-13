@@ -43,6 +43,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: 'Nuevo Grupo'
+})
 import { useWorkerStore } from '~/stores/workerStore'
 const toast = useToast()
 

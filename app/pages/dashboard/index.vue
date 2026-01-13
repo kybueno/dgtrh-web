@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+definePageMeta({
+  title: 'Panel principal'
+})
 
+import { ref } from 'vue'
 import { Toggle } from 'reka-ui'
 const supabase = useSupabaseClient()
 const mode = ref<'login' | 'signup'>('signup') // 'login' or 'signup'
