@@ -37,7 +37,8 @@ export default defineNuxtConfig({
   vite: { plugins: [tailwindcss()] },
   app: {
     head: {
-      link: [{ rel: "icon", type: "x-icon/ico", href: "/favicon.svg" }],
+      link: [{ rel: "icon", type: "x-icon/ico", href: "/favicon.svg" }], 
+      titleTemplate: "%s | DGTRH"
     },
   },
   supabase: {
