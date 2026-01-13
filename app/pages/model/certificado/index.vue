@@ -1,3 +1,12 @@
+<script setup lang="ts">
+definePageMeta({
+  title: 'Modelo de Certificado'
+})
+useHead({
+  title: 'Modelo de Certificado'
+})
+</script>
+
 <template>
     <div flex flex-col>
     <UButton>Imprimir</UButton>

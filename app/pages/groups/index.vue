@@ -2,6 +2,9 @@
 definePageMeta({
   title: 'Grupos de trabajo'
 })
+useHead({
+  title: 'Grupos de trabajo'
+})
 
 import { useWorkerStore } from "~/stores/workerStore";
 const supabase = useSupabaseClient();

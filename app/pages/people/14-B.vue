@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+definePageMeta({
+  title: 'Anexo 14-B'
+})
+useHead({
+  title: 'Anexo 14-B'
+})
+
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 import { useWorkerStore } from '~/stores/workerStore'

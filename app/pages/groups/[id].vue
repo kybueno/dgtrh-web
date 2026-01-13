@@ -48,6 +48,9 @@
 definePageMeta({
   title: 'Detalles del Grupo'
 })
+useHead({
+  title: 'Detalles del Grupo'
+})
 const group = ref<WorkGroupInfo | undefined>()
 const route = useRoute()
 const newMemberId = ref<UUID | undefined>()

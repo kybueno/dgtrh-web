@@ -2,6 +2,9 @@
 definePageMeta({
   title: 'Prenómina'
 })
+useHead({
+  title: 'Prenómina'
+})
 
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted } from 'vue';

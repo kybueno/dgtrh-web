@@ -1,4 +1,11 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Inicio de Sesión UCI'
+})
+useHead({
+  title: 'Inicio de Sesión UCI'
+})
+
 const supabase = useSupabaseClient()
 const username = ref('')
 

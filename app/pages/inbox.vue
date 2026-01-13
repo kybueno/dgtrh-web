@@ -2,6 +2,9 @@
 definePageMeta({
   title: 'Notificaciones'
 })
+useHead({
+  title: 'Notificaciones'
+})
 </script>
 
 <template>

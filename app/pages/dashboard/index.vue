@@ -2,6 +2,9 @@
 definePageMeta({
   title: 'Panel principal'
 })
+useHead({
+  title: 'Panel principal'
+})
 
 import { ref } from 'vue'
 import { Toggle } from 'reka-ui'

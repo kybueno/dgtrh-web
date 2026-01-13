@@ -46,6 +46,9 @@
 definePageMeta({
   title: 'Nuevo Grupo'
 })
+useHead({
+  title: 'Nuevo Grupo'
+})
 import { useWorkerStore } from '~/stores/workerStore'
 const toast = useToast()
 

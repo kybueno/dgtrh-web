@@ -2,6 +2,9 @@
 definePageMeta({
   title: 'Vacaciones'
 })
+useHead({
+  title: 'Vacaciones'
+})
 
 import { useWorkerStore } from '~/stores/workerStore'
 import { UCheckbox } from '#components';

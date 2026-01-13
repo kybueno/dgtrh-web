@@ -248,6 +248,9 @@
 definePageMeta({
   title: 'Evaluación de Desempeño'
 })
+useHead({
+  title: 'Evaluación de Desempeño'
+})
 
 import {
   generatePerformanceEvaluation,

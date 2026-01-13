@@ -4,6 +4,9 @@ import { workers, loadWorkers } from '~/stores/workerStoreC'
 definePageMeta({
     title: 'Trabajadores'
 })
+useHead({
+    title: 'Trabajadores'
+})
 
 const searchTerm = ref('')
 useAsyncData('workers', loadWorkers)

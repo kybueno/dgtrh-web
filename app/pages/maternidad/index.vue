@@ -1,4 +1,11 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Licencias de Maternidad'
+})
+useHead({
+  title: 'Licencias de Maternidad'
+})
+
 import { useWorkerStore } from '~/stores/workerStore'
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';

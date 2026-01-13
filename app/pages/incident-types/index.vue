@@ -2,6 +2,9 @@
 definePageMeta({
   title: 'Catálogo de Claves de Ausencias'
 })
+useHead({
+  title: 'Catálogo de Claves de Ausencias'
+})
 
 const supabase = useSupabaseClient()
 

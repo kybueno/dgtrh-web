@@ -1,4 +1,11 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Certificados Médicos'
+})
+useHead({
+  title: 'Certificados Médicos'
+})
+
 import { useWorkerStore } from '~/stores/workerStore'
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
