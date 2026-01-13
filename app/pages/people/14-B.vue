@@ -47,7 +47,7 @@ const columns: TableColumn<WorkerInfo>[] = [
     cell: ({ row }) => row.original.ci
   }, {
     header: "Sexo",
-    cell: ({ row }) => row.original.gender
+    cell: ({ row }) => getGenderLabel(row.original.gender as GenderValue)
 
   }, {
     header: "Nivel de Preparación",
