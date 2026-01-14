@@ -15,12 +15,12 @@ const workerToDelete = ref<WorkerInfo | null>(null)
 
 
 interface Props {
-    data: WorkerInfo[]
+    data: WorkerDetailed[]
     loading?: boolean
 }
 const { data,loading } = defineProps<Props>()
 
-const columns: TableColumn<WorkerInfo>[] = [
+const columns: TableColumn<typeof data[0]>[] = [
     {
         id: 'select',
         header: ({ table }) => h(UCheckbox, {
@@ -58,10 +58,10 @@ const columns: TableColumn<WorkerInfo>[] = [
 
     }, {
         header: "Grupo de Trabajo",
-        cell: ({ row }) => row.original.group_id
+        cell: ({ row }) => row.original.group?.name|| row.original.leaderAtGroup?.name || row.original.group_id
     }, {
         header: "Cargo",
-        cell: ({ row }) => row.original.position_code
+        cell: ({ row }) => row.original.position.description ?? row.original.position_code
     }, {
         header: "Dirección",
         cell: ({ row }) => row.original.address
