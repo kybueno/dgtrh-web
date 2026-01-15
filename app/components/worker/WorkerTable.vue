@@ -78,7 +78,7 @@ const columns: TableColumn<typeof data[0]>[] = [
 
 </script>
 <template>
-    <div>
+    <div class="border border-muted bg-muted rounded-md">
         <UTable :loading="loading || workersPending" :data="data" :columns="columns" class="w-full h-full" :paginate="true" :page-size="10" />
         <div class="flex justify-center py-4">
             <UPagination v-model="page" :total="data.length" :page-size="10" />
