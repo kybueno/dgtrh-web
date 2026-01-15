@@ -24,17 +24,14 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
 //   icon: 'i-lucide-user'
 // },
  {
-  label: 'Billing',
-  icon: 'i-lucide-credit-card'
-}, {
-  label: 'Settings',
+  label: 'Ajustes',
   icon: 'i-lucide-settings',
   to: '/settings'
 }], [{
-  label: 'Theme',
+  label: 'Tema',
   icon: 'i-lucide-palette',
   children: [{
-    label: 'Primary',
+    label: 'Primario',
     slot: 'chip',
     chip: appConfig.ui.colors.primary,
     content: {
@@ -75,10 +72,10 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     }))
   }]
 }, {
-  label: 'Appearance',
+  label: 'Apariencia',
   icon: 'i-lucide-sun-moon',
   children: [{
-    label: 'Light',
+    label: 'Clara',
     icon: 'i-lucide-sun',
     type: 'checkbox',
     checked: colorMode.value === 'light',
@@ -88,7 +85,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       colorMode.preference = 'light'
     }
   }, {
-    label: 'Dark',
+    label: 'Oscura',
     icon: 'i-lucide-moon',
     type: 'checkbox',
     checked: colorMode.value === 'dark',
@@ -101,51 +98,6 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       e.preventDefault()
     }
   }]
-}], [{
-  label: 'Templates',
-  icon: 'i-lucide-layout-template',
-  children: [{
-    label: 'Starter',
-    to: 'https://ui-pro-starter.nuxt.dev/'
-  }, {
-    label: 'Landing',
-    to: 'https://landing-template.nuxt.dev/'
-  }, {
-    label: 'Docs',
-    to: 'https://docs-template.nuxt.dev/'
-  }, {
-    label: 'SaaS',
-    to: 'https://saas-template.nuxt.dev/'
-  }, {
-    label: 'Dashboard',
-    to: 'https://dashboard-template.nuxt.dev/',
-    checked: true,
-    type: 'checkbox'
-  }, {
-    label: 'Chat',
-    to: 'https://chat-template.nuxt.dev/'
-  }]
-}], [{
-  label: 'Documentation',
-  icon: 'i-lucide-book-open',
-  to: 'https://ui.nuxt.com/getting-started/installation/pro/nuxt',
-  target: '_blank'
-}, {
-  label: 'GitHub repository',
-  icon: 'i-simple-icons-github',
-  to: 'https://github.com/nuxt-ui-pro/dashboard',
-  target: '_blank'
-}, {
-  label: 'Upgrade to Pro',
-  icon: 'i-lucide-rocket',
-  to: 'https://ui.nuxt.com/pro/purchase',
-  target: '_blank'
-}], [{
-  label: 'Log out',
-  icon: 'i-lucide-log-out',
-  onSelect:()=>{
-    supabase.auth.signOut()
-  }
 }]]))
 </script>
 
