@@ -36,7 +36,7 @@ const links = [[{
   icon: 'mdi:attach-money',
   color: 'green',
   to: '/payroll',
-  role:"['director', 'system_admin', 'hr_manager']",
+  role: "['director', 'system_admin', 'hr_manager']",
   defaultOpen: true,
   type: 'trigger',
   children: [
@@ -44,7 +44,7 @@ const links = [[{
       label: 'Prenómina',
       icon: 'lucide:file-spreadsheet',
       to: '/payroll',
-      role:"['director', 'system_admin', 'hr_manager']",
+      role: "['director', 'system_admin', 'hr_manager']",
       onSelect: () => {
         open.value = false
       }
@@ -52,23 +52,23 @@ const links = [[{
       label: 'Catálogo de claves',
       icon: 'lucide:file',
       to: '/incident-types',
-      role:"['hr_manager']",
+      role: "['hr_manager']",
       onSelect: () => {
         open.value = false
       }
-    },{
-    label: 'Anexo 14',
-    icon: 'lucide:file',
-    to: '/positions',
-    role:"['hr_manager', 'system_admin']",
-    onSelect: () => {
-      open.value = false
-    }
-  }, {
+    }, {
+      label: 'Anexo 14',
+      icon: 'lucide:file',
+      to: '/positions',
+      role: "['hr_manager', 'system_admin']",
+      onSelect: () => {
+        open.value = false
+      }
+    }, {
       label: 'Anexo 14-B',
       icon: 'lucide:file',
       to: '/people/14-B',
-      role:"['hr_manager']",
+      role: "['hr_manager']",
       onSelect: () => {
         open.value = false
       }
@@ -77,7 +77,7 @@ const links = [[{
 }, {
   label: 'Personal',
   to: '/people',
-  role:"['hr_manager', 'system_admin']",
+  role: "['hr_manager', 'system_admin']",
   icon: 'lucide:users',
   color: 'blue',
   defaultOpen: true,
@@ -85,37 +85,37 @@ const links = [[{
   children: [{
     label: 'Trabajadores',
     to: '/people',
-    role:"['hr_manager', 'system_admin']",
+    role: "['hr_manager', 'system_admin']",
     exact: true,
     onSelect: () => {
       open.value = false
     }
-  },{
+  }, {
     label: 'Grupos de trabajo',
     to: '/groups',
-    role:"['hr_manager', 'system_admin']",
+    role: "['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
-  },{
+  }, {
     label: 'Evaluación de desempeño',
     to: '/evaluations',
-    role:"['director', 'system_admin', 'hr_manager']",
+    role: "['director', 'system_admin', 'hr_manager']",
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Organizaciones',
     to: '/organizations',
-    role:"['hr_manager', 'system_admin']",
+    role: "['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
-  }, ]
+  },]
 }, {
   label: 'Reportes',
   to: '/',
-  role:"['hr_manager', 'system_admin']",
+  role: "['hr_manager', 'system_admin']",
   icon: 'lucide:file',
   color: "amber",
   defaultOpen: true,
@@ -123,44 +123,44 @@ const links = [[{
   children: [{
     label: 'Hojas de Firma',
     to: '/signsheets',
-    role:"['hr_manager', 'system_admin']",
+    role: "['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
-  },{
+  }, {
     label: 'Vacaciones',
     to: '/holidays',
-    role:"['hr_manager', 'system_admin']",
+    role: "['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
-  },{
+  }, {
     label: 'Certificados Médicos',
     to: '/medical',
-    role:"['hr_manager', 'system_admin']",
+    role: "['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Licencia sin sueldo',
     to: '/sin-sueldo',
-    role:"['hr_manager', 'system_admin']",
+    role: "['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
-  },{
+  }, {
     label: 'Licencia de maternidad',
     to: '/maternidad',
-    role:"['hr_manager', 'system_admin']",
+    role: "['hr_manager', 'system_admin']",
     onSelect: () => {
       open.value = false
     }
-  }, ]
+  },]
 
 }, {
   label: 'Modelos',
   to: '/',
-  role:"['hr_manager', 'system_admin']",
+  role: "['hr_manager', 'system_admin']",
   icon: 'lucide:users',
   color: 'teal',
   defaultOpen: true,
@@ -168,20 +168,20 @@ const links = [[{
   children: [{
     label: 'Modelo de Vacaciones',
     to: '/model',
-    role:"['hr_manager', 'system_admin']",
+    role: "['hr_manager', 'system_admin']",
     exact: true,
     onSelect: () => {
       open.value = false
     }
-  },{
+  }, {
     label: 'Modelo de certificado',
     to: '/model/certificado',
-    role:"['hr_manager', 'system_admin']",
+    role: "['hr_manager', 'system_admin']",
     exact: true,
     onSelect: () => {
       open.value = false
     }
-  }, ]
+  },]
 
 }], [{
   label: 'Directorio UCI',
@@ -256,17 +256,20 @@ const loggedUser = useSupabaseUser()
       :ui="{ footer: 'lg:border-t lg:border-default' }">
       <template #header="{ collapsed }">
         <div class="flex items-center gap-6">
-          <UAvatar class="bg-primary-50 text-primary-900"><UIcon name="game-icons:abstract-042"/></UAvatar>
-          <h1 class="tracking-wider font-black">DGTRH</h1>
+          <UAvatar class="bg-primary-50 text-primary-900">
+            <UIcon name="game-icons:abstract-042" />
+          </UAvatar>
+          <h1 v-if="!collapsed" class="tracking-wider font-black">DGTRH</h1>
         </div>
         <!-- <TeamsMenu :collapsed="collapsed" /> -->
       </template>
 
       <template #default="{ collapsed }">
-        
-        <UDashboardSearchButton v-if="loggedUser"  :collapsed="collapsed" class="bg-transparent ring-default" />
 
-        <UNavigationMenu v-if="loggedUser" :collapsed="collapsed" :items="links[0]" orientation="vertical" tooltip popover />
+        <UDashboardSearchButton v-if="loggedUser" :collapsed="collapsed" class="bg-transparent ring-default" />
+
+        <UNavigationMenu v-if="loggedUser" :collapsed="collapsed" :items="links[0]" orientation="vertical" tooltip
+          popover />
 
         <UNavigationMenu :collapsed="collapsed" :items="links[1]" orientation="vertical" tooltip class="mt-auto" />
       </template>
@@ -277,8 +280,19 @@ const loggedUser = useSupabaseUser()
     </UDashboardSidebar>
 
     <UDashboardSearch :groups="groups" />
-
-    <NuxtPage />
+    <UDashboardPanel>
+      <template #header>
+        <UDashboardNavbar
+          :title="String($route.meta.title || links[0]?.find(item => item.to === $route.path)?.label || capitalizeFirstLetter(String($route.name)) || $route.path)">
+          <template #leading>
+            <UDashboardSidebarCollapse />
+          </template>
+        </UDashboardNavbar>
+      </template>
+      <template #body>
+        <NuxtPage />
+      </template>
+    </UDashboardPanel>
 
     <NotificationsSlideover />
   </UDashboardGroup>
