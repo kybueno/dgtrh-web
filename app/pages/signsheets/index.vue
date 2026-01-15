@@ -1,4 +1,10 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Hojas de Firma'
+})
+useHead({
+  title: 'Hojas de Firma'
+})
 
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted } from 'vue';

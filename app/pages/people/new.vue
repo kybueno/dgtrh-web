@@ -3,6 +3,9 @@ import WorkerForm from '~/components/worker/WorkerForm.vue';
 definePageMeta({
   title:"Nuevo trabajador"
 })
+useHead({
+  title:"Nuevo trabajador"
+})
 </script>
 
 <template>

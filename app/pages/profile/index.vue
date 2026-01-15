@@ -18,6 +18,9 @@
 definePageMeta({
   title: 'Perfil'
 })
+useHead({
+  title: 'Perfil'
+})
 
 const loggedUserProfile = useState<WorkerProfile | null>(
     "logged-user-profile",

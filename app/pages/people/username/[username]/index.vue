@@ -51,6 +51,13 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: 'Detalles del Trabajador'
+})
+useHead({
+  title: 'Detalles del Trabajador'
+})
+
 import { useRoute } from 'vue-router';
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted, ref } from 'vue';

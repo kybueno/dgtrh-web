@@ -2,6 +2,9 @@
 definePageMeta({
   title: 'Anexo 14'
 })
+useHead({
+  title: 'Anexo 14'
+})
 
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
