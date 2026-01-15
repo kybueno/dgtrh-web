@@ -1,52 +1,21 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient()
-const workerStore = useWorkerStore();
 
-const formData = ref<WorkerInsert>({
-    email: '',
-    first_name: '',
-    middle_name: '',
-    last_name: '',
-    record_number: '',
-    second_last_name: '',
-    ci: '',
-    organizations_codes: [],
-    level: null,
-    address: null,
-    gender: null,
-    tel: null,
-    position_code: null,
-})
+const props = defineProps<{
+    data: TablesUpdate<'workers'>;
+    loading?: boolean;
+}>();
 
-const loading = ref(false)
+const emit = defineEmits<{
+    (e: 'save', worker: TablesUpdate<'workers'>): void;
+    (e: 'cancel'): void;
+}>();
 
-async function handleAddWorker() {
-    loading.value = true
-    try {
-        await workerStore.createWorker(formData.value, supabase);
+const formData = ref<TablesUpdate<'workers'>>({
+    ...props.data
+});
 
-        formData.value = {
-            email: '',
-            first_name: '',
-            middle_name: '',
-            last_name: '',
-            record_number: '',
-            second_last_name: '',
-            ci: '',
-            organizations_codes: [],
-            level: null,
-            address: null,
-            gender: null,
-            tel: null,
-            position_code: null,
-        };
-        
-        navigateTo('/people')
-    } catch (error) {
-        console.error('Error al crear trabajador:', error);
-    } finally {
-        loading.value = false
-    }
+function handleSubmit() {
+    emit('save', formData.value);
 }
 
 onMounted(() => {
@@ -57,8 +26,8 @@ onMounted(() => {
 
 <template>
     <div class="flex flex-col w-fit max-w-2xl mx-auto justify-center">
-        <FormCard icon="mdi:user-plus" heading="Registrar nuevo trabajador"
-            description="Complete el formulario para registrar un nuevo trabajador" @done="handleAddWorker" @cancel="navigateTo('/people')">
+        <FormCard icon="mdi:user-edit" :heading="'Actualizar: ' + getProfileDisplayName(data as any)"
+            description="Actualice los datos del trabajador" @done="handleSubmit" @cancel="emit('cancel')">
 
             <div class="grid grid-cols-2 gap-4 p-2">
                 <!-- Primer Nombre -->
@@ -90,7 +59,6 @@ onMounted(() => {
                 <UFormField label="Número de expediente" class="col-span-1">
                     <UInput v-model="formData.record_number" />
                 </UFormField>
-                
                 <!-- Nivel -->
                 <UFormField class="col-span-2" label="Nivel educativo">
                     <USelect class="w-full" :items="(EDUCATION_LEVELS as unknown as EducationLevel[])" value-key="code"
@@ -101,7 +69,6 @@ onMounted(() => {
                         </template>
                     </USelect>
                 </UFormField>
-                
                 <!-- Dirección -->
                 <UFormField label="Dirección" class="col-span-2">
                     <UTextarea class="w-full" v-model="formData.address" />
@@ -143,9 +110,10 @@ onMounted(() => {
                     </USelect>
                 </UFormField>
 
+
                 <!-- Cargo -->
                 <UFormField label="Cargo que ocupa" class="col-span-2">
-                    <USelect required v-model="formData.position_code as number | undefined" :items="positions" class="w-full"
+                    <USelect required v-model="formData.position_code" :items="positions" class="w-full"
                         value-key="code" label-key="description">
                         <template #content-top>
                             <UButton to="/positions/new" color="neutral" variant="ghost" icon="mdi:plus">Nuevo cargo
@@ -157,7 +125,7 @@ onMounted(() => {
             </div>
             <template #actions>
                 <UButton type="submit" color="primary" :loading="loading">
-                    {{ loading ? 'Guardando...' : 'Registrar Trabajador' }}
+                    {{ loading ? 'Guardando...' : 'Guardar Cambios' }}
                 </UButton>
             </template>
         </FormCard>
