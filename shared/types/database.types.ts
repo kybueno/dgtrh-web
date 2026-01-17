@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      extra_work: {
+        Row: {
+          created_at: string
+          end_date: string | null
+          id: string
+          start_date: string
+          updated_at: string
+          worker_id: string
+        }
+        Insert: {
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          start_date: string
+          updated_at?: string
+          worker_id: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          start_date?: string
+          updated_at?: string
+          worker_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extra_work_worker_id_fkey"
+            columns: ["worker_id"]
+            isOneToOne: false
+            referencedRelation: "workers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extra_work_worker_id_fkey"
+            columns: ["worker_id"]
+            isOneToOne: false
+            referencedRelation: "workers_with_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       groups: {
         Row: {
           id: number
@@ -242,36 +284,65 @@ export type Database = {
       }
       payroll: {
         Row: {
+          created_at: string
+          created_by: string | null
           id: number
-          incident: number
-          observations: string
-          work_estra: number
+          month: number
+          revised_by: string | null
+          status: string
+          year: number
         }
         Insert: {
+          created_at?: string
+          created_by?: string | null
           id?: number
-          incident: number
-          observations: string
-          work_estra: number
+          month?: number
+          revised_by?: string | null
+          status?: string
+          year?: number
         }
         Update: {
+          created_at?: string
+          created_by?: string | null
           id?: number
-          incident?: number
-          observations?: string
-          work_estra?: number
+          month?: number
+          revised_by?: string | null
+          status?: string
+          year?: number
         }
         Relationships: [
           {
-            foreignKeyName: "payroll_incident_fkey"
-            columns: ["incident"]
-            isOneToOne: true
-            referencedRelation: "incident_types"
-            referencedColumns: ["code"]
+            foreignKeyName: "payroll_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "workers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payroll_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "workers_with_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payroll_revised_by_fkey"
+            columns: ["revised_by"]
+            isOneToOne: false
+            referencedRelation: "workers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payroll_revised_by_fkey"
+            columns: ["revised_by"]
+            isOneToOne: false
+            referencedRelation: "workers_with_roles"
+            referencedColumns: ["id"]
           },
         ]
       }
       positions: {
         Row: {
-          cant: number
           category: string
           code: number
           created_at: string
@@ -281,7 +352,6 @@ export type Database = {
           level: string
         }
         Insert: {
-          cant: number
           category: string
           code: number
           created_at?: string
@@ -291,7 +361,6 @@ export type Database = {
           level: string
         }
         Update: {
-          cant?: number
           category?: string
           code?: number
           created_at?: string
