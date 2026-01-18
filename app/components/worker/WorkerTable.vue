@@ -70,7 +70,7 @@ const columns: TableColumn<typeof data[0]>[] = [
         cell: ({ row }) => row.original.organizations_codes.join(", ").toUpperCase()
     }, {
         header: "Nivel de preparación",
-        cell: ({ row }) => row.original.level
+        cell: ({ row }) => getEducationLevelByCode(row.original.level as EducationLevelCode)?.label
     },
 ]
 
