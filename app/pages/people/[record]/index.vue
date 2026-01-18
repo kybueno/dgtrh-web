@@ -1,141 +1,95 @@
 <template>
-   <div class="max-w-5xl mx-auto p-6">
-        <h1 class="text-xl font-bold mb-6 text-center">
-            Detalles del Trabajador
-        </h1>
+  <div class="max-w-5xl mx-auto p-6">
+    <h1 class="text-xl font-bold mb-6 text-center">
+      Detalles del Trabajador
+    </h1>
 
-        <UCard v-if="loading">
-          <template #header>
-            <USkeleton class="h-6 w-1/3" />
-          </template>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-3">
-              <USkeleton class="h-4 w-1/2" />
-              <USkeleton class="h-4 w-full" />
-              <USkeleton class="h-4 w-5/6" />
-              <USkeleton class="h-4 w-2/3" />
-            </div>
-            <div class="space-y-3">
-              <USkeleton class="h-4 w-1/2" />
-              <USkeleton class="h-4 w-full" />
-              <USkeleton class="h-4 w-5/6" />
-              <USkeleton class="h-4 w-2/3" />
-            </div>
+    <UCard v-if="loading && !worker">
+      <template #header>
+        <Flex class="gap-4 mx-4 my-2">
+          <USkeleton class="size-10 rounded-full" />
+          <div class="space-y-2 flex-1">
+            <USkeleton class="h-3 w-1/2" />
+            <USkeleton class="h-2 w-1/4" />
           </div>
-        </UCard>
+        </Flex>
+      </template>
+      <Grid class="grid-cols-2 gap-4 p-4">
+        <DescriptionListItem v-for="i in 12" loading />
+      </Grid>
+    </UCard>
 
-        <UCard v-else-if="worker">
-          <template #header>
-            <div class="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div class="flex items-center gap-3">
-                <UAvatar :text="displayInitials" size="lg" />
-                <div>
-                  <h2 class="text-xl font-semibold leading-tight">{{ displayName }}</h2>
-                  <div class="flex items-center gap-2 mt-1">
-                    <UBadge :color="statusColor" variant="subtle" size="xs" class="inline-flex items-center gap-1">
-                      <CheckCircle v-if="worker.status === 'active'" class="inline w-3.5 h-3.5" />
-                      <XCircle v-else class="inline w-3.5 h-3.5" />
-                      {{ statusLabel }}
-                    </UBadge>
-                    <span class="text-xs text-muted">Expediente #{{ worker.record_number }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="flex gap-2 md:justify-end">
-                <UButton :to="`/people/${worker.record_number}/edit`">Editar</UButton>
-                <UButton @click="handleDelete()" variant="subtle" color="error">Eliminar</UButton>
-              </div>
+    <UCard v-else-if="worker">
+      <template #header>
+        <Flex class="p-4 flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <!-- TODO: Add a simple skeleton for the header when the old UCard skeleton above is removed -->
+          <Flex class="items-center gap-3">
+            <UAvatar :text="displayInitials" size="lg" />
+            <div>
+              <h2 class="text-xl font-semibold leading-tight">{{ getProfileDisplayName(worker) }}</h2>
+              <Flex class="gap-2 mt-1">
+                <UBadge :color="statusColor" variant="subtle" size="xs" class="inline-flex items-center gap-1">
+                  {{ statusLabel }}
+                </UBadge>
+                <span class="text-xs text-muted">Expediente #{{ worker.record_number }}</span>
+              </Flex>
             </div>
-          </template>
+          </Flex>
+          <HStack class="flex gap-2 md:justify-end">
+            <UButton size="xs" :to="`/people/${worker.record_number}/edit`" variant="subtle">Editar</UButton>
+            <UButton size="xs" @click="handleDelete()" color="error"  variant="subtle" >Eliminar</UButton>
+          </HStack>
+        </Flex>
+      </template>
 
-          <div class="space-y-8 p-4">
-            <section>
-              <h3 class="text-sm font-semibold text-muted uppercase tracking-wide mb-3">Información Personal</h3>
-              <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                <div>
-                  <dt class="text-sm text-muted">Nombre</dt>
-                  <dd class="text-sm font-medium">{{ displayName }}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-muted">CI</dt>
-                  <dd class="text-sm font-medium">{{ worker.ci || '—' }}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-muted">Género</dt>
-                  <dd class="text-sm font-medium">{{ getGenderLabel(worker.gender as GenderValue) }}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-muted">Nivel de preparación</dt>
-                  <dd class="text-sm font-medium">{{ worker.level || '—' }}</dd>
-                </div>
-              </dl>
-            </section>
+      <Box class="space-y-8 p-4">
+        <CardSection title="Información Personal">
+          <DescriptionList>
+            <DescriptionListItem label="Nombre" :value="displayName" />
+            <DescriptionListItem label="CI" :value="worker.ci || '—'" />
+            <DescriptionListItem label="Género" :value="getGenderLabel(worker.gender as GenderValue)" />
+            <DescriptionListItem label="Nivel de preparación" :value="worker.level || '—'" />
+          </DescriptionList>
+        </CardSection>
 
-            <section>
-              <h3 class="text-sm font-semibold text-muted uppercase tracking-wide mb-3">Contacto</h3>
-              <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                <div>
-                  <dt class="text-sm text-muted">Email</dt>
-                  <dd class="text-sm font-medium">{{ worker.email || '—' }}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-muted">Teléfono</dt>
-                  <dd class="text-sm font-medium">{{ worker.tel || '—' }}</dd>
-                </div>
-                <div class="md:col-span-2">
-                  <dt class="text-sm text-muted">Dirección</dt>
-                  <dd class="text-sm font-medium">{{ worker.address || '—' }}</dd>
-                </div>
-              </dl>
-            </section>
+        <CardSection title="Contacto">
+          <DescriptionList>
+            <DescriptionListItem label="Email" :value="worker.email || '—'" />
+            <DescriptionListItem label="Teléfono" :value="worker.tel || '—'" />
+            <DescriptionListItem label="Dirección" :full="true" :value="worker.address || '—'" />
+          </DescriptionList>
+        </CardSection>
 
-            <section>
-              <h3 class="text-sm font-semibold text-muted uppercase tracking-wide mb-3">Información Laboral</h3>
-              <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                <div>
-                  <dt class="text-sm text-muted">Fecha de inicio</dt>
-                  <dd class="text-sm font-medium">{{ formattedStartDate }}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-muted">Grupo de trabajo</dt>
-                  <dd class="text-sm font-medium">{{ worker.group_id || '—' }}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-muted">Cargo</dt>
-                  <dd class="text-sm font-medium">{{ worker.position_code || '—' }}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-muted">Organizaciones</dt>
-                  <dd class="text-sm font-medium">{{ worker.organizations_codes || '—' }}</dd>
-                </div>
-              </dl>
-            </section>
+        <CardSection title="Información Laboral">
+          <DescriptionList>
+            <DescriptionListItem label="Fecha de inicio" :value="formattedStartDate" />
+            <DescriptionListItem label="Grupo de trabajo" :value="worker.group_id || '—'" />
+            <DescriptionListItem label="Cargo" :value="worker.position_code || '—'" />
+            <DescriptionListItem label="Organizaciones"
+              :value="worker.organizations_codes.join(', ').toUpperCase() || '—'" />
+          </DescriptionList>
+        </CardSection>
 
-            <section>
-              <h3 class="text-sm font-semibold text-muted uppercase tracking-wide mb-3">Familia</h3>
-              <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                <div>
-                  <dt class="text-sm text-muted">Padre</dt>
-                  <dd class="text-sm font-medium">{{ worker.parent1_name || '—' }}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-muted">Madre</dt>
-                  <dd class="text-sm font-medium">{{ worker.parent2_name || '—' }}</dd>
-                </div>
-              </dl>
-            </section>
+        <CardSection title="Familia">
+          <DescriptionList>
+            <DescriptionListItem label="Padre" :value="worker.parent1_name || '—'" />
+            <DescriptionListItem label="Madre" :value="worker.parent2_name || '—'" />
+          </DescriptionList>
+        </CardSection>
 
-            <UAlert v-if="errorMessage" variant="subtle" color="error" title="Error" :description="errorMessage">Error: {{ errorMessage }}</UAlert>
-          </div>
-        </UCard>
+        <UAlert v-if="errorMessage" variant="subtle" color="error" title="Error" :description="errorMessage">Error: {{
+          errorMessage }}</UAlert>
+      </Box>
+    </UCard>
 
-        <div v-else class="text-center text-muted mt-20">
-          Trabajador no encontrado.
-        </div>
-    </div> 
+    <p v-else class="text-center text-muted mt-20">
+      Trabajador no encontrado.
+    </p>
+  </div>
 </template>
 
 <script setup lang="ts">
+
 definePageMeta({
   title: 'Detalles del Trabajador'
 })
@@ -183,7 +137,7 @@ const formattedStartDate = computed(() => {
 
 const loadWorkerData = async () => {
   try {
-    if(!workers.value.length) await loadWorkers();
+    if (!workers.value.length) await loadWorkers();
     if (recordNumber.value) worker.value = await getWorkerByRecordNumber(recordNumber.value) || null;
   } catch (e: any) {
     errorMessage.value = e?.message || 'Error al cargar los datos'
@@ -193,10 +147,10 @@ const loadWorkerData = async () => {
 }
 
 async function handleDelete() {
-    if (!worker.value?.id || !confirm("Seguro de que desea eliminar permanentemente el registro #" + recordNumber + "?")) return
+  if (!worker.value?.id || !confirm("Seguro de que desea eliminar permanentemente el registro #" + recordNumber + "?")) return
 
-    const response = await deleteWorker(worker.value.id)
-    errorMessage.value = response.error?.details || ''
+  const response = await deleteWorker(worker.value.id)
+  errorMessage.value = response.error?.details || ''
 }
 
 onMounted(loadWorkerData);
