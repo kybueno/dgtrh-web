@@ -15,7 +15,7 @@
 
             <div class="flex gap-2 justify-end p-3 pt-4 mt-8 border-t-muted">
                 <slot name="actions-leading">
-                    <UButton @click="emit('cancel')" variant="outline">Cancelar</UButton>
+                    <UButton @click="emit('cancel')" variant="outline" color="neutral">Cancelar</UButton>
                 </slot>
                 <slot name="actions">
                     <UButton type="submit" :disabled="loading" :loading="loading">Guardar</UButton>

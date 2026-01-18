@@ -1,7 +1,55 @@
 import { ref } from 'vue';
 
-export const workers = ref<WorkerInfo[]>([]);
+type WorkerStatus = 'active' | 'terminated' | 'inactive';
+
+export const WORKER_STATUS = {
+  ACTIVE: 'active',
+  TERMINATED: 'terminated',
+  INACTIVE: 'inactive'
+} as const;
+
+export const WORKER_STATUS_CONFIG = {
+  [WORKER_STATUS.ACTIVE]: {
+    label: 'Activo',
+    color: 'success',
+  },
+  [WORKER_STATUS.TERMINATED]: {
+    label: 'Baja',
+    color: 'error',
+  },
+  [WORKER_STATUS.INACTIVE]: {
+    label: 'No activo',
+    color: 'neutral',
+  },
+  default: {
+    label: '—',
+    color: 'neutral',
+  },
+} as const;
+
+// Select field options
+export const WORKER_STATUS_OPTIONS:{label:string,value:string}[] =[
+  {label:WORKER_STATUS_CONFIG[WORKER_STATUS.ACTIVE].label,value:WORKER_STATUS.ACTIVE},
+  {label:WORKER_STATUS_CONFIG[WORKER_STATUS.INACTIVE].label,value:WORKER_STATUS.INACTIVE},
+  {label:WORKER_STATUS_CONFIG[WORKER_STATUS.TERMINATED].label,value:WORKER_STATUS.TERMINATED},
+]
+
+export function getWorkerStatusLabel(status?: WorkerStatus): string {
+  if (!status) return WORKER_STATUS_CONFIG.default.label;
+  return WORKER_STATUS_CONFIG[status as keyof typeof WORKER_STATUS_CONFIG]?.label || status;
+}
+
+export function getWorkerStatusColor(status?: WorkerStatus): "success" | "error" | "neutral" | "primary" | "secondary" | "info" | "warning" {
+  if (!status) return WORKER_STATUS_CONFIG.default.color;
+  return WORKER_STATUS_CONFIG[status as keyof typeof WORKER_STATUS_CONFIG]?.color || WORKER_STATUS_CONFIG.default.color;
+}
+
+export const workers = ref<WorkerDetailed[]>([]);
 export const workersPending = ref<boolean>(false);
+export const WORKER_QUERY = {
+  detailed: "*, group:groups!workers_group_id_fkey(name), position:positions(code,description,category,level)"
+}
+
 
 // CREATE
 export async function createWorker(newWorkerData: TablesInsert<"workers">) {
@@ -29,7 +77,7 @@ export async function loadWorkers() {
   const supabase = useSupabaseClient();
   
   workersPending.value = true;
-  const response = await supabase.from("workers").select("*, group:groups!workers_group_id_fkey(name), position:positions(code,description,category,level)");//, leaderAtGroup:groups!groups_leader_id_fkey
+  const response = await supabase.from("workers").select(WORKER_QUERY.detailed);//, leaderAtGroup:groups!groups_leader_id_fkey
   const { data, error } = response;
   workersPending.value = false;
 
@@ -115,7 +163,7 @@ export async function getWorkerById(id: string) {
   return null;
 }
 
-export async function getWorkerByRecordNumber(recordNumber: string) {
+export async function getWorkerByRecordNumber(recordNumber: string):Promise<WorkerDetailed | null> {
   // Try to find in local store first
   const localWorker = workers.value.find(worker => worker.record_number === recordNumber);
   if (localWorker) return localWorker;
@@ -124,7 +172,7 @@ export async function getWorkerByRecordNumber(recordNumber: string) {
   const supabase = useSupabaseClient();
   const { data, error } = await supabase
     .from('workers')
-    .select('*')
+    .select(WORKER_QUERY.detailed)
     .eq('record_number', recordNumber)
     .single();
 

@@ -16,7 +16,7 @@
                         value-key="id" label-key="first_name" v-model="leaderId"
                         :loading="workerStore.workers.length < 1" :disabled="noLeaderWorkers.length == 0">
                         <template #item-label="{ item }">
-                            <p>{{ getProfileDisplayName(item) }}</p>
+                            <p>{{ getDisplayName(item) }}</p>
                             <small v-if="item.email" class="text-muted">{{ item.email ?? item.tel }}</small>
                         </template>
                     </USelect>

@@ -18,7 +18,7 @@ export const exportSignSheet = (
           body: [
             [
               {
-                text: `Hoja de Firma de ${getProfileDisplayName(worker)}`,
+                text: `Hoja de Firma de ${getDisplayName(worker)}`,
                 style: "tableHeader",
                 colSpan: 2,
                 alignment: "center",
@@ -218,7 +218,7 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
       {
         columns: [
           {
-            text: `Nombre y Apellidos: ${getProfileDisplayName(worker)}`,
+            text: `Nombre y Apellidos: ${getDisplayName(worker)}`,
             style: "employeeInfo",
           },
           {

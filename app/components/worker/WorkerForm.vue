@@ -153,7 +153,10 @@ onMounted(() => {
                         </template>
                     </USelect>
                 </UFormField>
-
+                <!-- Estado -->
+                <UFormField label="Estado" class="col-span-2">
+                    <USelect required v-model="formData.status" :items="WORKER_STATUS_OPTIONS" class="w-full"/>
+                </UFormField>
             </div>
             <template #actions>
                 <UButton type="submit" color="primary" :loading="loading">

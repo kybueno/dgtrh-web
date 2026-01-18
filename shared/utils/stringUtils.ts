@@ -5,6 +5,29 @@
  */
 export const getEmailUsername = (email: string) => email.split("@").at(0);
 
+/**
+ * Formats a date string or Date object into a localized date string
+ * @param date The date to format (can be string, Date, or null/undefined)
+ * @param locale The locale to use for formatting (default: 'es-ES')
+ * @param options Intl.DateTimeFormatOptions for custom formatting (default: { year: 'numeric', month: 'long', day: '2-digit' })
+ * @returns Formatted date string or '—' if date is invalid
+ */
+export const formatDate = (
+  date: string | Date | null | undefined,
+  locale: string = 'es-ES',
+  options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: '2-digit' }
+): string => {
+  if (!date) return '—';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  if (isNaN(dateObj.getTime())) {
+    return typeof date === 'string' ? date : '—';
+  }
+  
+  return dateObj.toLocaleDateString(locale, options);
+};
+
 
 //CASE TRANSFORMATION
 

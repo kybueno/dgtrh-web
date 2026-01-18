@@ -26,7 +26,7 @@ onMounted(() => {
 
 <template>
     <div class="flex flex-col w-fit max-w-2xl mx-auto justify-center">
-        <FormCard icon="mdi:user-edit" :heading="'Actualizar: ' + getProfileDisplayName(data as any)"
+        <FormCard icon="mdi:user-edit" :heading="'Actualizar: ' + getDisplayName(data as any)"
             description="Actualice los datos del trabajador" @done="handleSubmit" @cancel="emit('cancel')">
 
             <div class="grid grid-cols-2 gap-4 p-2">
@@ -86,8 +86,8 @@ onMounted(() => {
 
                 <!-- Género -->
                 <UFormField label="Género" class="col-span-1">
-                    <USelect class="w-full" :items="GENDER_OPTIONS" value-key="value"
-                        label-key="label" v-model="(formData.gender as GenderCode)" />
+                    <USelect class="w-full" :items="GENDER_OPTIONS" value-key="value" label-key="label"
+                        v-model="(formData.gender as GenderCode)" />
                 </UFormField>
 
                 <!-- Organizaciones -->
@@ -121,7 +121,10 @@ onMounted(() => {
                         </template>
                     </USelect>
                 </UFormField>
-
+                <!-- Estado -->
+                <UFormField label="Estado" class="col-span-2">
+                    <USelect required v-model="formData.status" :items="WORKER_STATUS_OPTIONS" class="w-full" />
+                </UFormField>
             </div>
             <template #actions>
                 <UButton type="submit" color="primary" :loading="loading">
