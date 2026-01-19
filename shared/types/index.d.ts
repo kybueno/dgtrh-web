@@ -7,7 +7,7 @@ interface WorkerDetailed extends WorkerInfo {
 
     group: {name:string};
     leaderAtGroup: {name:string};
-    position: OmitTables<"positions","id">;
+    position: Omit<Tables<"positions","id">>;
 
 }
 type WorkerInsert = TablesInsert<"workers"> 

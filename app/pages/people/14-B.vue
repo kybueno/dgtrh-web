@@ -11,17 +11,15 @@ import type { TableColumn } from '@nuxt/ui';
 import { useWorkerStore } from '~/stores/workerStore'
 const supabase = useSupabaseClient()
 
-const workerStore = useWorkerStore()
-
-onMounted(() => workerStore.loadWorkers())
+onMounted(() => loadWorkers())
 
 
 interface Props {
-  data: WorkerInfo[]
+  data: WorkerDetailed[]
 }
 const { data } = defineProps<Props>()
 
-const columns: TableColumn<WorkerInfo>[] = [
+const columns: TableColumn<WorkerDetailed>[] = [
   {
     id: 'select',
     header: ({ table }) => h(UCheckbox, {
@@ -62,7 +60,7 @@ const columns: TableColumn<WorkerInfo>[] = [
 
   }, {
     header: "Grupo Escala",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.position.group_escale //todo: grupo escala de la positions
   }, {
     header: "Total",
     cell: ({ row }) => row.original
@@ -101,7 +99,7 @@ const columns: TableColumn<WorkerInfo>[] = [
       </template>
       <strong class="flex justify-center">Anexo No.14-B</strong>
       <div class="flex justify-center">De la Plantilla de cargos y registro de trabajadores</div>
-      <UTable :data="workerStore.workers" :columns="columns" sticky class="h-96" />
+      <UTable :data="workers" :columns="columns" sticky class="h-96" />
       
 
     </UCard>

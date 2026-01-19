@@ -47,7 +47,7 @@ export function getWorkerStatusColor(status?: WorkerStatus): "success" | "error"
 export const workers = ref<WorkerDetailed[]>([]);
 export const workersPending = ref<boolean>(false);
 export const WORKER_QUERY = {
-  detailed: "*, group:groups!workers_group_id_fkey(name), position:positions(code,description,category,level)",
+  detailed: "*, group:groups!workers_group_id_fkey(name), position:positions(*)",
   basic: "*",
 }
 

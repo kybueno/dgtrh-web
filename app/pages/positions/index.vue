@@ -49,7 +49,7 @@ const columns: TableColumn<PositionInfo>[] = [
         cell: ({ row }) => row.original.category
     }, {
         header: "Cantidad",
-        cell: ({ row }) => row.original.cant
+        cell: ({ row }) => row.original //todo: calcular 
     }, {
         header: "Nivel",
         cell: ({ row }) => row.original.level
