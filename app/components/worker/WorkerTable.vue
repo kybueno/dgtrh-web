@@ -42,6 +42,7 @@ const columns: TableColumn<typeof data[0]>[] = [
         header: "Expediente",
         cell: ({ row }) => row.original.record_number,
     }, {
+        enableSorting: true,
         id:'name',
         accessorKey: 'name',
         header: "Nombre y Apellidos",
@@ -106,14 +107,14 @@ const initialTableState = {
 }
 
 const table = useTemplateRef('table')
-
+const sorting = ref([])
 </script>
 <template>
     <div class="border border-muted bg-muted rounded-md">
         <Flex class="pt-1 px-1 justify-end">
             <ColumnsControl :table="table" />
         </Flex>
-        <UTable :initial-state="initialTableState" ref="table" :loading="loading || workersPending" :data="data"
+        <UTable v-model:sorting="sorting" :initial-state="initialTableState" ref="table" :loading="loading || workersPending" :data="data"
             :columns="columns" class="w-full h-full" :paginate="true" :page-size="10" />
         <div class="flex justify-center py-4">
             <UPagination v-model="page" :total="data.length" :page-size="10" />

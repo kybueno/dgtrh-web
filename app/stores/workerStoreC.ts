@@ -28,10 +28,10 @@ export const WORKER_STATUS_CONFIG = {
 } as const;
 
 // Select field options
-export const WORKER_STATUS_OPTIONS:{label:string,value:string}[] =[
-  {label:WORKER_STATUS_CONFIG[WORKER_STATUS.ACTIVE].label,value:WORKER_STATUS.ACTIVE},
-  {label:WORKER_STATUS_CONFIG[WORKER_STATUS.INACTIVE].label,value:WORKER_STATUS.INACTIVE},
-  {label:WORKER_STATUS_CONFIG[WORKER_STATUS.TERMINATED].label,value:WORKER_STATUS.TERMINATED},
+export const WORKER_STATUS_OPTIONS: { label: string, value: string }[] = [
+  { label: WORKER_STATUS_CONFIG[WORKER_STATUS.ACTIVE].label, value: WORKER_STATUS.ACTIVE },
+  { label: WORKER_STATUS_CONFIG[WORKER_STATUS.INACTIVE].label, value: WORKER_STATUS.INACTIVE },
+  { label: WORKER_STATUS_CONFIG[WORKER_STATUS.TERMINATED].label, value: WORKER_STATUS.TERMINATED },
 ]
 
 export function getWorkerStatusLabel(status?: WorkerStatus): string {
@@ -47,17 +47,31 @@ export function getWorkerStatusColor(status?: WorkerStatus): "success" | "error"
 export const workers = ref<WorkerDetailed[]>([]);
 export const workersPending = ref<boolean>(false);
 export const WORKER_QUERY = {
-  detailed: "*, group:groups!workers_group_id_fkey(name), position:positions(code,description,category,level)"
+  detailed: "*, group:groups!workers_group_id_fkey(name), position:positions(code,description,category,level)",
+  basic: "*",
 }
 
 
-// CREATE
-export async function createWorker(newWorkerData: TablesInsert<"workers">) {
+//No mutation functions
+export async function fetchWorkersBasic() {
   const supabase = useSupabaseClient();
-  const response = await supabase
+  return await supabase.from("workers").select(WORKER_QUERY.basic);
+}
+export async function fetchWorkersDetailed() {
+  const supabase = useSupabaseClient();
+  return await supabase.from("workers").select(WORKER_QUERY.detailed);
+}
+export async function queryWorkerCreate(newWorkerData: TablesInsert<"workers">) {
+  const supabase = useSupabaseClient();
+  return await supabase
     .from("workers")
     .insert([newWorkerData])
     .select();
+}
+
+// CREATE
+export async function createWorker(newWorkerData: TablesInsert<"workers">) {
+  const response = await queryWorkerCreate(newWorkerData)
 
   const { data, error } = response;
 
@@ -74,10 +88,9 @@ export async function createWorker(newWorkerData: TablesInsert<"workers">) {
 
 // READ
 export async function loadWorkers() {
-  const supabase = useSupabaseClient();
-  
+
   workersPending.value = true;
-  const response = await supabase.from("workers").select(WORKER_QUERY.detailed);//, leaderAtGroup:groups!groups_leader_id_fkey
+  const response = await fetchWorkersDetailed()
   const { data, error } = response;
   workersPending.value = false;
 
@@ -163,7 +176,7 @@ export async function getWorkerById(id: string) {
   return null;
 }
 
-export async function getWorkerByRecordNumber(recordNumber: string):Promise<WorkerDetailed | null> {
+export async function getWorkerByRecordNumber(recordNumber: string): Promise<WorkerDetailed | null> {
   // Try to find in local store first
   const localWorker = workers.value.find(worker => worker.record_number === recordNumber);
   if (localWorker) return localWorker;
