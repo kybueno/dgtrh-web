@@ -40,10 +40,10 @@ const columns: TableColumn<WorkerDetailed>[] = [
     
   }, {
     header: "Órganos y Cargos",
-    cell: ({ row }) => row.original.position_code
+    cell: ({ row }) => row.original.position.description ?? row.original.position_code
   }, {
     header: "CO",
-    cell: ({ row }) => row.original
+    cell:  "T"
   }, {
     header: "Nombre y Apellidos del trabajador",
     cell: ({ row }) => `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`
@@ -60,27 +60,28 @@ const columns: TableColumn<WorkerDetailed>[] = [
 
   }, {
     header: "Grupo Escala",
-    cell: ({ row }) => row.original.position.group_escale //todo: grupo escala de la positions
+    cell: ({ row }) => row.original.position.group_escale 
   }, {
     header: "Total",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.position.total
   }, {
     header: "Escala",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.position.scale
   }, {
     header: "CLA",
-    cell: ({ row }) => row.original
+    cell: "0.00"
   }, {
     header: "Turnos nocturnos y Mixtos",
     cell: ({ row }) => row.original
   }, {
     header: "Maestría o Doctorados",
-    cell: ({ row }) => row.original
+    cell: "0.00"
   }, {
     header: "Años de Servicio",
-    cell: ({ row }) => row.original
+    cell: "0.00"
   }, {
     header: "Otros",
+    cell: "0.00"
     
   },
 

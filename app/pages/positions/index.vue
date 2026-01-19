@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 definePageMeta({
-  title: 'Anexo 14'
+    title: 'Anexo 14'
 })
 useHead({
-  title: 'Anexo 14'
+    title: 'Anexo 14'
 })
 
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
+onMounted(loadWorkers)
 
 onMounted(loadPositions);
 
@@ -49,7 +50,7 @@ const columns: TableColumn<PositionInfo>[] = [
         cell: ({ row }) => row.original.category
     }, {
         header: "Cantidad",
-        cell: ({ row }) => row.original //todo: calcular 
+        cell: ({ row }) => row.original//todo: calcular la cantidad de trabajadores que pertenece a cada posicion 
     }, {
         header: "Nivel",
         cell: ({ row }) => row.original.level

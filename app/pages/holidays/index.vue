@@ -13,11 +13,11 @@ import type { TableColumn } from '@nuxt/ui';
 
 const supabase = useSupabaseClient()
 
-const workerStore = useWorkerStore()
 
-onMounted(() => workerStore.loadWorkers())
 
-const columns: TableColumn<WorkerInfo>[] = [
+onMounted(() =>loadWorkers())
+
+const columns: TableColumn<WorkerDetailed>[] = [
   {
     id: 'select',
     header: ({ table }) => h(UCheckbox, {
@@ -42,7 +42,7 @@ const columns: TableColumn<WorkerInfo>[] = [
     cell: ({ row }) => `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`
   }, {
     header: "Área",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.group?.name || row.original.leaderAtGroup?.name || row.original.group_id
   }, {
     header: "Desde",
     cell: ({ row }) => row.original
@@ -71,7 +71,7 @@ const columns: TableColumn<WorkerInfo>[] = [
 		Registro de Vacaciones
 	  </h2>
     <UButton to="holidays/new">Añadir</UButton>
-    <UTable :data="workerStore.workers" class="flex-1" :columns="columns"/>
+    <UTable :data="workers" class="flex-1" :columns="columns"/>
   </div>
 
 

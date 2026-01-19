@@ -350,6 +350,8 @@ export type Database = {
           group_escale: string
           id: number
           level: string
+          scale: number | null
+          total: number | null
         }
         Insert: {
           category: string
@@ -359,6 +361,8 @@ export type Database = {
           group_escale: string
           id?: number
           level: string
+          scale?: number | null
+          total?: number | null
         }
         Update: {
           category?: string
@@ -368,6 +372,8 @@ export type Database = {
           group_escale?: string
           id?: number
           level?: string
+          scale?: number | null
+          total?: number | null
         }
         Relationships: []
       }

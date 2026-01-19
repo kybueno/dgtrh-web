@@ -23,9 +23,15 @@
         <UInput placeholder="Introduzca el nivel" v-model="formData.level" error="Please enter a valid level." />
       </UFormField>
 
-      <UFormField label="Grupo/Escala" name="group_escale">
+      <UFormField label="Grupo" name="group_escale">
         <UInput placeholder="Introduzca la escala a la que pertenece" v-model="formData.group_escale"
           error="Please enter a valid escale." />
+      </UFormField>
+      <UFormField label="Total" name="total">
+        <UInput placeholder="Introduzca el monto salarial" v-model="formData.total" />
+      </UFormField>
+      <UFormField label="Escala" name="scale">
+        <UInput placeholder="Introduzca el monto salarial de acuerdo a su escala" v-model="formData.scale"/>
       </UFormField>
       <UButton @click="() => handleAddPosition()" color="primary">Guardar posición</UButton>
     </div>
@@ -43,7 +49,6 @@ const formData = ref<TablesInsert<"positions">>({
   code: 0,
   description: '',
   category: '',
-  cant: 0,
   group_escale: '',
   level: '',
 })
