@@ -1,4 +1,11 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Licencia sin Sueldo'
+})
+useHead({
+  title: 'Licencia sin Sueldo'
+})
+
 import { useWorkerStore } from '~/stores/workerStore'
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';

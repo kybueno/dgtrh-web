@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+definePageMeta({
+  title: 'Anexo 14-B'
+})
+useHead({
+  title: 'Anexo 14-B'
+})
+
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 import { useWorkerStore } from '~/stores/workerStore'
@@ -47,7 +54,7 @@ const columns: TableColumn<WorkerInfo>[] = [
     cell: ({ row }) => row.original.ci
   }, {
     header: "Sexo",
-    cell: ({ row }) => row.original.gender
+    cell: ({ row }) => getGenderLabel(row.original.gender as GenderValue)
 
   }, {
     header: "Nivel de Preparación",

@@ -57,6 +57,13 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: 'Nueva Licencia sin Sueldo'
+})
+useHead({
+  title: 'Nueva Licencia sin Sueldo'
+})
+
 import { useWorkerStore } from '~/stores/workerStore'
 const supabase = useSupabaseClient()
 

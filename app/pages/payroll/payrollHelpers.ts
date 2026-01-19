@@ -39,7 +39,7 @@ export interface PrenominaData {
 
 
 export class PdfService {
-  static generatePrenominaPDF(data: PrenominaData): TDocumentDefinitions {
+  static generatePayrollPDF(data: PrenominaData): TDocumentDefinitions {
     const docDefinition: TDocumentDefinitions = {
       pageSize: 'A4',
       pageOrientation: 'landscape',
@@ -186,8 +186,8 @@ export class PdfService {
 }
 
 
-export const usePrenominaPDF = (worker: WorkerInfo, date: Date = new Date(), p0: Date) => {
-  const { generatePrenominaPDF } = usePrenominaPDF(worker);
+export const usePayrollPDF = (worker: WorkerInfo, date: Date = new Date(), p0: Date) => {
+  const { generatePrenominaPDF } = usePayrollPDF(worker);
   
   const generatePDF = () => {
     generatePrenominaPDF();
@@ -229,7 +229,7 @@ export const usePrenominaPDF = (worker: WorkerInfo, date: Date = new Date(), p0:
       ]
     };
 
-    const docDefinition = PdfService.generatePrenominaPDF(prenominaData);
+    const docDefinition = PdfService.generatePayrollPDF(prenominaData);
     
     // En el cliente, usa pdfmake para generar el PDF
     if (process.client) {

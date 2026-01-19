@@ -3,6 +3,13 @@ type EmailAddress = `${string}@${string}.${string}` | string;
 
 type Profile = Tables<"profiles"> 
 type WorkerInfo = Tables<"workers"> 
+interface WorkerDetailed extends WorkerInfo {
+
+    group: {name:string};
+    leaderAtGroup: {name:string};
+    position: OmitTables<"positions","id">;
+
+}
 type WorkerInsert = TablesInsert<"workers"> 
 type WorkerProfile = Tables<"profiles_with_worker"> 
 type ProfileInsert = TablesInsert<"profiles"> 

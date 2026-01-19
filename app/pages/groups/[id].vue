@@ -8,7 +8,7 @@
             <template #header>
                 <strong>{{ group.name }}</strong>
                 <div class="text-muted text-sm">
-                    <p>Jefe: {{ getProfileDisplayName(group.leader) }}</p>
+                    <p>Jefe: {{ getDisplayName(group.leader) }}</p>
                     <p>{{ group.leader.email }}</p>
                 </div>
             </template>
@@ -28,7 +28,7 @@
                 <template v-for="member in group.workers">
                     <UButton class="block w-full text-start" variant="soft" color="neutral">
                         <p>
-                            {{ getProfileDisplayName(member)
+                            {{ getDisplayName(member)
                             }}
                         </p>
                         <p class="text-muted">{{ member.email }}</p>
@@ -45,6 +45,12 @@
     </div>
 </template>
 <script setup lang="ts">
+definePageMeta({
+  title: 'Detalles del Grupo'
+})
+useHead({
+  title: 'Detalles del Grupo'
+})
 const group = ref<WorkGroupInfo | undefined>()
 const route = useRoute()
 const newMemberId = ref<UUID | undefined>()

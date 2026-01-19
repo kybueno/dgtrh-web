@@ -12,7 +12,14 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
+definePageMeta({
+  title: 'Organizaciones'
+})
+useHead({
+  title: 'Organizaciones'
+})
+
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 

@@ -1,4 +1,10 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Hojas de Firma'
+})
+useHead({
+  title: 'Hojas de Firma'
+})
 
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted } from 'vue';
@@ -23,7 +29,7 @@ onMounted(async () => {
 
     <UCard @click="generateSignSheet(worker)" v-for="worker in workerStore.workers"
       class="p-4 flex gap-4 cursor-pointer hover:scale-105 transition-all active:scale-100">{{
-        getProfileDisplayName(worker) }}
+        getDisplayName(worker) }}
     </UCard>
     <div>
     </div>

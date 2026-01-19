@@ -1,4 +1,11 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Inicio de Sesión'
+})
+useHead({
+  title: 'Inicio de Sesión'
+})
+
 import { ref } from 'vue'
 const supabase = useSupabaseClient()
 const mode = ref<'login' | 'signup'>('login') // 'login' or 'signup'

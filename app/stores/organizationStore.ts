@@ -1,4 +1,4 @@
-export const organizations = ref<OrganizationInfo[]>([])
+export const organizations = useLocalStorage<OrganizationInfo[]>("organizations", [])
 
 export const organizationsPending = ref<boolean>(false)
 

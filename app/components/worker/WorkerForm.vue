@@ -1,175 +1,168 @@
 <script setup lang="ts">
-import { id } from '@nuxt/ui/runtime/locale/index.js';
-import { useWorkerStore } from '~/stores/workerStore';
 const supabase = useSupabaseClient()
 const workerStore = useWorkerStore();
 
-
 const formData = ref<WorkerInsert>({
-    email: 'jeduardo@uci.cu',
-    first_name: 'Jose',
-    last_name: 'Gomez',
-    record_number: '25548',
-    second_last_name: 'Perez',
-    ci:'5445877825',
-    parent1_name:'Juan',
-    parent2_name:'Jo',
-    middle_name:'Eduardo',
-    organizations_codes:['CTC'],
-    level:'Tecnico',
-    address:'Calle 51/ 5ta y 7ma',
-    gender:'Masculino',
-    tel:'55555555', 
-    position_code: 0,  
-    
+    email: '',
+    first_name: '',
+    middle_name: '',
+    last_name: '',
+    record_number: '',
+    second_last_name: '',
+    ci: '',
+    organizations_codes: [],
+    level: null,
+    address: null,
+    gender: null,
+    tel: null,
+    position_code: null,
 })
 
+const loading = ref(false)
+
 async function handleAddWorker() {
+    loading.value = true
     try {
         await workerStore.createWorker(formData.value, supabase);
 
         formData.value = {
             email: '',
             first_name: '',
+            middle_name: '',
             last_name: '',
             record_number: '',
             second_last_name: '',
-            ci:'',
-
+            ci: '',
+            organizations_codes: [],
+            level: null,
+            address: null,
+            gender: null,
+            tel: null,
+            position_code: null,
         };
+        
+        navigateTo('/people')
     } catch (error) {
         console.error('Error al crear trabajador:', error);
-
+    } finally {
+        loading.value = false
     }
 }
 
-loadGroups()
-
-
+onMounted(() => {
+    if (!organizations.value.length) loadOrganizations()
+    if (!positions.value.length) loadPositions()
+})
 </script>
 
 <template>
-    <div class="flex flex-col w-full max-w-2xl mx-auto justify-center">
-      <Card class="shadow-xl rounded-2xl p-6">
-        <CardHeader>
-          <CardDescription>Complete el formulario para registrar un nuevo trabajador</CardDescription>
-        </CardHeader>
-  
-        <CardContent>
-          <form class="grid grid-cols-2 gap-4">
-            <!-- Primer Nombre -->
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Primer Nombre *</label>
-              <UInput placeholder="Introduzca el nombre" v-model="formData.first_name" error="Please enter a valid name." />
-            </div>
-  
-            <!-- Segundo Nombre -->
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Segundo Nombre</label>
-              <UInput placeholder="Segundo nombre" v-model="formData.middle_name" />
-            </div>
-  
-            <!-- Primer Apellido -->
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Primer Apellido *</label>
-              <UInput placeholder="Apellidos" v-model="formData.last_name" error="Please enter a valid name."/>
-            </div>
-  
-            <!-- Segundo Apellido -->
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Segundo Apellido</label>
-              <UInput placeholder="Apellidos" v-model="formData.second_last_name" error="Please enter a valid name."/>
-            </div>
-  
-            <!-- CI -->
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Carnet de Identidad *</label>
-              <UInput placeholder="CI" v-model="formData.ci" error="Please enter a valid ci." />
-            </div>
-  
-            <!-- Número expediente -->
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Número de expediente</label>
-              <UInput placeholder="Expediente laboral" v-model="formData.record_number" error="Please enter a valid record number." />
-            </div>
-  
-            <!-- Dirección -->
-            <div class="flex flex-col gap-1 col-span-2">
-              <label class="font-medium">Dirección</label>
-              <UInput placeholder="Dirección particular" v-model="formData.address" />
-            </div>
-  
-            <!-- Sexo -->
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Sexo</label>
-              <UInput v-model="formData.gender" />
-            </div>
-  
-            <!-- Correo -->
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Correo *</label>
-              <UInput trailing-icon="i-lucide-at-sign" placeholder="Email" v-model="formData.email" error="Please enter a valid email address." />
-            </div>
-  
-            <!-- Madre -->
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Madre</label>
-              <UInput placeholder="Nombre y apellido" v-model="formData.parent1_name" />
-            </div>
-  
-            <!-- Padre -->
-            <div class="flex flex-col gap-1">
-              <label class="font-medium">Padre</label>
-              <UInput placeholder="Nombre y apellido" v-model="formData.parent2_name" />
-            </div>
-  
-            <!-- Teléfono -->
-            <div class="flex flex-col gap-1 col-span-2">
-              <label class="font-medium">Número de teléfono</label>
-              <UInput placeholder="tel:" v-model="formData.tel" error="Please enter a valid phone."/>
-            </div>
-  
-            <!-- Cargo -->
-            <div class="flex flex-col gap-1 col-span-2">
-              <label class="font-medium">Cargo a ocupar *</label>
-              <USelectMenu v-model="formData.position_code" :items="positions" class="w-48" value-key="codigo" label-key="descripcion" >
-              <template #content-top>
-                <UButton to="/positions/new" color="neutral">Añadir</UButton>
-              </template>
-              </USelectMenu>
-            </div>
-  
-            <!-- Grupo de trabajo -->
-            <div class="flex flex-col gap-1 col-span-2">
-              <label class="font-medium">Grupo de Trabajo</label>
-              <USelectMenu v-model="formData.group_id" :items="workGroups" class="w-48" value-key="id" label-key="name">
-                <template #content-top>
-                <UButton to="/groups/new" color="neutral">Añadir</UButton>
-              </template>
-              </USelectMenu>
-              </div>
-  
-            <!-- Organización de masas -->
-            <div class="flex flex-col gap-1 col-span-2">
-              <label class="font-medium">Organizaciones de masas</label>
-              <USelectMenu v-model="formData.organizations_codes" :items="organizations" class="w-48" value-key="code" label-key="acronym" multiple>
-                <template #content-top>
-                <UButton to="/organizations/new" color="neutral">Añadir</UButton>
-              </template>
-              </USelectMenu>
-            </div>
-          </form>
-  
-          <CardDescription class="mt-4">Los campos marcados con (*) son requeridos.</CardDescription>
-         
+    <div class="flex flex-col w-fit max-w-2xl mx-auto justify-center">
+        <FormCard icon="mdi:user-plus" heading="Registrar nuevo trabajador"
+            description="Complete el formulario para registrar un nuevo trabajador" @done="handleAddWorker" @cancel="navigateTo('/people')">
 
-  
-          <div class="flex justify-end gap-3 mt-6">
-            <UButton to="/people">Cancelar</UButton>
-            <UButton @click="handleAddWorker" color="primary">Registrar Trabajador</UButton>
-          </div>
-        </CardContent>
-      </Card>
+            <div class="grid grid-cols-2 gap-4 p-2">
+                <!-- Primer Nombre -->
+                <UFormField label="Primer Nombre *" class="col-span-1">
+                    <UInput v-model="formData.first_name" required />
+                </UFormField>
+
+                <!-- Segundo Nombre -->
+                <UFormField label="Segundo Nombre" class="col-span-1">
+                    <UInput v-model="formData.middle_name" />
+                </UFormField>
+
+                <!-- Primer Apellido -->
+                <UFormField label="Primer Apellido *" class="col-span-1">
+                    <UInput v-model="formData.last_name" required />
+                </UFormField>
+
+                <!-- Segundo Apellido -->
+                <UFormField label="Segundo Apellido" class="col-span-1">
+                    <UInput v-model="formData.second_last_name" />
+                </UFormField>
+
+                <!-- CI -->
+                <UFormField label="Carnet de Identidad *" class="col-span-1">
+                    <UInput v-model="formData.ci" required />
+                </UFormField>
+
+                <!-- Número expediente -->
+                <UFormField label="Número de expediente" class="col-span-1">
+                    <UInput v-model="formData.record_number" />
+                </UFormField>
+                
+                <!-- Nivel -->
+                <UFormField class="col-span-2" label="Nivel educativo">
+                    <USelect class="w-full" :items="(EDUCATION_LEVELS as unknown as EducationLevel[])" value-key="code"
+                        label-key="label" v-model="(formData.level as EducationLevelCode)">
+                        <template #item-label="{ item }">
+                            <p>{{ item.label }}</p>
+                            <span class="text-muted">{{ item.description }}</span>
+                        </template>
+                    </USelect>
+                </UFormField>
+                
+                <!-- Dirección -->
+                <UFormField label="Dirección" class="col-span-2">
+                    <UTextarea class="w-full" v-model="formData.address" />
+                </UFormField>
+
+                <!-- Email -->
+                <UFormField label="Correo Electrónico" class="col-span-1">
+                    <UInput v-model="formData.email" type="email" />
+                </UFormField>
+
+                <!-- Teléfono -->
+                <UFormField label="Teléfono" class="col-span-1">
+                    <UInput v-model="formData.tel" />
+                </UFormField>
+
+                <!-- Género -->
+                <UFormField label="Género" class="col-span-1">
+                    <USelect class="w-full" :items="GENDER_OPTIONS" value-key="value"
+                        label-key="label" v-model="(formData.gender as GenderCode)" />
+                </UFormField>
+
+                <!-- Organizaciones -->
+                <UFormField class="col-span-2" label="Organizaciones">
+                    <USelect multiple class="w-full" :items="organizations" value-key="code" label-key="code"
+                        v-model="formData.organizations_codes" :loading="organizationsPending"
+                        :disabled="organizations.length == 0">
+                        <span v-for="o in formData.organizations_codes">{{ o.toUpperCase() }}</span>
+                        <template #item-leading="{ item }">
+                            <UAvatar :src="item.img || undefined" :alt="item.acronym || undefined" />
+                        </template>
+                        <template #item-label="{ item }">
+                            <p class="mr-2">{{ item.acronym ?? item.code?.toUpperCase() }}</p>
+                            <span v-if="item.name" class="text-muted">{{ item.name }}</span>
+                        </template>
+                        <template #content-top>
+                            <UButton to="/organizations/new" color="neutral" variant="ghost" icon="mdi:plus">Nueva
+                                organización</UButton>
+                        </template>
+                    </USelect>
+                </UFormField>
+
+                <!-- Cargo -->
+                <UFormField label="Cargo que ocupa" class="col-span-2">
+                    <USelect required v-model="formData.position_code as number | undefined" :items="positions" class="w-full"
+                        value-key="code" label-key="description">
+                        <template #content-top>
+                            <UButton to="/positions/new" color="neutral" variant="ghost" icon="mdi:plus">Nuevo cargo
+                            </UButton>
+                        </template>
+                    </USelect>
+                </UFormField>
+                <!-- Estado -->
+                <UFormField label="Estado" class="col-span-2">
+                    <USelect required v-model="formData.status" :items="WORKER_STATUS_OPTIONS" class="w-full"/>
+                </UFormField>
+            </div>
+            <template #actions>
+                <UButton type="submit" color="primary" :loading="loading">
+                    {{ loading ? 'Guardando...' : 'Registrar Trabajador' }}
+                </UButton>
+            </template>
+        </FormCard>
     </div>
-  </template>
-  
+</template>

@@ -68,6 +68,13 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: 'Nuevo Certificado Médico'
+})
+useHead({
+  title: 'Nuevo Certificado Médico'
+})
+
 import { useWorkerStore } from '~/stores/workerStore'
 const supabase = useSupabaseClient()
 

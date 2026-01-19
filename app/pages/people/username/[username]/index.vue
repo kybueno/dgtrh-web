@@ -23,20 +23,20 @@
                                 worker.status
                             }}
                         </span></p>
-                    <p><strong>No. Expediente:</strong> #{{ worker.record_number }}</p>
+                    <p><strong>No. Expediente:</strong> {{ worker.record_number }}</p>
                     <p><strong>Teléfono:</strong>{{ worker.tel }}</p>
                     <p><strong>Grupo de trabajo:</strong>{{ worker.group_id }}</p>
                     <p><strong>Fecha de inicio:</strong>{{ worker.created_at }}</p>
                     <p><strong>Padre:</strong>{{ worker.parent1_name }}</p>
                     <p><strong>Madre:</strong>{{ worker.parent2_name }}</p>
                     <p><strong>Dirección:</strong>{{ worker.address }}</p> 
-                    <p><strong>Género:</strong>{{ worker.gender }}</p>
+                    <p><strong>Género:</strong>{{ getGenderLabel(worker.gender as GenderValue) }}</p>
                     <p><strong>Nivel de preparación:</strong>{{ worker.level }}</p>
                     <p><strong>Cargo que ocupa:</strong>{{ worker.position_code }}</p>
                     <p><strong>Organizaciones a las que pertenece:</strong>{{ worker.organizations_codes }}</p>
                     <div class="flex gap-4 justify-end mt-4">
-                        <UButton to="/people/new"> Editar</UButton>
-                        <UButton @click="handleDelete()" variant="subtle" color="error" > Eliminar</UButton>
+                        <UButton @click="handleDelete()" variant="subtle" color="error" >Eliminar trabajador</UButton>
+                        <UButton :to="`/people/username/${getEmailUsername(worker.email||'')}/edit`" variant="subtle" > Modificar datos</UButton>
                     </div>
     
                 </div>
@@ -51,6 +51,13 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: 'Detalles del Trabajador'
+})
+useHead({
+  title: 'Detalles del Trabajador'
+})
+
 import { useRoute } from 'vue-router';
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted, ref } from 'vue';

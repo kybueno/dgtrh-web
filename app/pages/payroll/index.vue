@@ -1,11 +1,17 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Prenómina'
+})
+useHead({
+  title: 'Prenómina'
+})
 
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted } from 'vue';
 
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
-import {usePrenominaPDF} from './payrollHelpers'
+import {usePayrollPDF} from './payrollHelpers'
 
 
 

@@ -93,6 +93,13 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: 'Nueva Licencia de Maternidad'
+})
+useHead({
+  title: 'Nueva Licencia de Maternidad'
+})
+
 import { useWorkerStore } from '~/stores/workerStore'
 const supabase = useSupabaseClient()
 

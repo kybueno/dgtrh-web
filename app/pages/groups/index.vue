@@ -1,4 +1,11 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Grupos de trabajo'
+})
+useHead({
+  title: 'Grupos de trabajo'
+})
+
 import { useWorkerStore } from "~/stores/workerStore";
 const supabase = useSupabaseClient();
 const workerStore = useWorkerStore();
@@ -40,7 +47,7 @@ function handleDeleteGroup(group:WorkGroupInfo){
                         <template #header>
                             <strong>{{ group.name }}</strong>
                             <p class="text-muted text-sm">
-                                Jefe: {{ getProfileDisplayName(group.leader) }}
+                                Jefe: {{ getDisplayName(group.leader) }}
                             </p>
                         </template>
                             <div class="flex justify-between items-center mb-1">
@@ -49,7 +56,7 @@ function handleDeleteGroup(group:WorkGroupInfo){
                             </div>
                             <div class="space-y-1">
                                 <template v-for="member in group.workers">
-                                    <UButton class="block w-full text-start" variant="soft" color="neutral">{{ getProfileDisplayName(member) }}</UButton>
+                                    <UButton class="block w-full text-start" variant="soft" color="neutral">{{ getDisplayName(member) }}</UButton>
                                 </template>
                             </div>
                         <template #footer >

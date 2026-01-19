@@ -64,6 +64,13 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: 'Nueva Vacación'
+})
+useHead({
+  title: 'Nueva Vacación'
+})
+
 import { useWorkerStore } from '~/stores/workerStore'
 const supabase = useSupabaseClient()
 
