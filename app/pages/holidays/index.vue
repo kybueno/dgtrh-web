@@ -13,11 +13,11 @@ import type { TableColumn } from '@nuxt/ui';
 
 const supabase = useSupabaseClient()
 
-
+onMounted(() =>loadHolidays())
 
 onMounted(() =>loadWorkers())
 
-const columns: TableColumn<WorkerDetailed>[] = [
+const columns: TableColumn<HolidaysInfo>[] = [
   {
     id: 'select',
     header: ({ table }) => h(UCheckbox, {
@@ -45,21 +45,20 @@ const columns: TableColumn<WorkerDetailed>[] = [
     cell: ({ row }) => row.original.group?.name || row.original.leaderAtGroup?.name || row.original.group_id
   }, {
     header: "Desde",
-    cell: ({ row }) => row.original
-
+    cell: ({ row }) => row.original.desde
   }, {
     header: "Hasta",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.hasta
 
   }, {
     header: "Tiempo",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.tiempo
   }, {
     header: "Incorporación",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.incorporacion
   }, {
     header: "Motivo",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.motivo
   }, 
 
 ]

@@ -8,19 +8,6 @@
                 <fieldset class="flex flex-col w-full max-w-sm gap-1.5">
                     <div class="flex flex-col gap-2">
 
-                        <label> NoExp:
-                        <UInput  placeholder="0000000"/>
-                    </label>
-
-                    
-                        <label> Nombre y Apellidos:
-                        <UInput  placeholder="Nombre del trabajador"/>
-                    </label>
-
-                    <label> Área:
-                        <UInput  placeholder="Área a la que pertenece"/>
-                    </label>
-
                     <label> Desde:
                         <UInput  placeholder=""/>
                     </label>
@@ -65,10 +52,10 @@
 
 <script setup lang="ts">
 definePageMeta({
-  title: 'Nueva Vacación'
+  title: 'Nueva Vacaciones'
 })
 useHead({
-  title: 'Nueva Vacación'
+  title: 'Nueva Vacaciones'
 })
 
 import { useWorkerStore } from '~/stores/workerStore'
