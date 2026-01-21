@@ -4,7 +4,7 @@
             <UButton icon="mdi:arrow-back" variant="ghost" color="neutral" to="/groups" />
             <h2>Detalles del Grupo de Trabajo</h2>
         </div>
-        <UCard v-if="group" @click="navigateTo('/groups/' + group.id)" class="cursor-pointer">
+        <UCard v-if="group" @click="navigateTo('/groups/' + group.id)" class="cursor-pointer max-w-sm" variant="subtle">
             <template #header>
                 <strong>{{ group.name }}</strong>
                 <div class="text-muted text-sm">
@@ -12,27 +12,31 @@
                     <p>{{ group.leader.email }}</p>
                 </div>
             </template>
-            <div class="flex justify-between items-center mb-1">
-                <p class="text-sm font-semibold">Miembros</p>
-                <UButton icon="mdi:add" variant="ghost" color="neutral" />
-            </div>
-            <UFormField class="mb-2" label="Añadir nuevo miembro">
+           
+            <UFormField class="mb-2" label="Añadir miembro">
                 <div class="flex gap-1">
-                    <USelect class="w-full" label-key="first_name" value-key="id" v-model="newMemberId"
+                    <USelect placeholder="Seleccione un trabajador" class="w-full" label-key="first_name" value-key="id" v-model="newMemberId"
                         :items="workersNotMembers" />
-                    <UButton v-if="newMemberId" variant="subtle" color="neutral" @click="handleAddNewMember()">Añadir
+                    <UButton v-if="newMemberId" variant="subtle" color="neutral" @click="handleAddNewMember(newMemberId,group.id)">Añadir
                     </UButton>
                 </div>
-            </UFormField>
+            </UFormField> 
+            <div v-if="group.workers.length>0" class="flex justify-between items-center mb-1">
+                <p class="text-sm font-semibold">Miembros</p>
+                <!-- <UButton icon="mdi:add" variant="ghost" color="neutral" /> -->
+            </div>
             <div class="space-y-1">
                 <template v-for="member in group.workers">
-                    <UButton class="block w-full text-start" variant="soft" color="neutral">
-                        <p>
-                            {{ getDisplayName(member)
-                            }}
-                        </p>
-                        <p class="text-muted">{{ member.email }}</p>
-                    </UButton>
+                    <div class="flex justify-between w-full text-start p-2 rounded-md">
+                        <div>
+                            <p>
+                                {{ getDisplayName(member)
+                                }}
+                            </p>
+                            <p class="text-muted">{{ member.email }}</p>
+                        </div>
+                        <UButton icon="mdi:close" color="neutral" variant="ghost" size="sm" title="Retirar miembro de este grupo" @click="handleRemoveMember(member.id)" />
+                    </div>
                 </template>
             </div>
             <template #footer>
@@ -73,7 +77,23 @@ function handleDeleteGroup(group: WorkGroupInfo) {
     if (confirm(`¿Está seguro de que desea eliminar el grupo ${group.name}? (Tiene ${group.workers.length} miembros)`)) deleteGroup(group.id)
 }
 
-async function handleAddNewMember() {
+async function handleAddNewMember(workerId:string,groupId?:number) {
     // workerStore TODO: Update worker with the new group and refetch group
+    let updatedWorkerData = {group_id:groupId ?? group.value?.id}
+    await updateWorker(workerId,updatedWorkerData).then(async()=>{
+        await loadGroups()
+        group.value = getGroupById(Number(route.params.id))
+    }).catch((error)=>{
+     useToast().add({title:"Error añadiendo usuario al grupo",description:error.message,color:"error"})
+    })
+}
+async function handleRemoveMember(workerId:string) {
+    // workerStore TODO: Update worker with the new group and refetch group
+    await updateWorker(workerId,{group_id:null}).then(async()=>{
+        await loadGroups()
+        group.value = getGroupById(Number(route.params.id))
+    }).catch((error)=>{
+     useToast().add({title:"Error retirando usuario del grupo",description:error.message,color:"error"})
+    })
 }
 </script>
