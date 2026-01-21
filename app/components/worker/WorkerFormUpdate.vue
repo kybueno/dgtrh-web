@@ -96,12 +96,14 @@ onMounted(() => {
                         v-model="formData.organizations_codes" :loading="organizationsPending"
                         :disabled="organizations.length == 0">
                         <span v-for="o in formData.organizations_codes">{{ o.toUpperCase() }}</span>
-                        <template #item-leading="{ item }">
-                            <UAvatar :src="item.img || undefined" :alt="item.acronym || undefined" />
-                        </template>
-                        <template #item-label="{ item }">
-                            <p class="mr-2">{{ item.acronym ?? item.code?.toUpperCase() }}</p>
-                            <span v-if="item.name" class="text-muted">{{ item.name }}</span>
+                        <template #item="{ item }">
+                            <HStack class="p-4">
+                                <UAvatar :src="item.img || undefined" :alt="item.acronym || undefined" />
+                                <Stack>
+                                    <p class="mr-2">{{ item.acronym ?? item.code?.toUpperCase() }}</p>
+                                    <span v-if="item.name" class="text-muted">{{ item.name }}</span>
+                                </Stack>
+                            </HStack>
                         </template>
                         <template #content-top>
                             <UButton to="/organizations/new" color="neutral" variant="ghost" icon="mdi:plus">Nueva
