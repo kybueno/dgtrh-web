@@ -106,12 +106,12 @@ export async function loadWorkers() {
 }
 
 // UPDATE
-export async function updateWorker(updatedWorkerData: TablesUpdate<"workers">) {
+export async function updateWorker(id:string,updatedWorkerData: TablesUpdate<"workers">) {
   const supabase = useSupabaseClient();
   const response = await supabase
     .from("workers")
     .update(updatedWorkerData)
-    .eq('id', updatedWorkerData.id)
+    .eq('id', id)
     .select();
 
   const { data, error } = response;

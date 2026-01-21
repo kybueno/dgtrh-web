@@ -18,7 +18,7 @@ function handleDeleteGroup(group:WorkGroupInfo){
 </script>
 
 <template>
-    <div class="flex flex-col bg-gray-50 w-full">
+    <div class="flex flex-col w-full">
         <div class="max-w-6xl mx-auto p-6 w-full">
             <!-- Encabezado -->
             <div class="flex items-center justify-between mb-8">
