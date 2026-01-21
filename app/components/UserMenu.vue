@@ -98,7 +98,17 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       e.preventDefault()
     }
   }]
-}]]))
+}]
+,
+[{
+  label: 'Cerrar sesión',
+  icon: 'i-lucide-log-out',
+  onSelect:async()=>{
+    await supabase.auth.signOut()
+    navigateTo('/auth/login/uci')
+  }
+}]
+]))
 </script>
 
 <template>
