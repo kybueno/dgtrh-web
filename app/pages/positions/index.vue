@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { workers } from '~/stores/workerStoreC';
+import type { WorkerDetailed } from '~/types/worker';
+
 definePageMeta({
     title: 'Anexo 14'
 })
@@ -10,7 +13,6 @@ import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
 onMounted(loadWorkers)
-
 onMounted(loadPositions);
 
 function handleDeletePosition(position: PositionInfo) {
@@ -50,7 +52,11 @@ const columns: TableColumn<PositionInfo>[] = [
         cell: ({ row }) => row.original.category
     }, {
         header: "Cantidad",
-        cell: ({ row }) => row.original//todo: calcular la cantidad de trabajadores que pertenece a cada posicion 
+        cell: ({ row }) => {
+          const positionCode = row.original.code;
+          const count = workers.value.filter((worker: WorkerDetailed) => worker.position_code === positionCode).length;
+          return count || 0;
+        }
     }, {
         header: "Nivel",
         cell: ({ row }) => row.original.level
@@ -66,6 +72,7 @@ const columns: TableColumn<PositionInfo>[] = [
 
 <template>
     <div class="flex flex-col p-8 w-full">
+
         <div class="flex items-center justify-between p-2 ">
             <h3 class="font-semibold text-lg">Anexo 14</h3>
 

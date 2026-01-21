@@ -134,27 +134,6 @@ const links = [[{
     onSelect: () => {
       open.value = false
     }
-  }, {
-    label: 'Certificados Médicos',
-    to: '/medical',
-    role: "['hr_manager', 'system_admin']",
-    onSelect: () => {
-      open.value = false
-    }
-  }, {
-    label: 'Licencia sin sueldo',
-    to: '/sin-sueldo',
-    role: "['hr_manager', 'system_admin']",
-    onSelect: () => {
-      open.value = false
-    }
-  }, {
-    label: 'Licencia de maternidad',
-    to: '/maternidad',
-    role: "['hr_manager', 'system_admin']",
-    onSelect: () => {
-      open.value = false
-    }
   },]
 
 }, {
