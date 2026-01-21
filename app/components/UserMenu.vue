@@ -105,7 +105,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   icon: 'i-lucide-log-out',
   onSelect:async()=>{
     await supabase.auth.signOut()
-    navigateTo('/auth/login/uci')
+    navigateTo('/auth/login')
   }
 }]
 ]))

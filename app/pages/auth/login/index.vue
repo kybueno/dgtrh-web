@@ -37,7 +37,7 @@ const handleAuth = async () => {
       if(data.user && !data.session) successMessage.value = '¡Registro exitoso! Por favor verifica tu correo electrónico para completar el proceso.'
       if(data.user && data.session) successMessage.value = '¡Registro exitoso! Está autenticado.'
     } else {
-      // Log in existing user
+      //MODE != signup. Log in existing user
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password: password.value
@@ -63,8 +63,8 @@ const handleAuth = async () => {
 
 const toggleMode = () => {
   mode.value = mode.value === 'signup' ? 'login' : 'signup'
-  username.value = ''
-  password.value = ''
+  // username.value = ''
+  // password.value = ''
   errorMessage.value = ''
   successMessage.value = ''
 }
@@ -72,15 +72,14 @@ const loggedUser = useSupabaseUser()
 </script>
 
 <template>
-  <div class=" flex items-center justify-center p-4 mx-auto">
-    <UCard v-if="!loggedUser" class="w-full max-w-md shadow-lg rounded-2xl overflow-hidden">
-      <template #header>
-        <div class="">
-          <h1 class="text-center">
-            {{ mode === 'signup' ? 'Registro' : 'Inicio de Sesión' }}
-          </h1>
-        </div>
-      </template>
+  <div class=" flex items-center justify-center p-4 mx-auto bg-muted rounded-xl w-full max-w-lg">
+    <UCard v-if="!loggedUser" class="w-full max-w-lg">
+      <Stack class="text-center items-center p-4">
+        <h2 class="text-center text-2xl font-bold">
+          Bienvenido
+        </h2>
+        <p class="max-w-xs mx-auto text-muted">{{ mode === 'signup' ? 'Puede registrarse en el sistema' : 'Inicie su sesión en el sistema' }}</p>
+      </Stack>
 
       <div class="p-6">
        
@@ -89,28 +88,29 @@ const loggedUser = useSupabaseUser()
         <form @submit.prevent="handleAuth" class="space-y-6">
           <div class="space-y-4 flex flex-col items-center">
 
-            <UFormField label="Nombre de usuario" help="Use el nombre de usuario UCI.">
-              <UInput v-model="username" placeholder="Enter your email" class="w-full" />
-            </UFormField>
-
-            <UFormField label="Contraseña" :error="errorMessage.toLowerCase().includes('password') && errorMessage">
-              <UInput v-model="password" placeholder="Password" :type="showPassword ? 'text' : 'password'"
-                class="w-full" :ui="{ trailing: 'pe-1' }" required>
-                <template #trailing>
-                  <UButton color="neutral" variant="link" size="sm"
-                    :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                    :aria-label="showPassword ? 'Hide password' : 'Show password'" :aria-pressed="showPassword"
-                    aria-controls="password" @click="showPassword = !showPassword" />
-                </template>
-              </UInput>
-            </UFormField>
-
-
-            <UButton class="mt-4" :loading="loading" type="submit" >
-
-              {{ mode === 'signup' ? 'Registrarse' : 'Iniciar Sesión' }}
-
+            <Stack>
+              <UFormField label="Nombre de usuario UCI">
+                <UInput size="xl" v-model="username" placeholder="Enter your email" class="w-full" />
+              </UFormField>
+              <UFormField label="Contraseña" :error="errorMessage.toLowerCase().includes('password') && errorMessage">
+                <UInput size="xl" v-model="password" placeholder="Password" :type="showPassword ? 'text' : 'password'"
+                  class="w-full" :ui="{ trailing: 'pe-1' }" required>
+                  <template #trailing>
+                    <UButton color="neutral" variant="link" size="sm"
+                      :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                      :aria-label="showPassword ? 'Hide password' : 'Show password'" :aria-pressed="showPassword"
+                      aria-controls="password" @click="showPassword = !showPassword" />
+                  </template>
+                </UInput>
+              </UFormField>
+              
+              <UButton class="mt-4 w-full justify-center" size="lg" variant="subtle" :icon="mode==='signup' ? 'mdi:account-plus-outline' : 'mdi:login'" :loading="loading" type="submit" >
+              {{ mode === 'signup' ? 'Registrarme' : 'Entrar' }}
             </UButton>
+            </Stack>
+
+
+            
           </div>
            <!-- Error/Success Messages -->
         <UAlert v-if="errorMessage" color="error" variant="subtle" title="¡Error!" :description="errorMessage"
@@ -124,21 +124,19 @@ const loggedUser = useSupabaseUser()
        
       </div>
       <template #footer>
-        <div class="py-2 space-y-2">
-          <div class=" text-center text-sm">
+        <div class="py-2 space-y-2 text-muted">
+          <HStack class="justify-center items-center">
             <p>
-              {{ mode === 'signup' ? '¿Ya tienes una cuenta?' : '¿No tienes una cuenta?' }}
-              <UButton variant="link" @click="toggleMode">
-                {{ mode === 'signup' ? 'Inicia sesión aquí' : 'Regístrate aquí' }}
+              {{ mode === 'signup' ? '¿Ya tiene una cuenta?' : '¿No tiene una cuenta?' }}
+            </p>
+              <UButton variant="soft" @click="toggleMode">
+                {{ mode === 'signup' ? 'Inicie sesión' : 'Regístrese' }}
               </UButton>
-            </p>
-          </div>
-          <div class=" text-center">
-            <p class="text-sm text-muted-foreground">
-              ¿Problemas para acceder?
-              <a href="#" class="text-primary hover:underline">Contactar a Recursos Humanos</a>
-            </p>
-          </div>
+          </HStack>
+          <Box class="text-center">
+              <p>¿Problemas para acceder?</p>
+              <a href="mailto:" class="text-primary hover:underline whitespace-nowrap">Contacte a Recursos Humanos</a>
+          </Box>
         </div>
       </template>
     </UCard>
