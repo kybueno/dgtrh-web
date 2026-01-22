@@ -6,36 +6,30 @@ useHead({
   title: 'Prenómina'
 })
 
-import { useWorkerStore } from '~/stores/workerStore';
-import { onMounted } from 'vue';
-
+import { onMounted, ref } from 'vue';
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
-import {usePayrollPDF} from './payrollHelpers'
+import { usePayrollPDF } from './payrollHelpers';
 
+// Import store functions and state
+import { loadWorkers, workers } from '~/stores/workerStoreC';
+import { loadIncidents } from '~/stores/incidentStore';
+import { useIncidentTypeStore } from '~/stores/incidentTypeStore';
 
-
-const workerStore = useWorkerStore();
-const supabase = useSupabaseClient()
 const email = ref('')
-
-
-const incidentStore = useIncidentStore()
 const incidentTypeStore = useIncidentTypeStore()
 
-onMounted(() => {
-  incidentStore.loadIncidents(supabase)
-})
-
-
+// Load data
 onMounted(async () => {
-  await workerStore.loadWorkers();
+  await Promise.all([
+    loadWorkers(),
+    loadIncidents(),
+    incidentTypeStore.loadIncidentTypes()
+  ]);
 });
 
-interface Props {
-  data: WorkerDetailed[]
-}
-const { data } = defineProps<Props>()
+// Workers data is now available in the workers ref from workerStoreC
+const workerData = workers;
 
 const columns: TableColumn<WorkerDetailed>[] = [
   {
@@ -83,14 +77,15 @@ const columns: TableColumn<WorkerDetailed>[] = [
     <UCard>
       <template #header>
 
-        <div class="flex justify-between">
+        <div class="flex justify-between gap-4">
           <UInput placeholder="Busca.." />
-          <UButton icon="mdi:add" to="payroll/new">Añadir</UButton>
-          <UButton icon="mdi:print">Imprimir</UButton>
+         <div class="flex-1"></div> 
+         <!-- <UButton icon="mdi:add" to="payroll/new">Añadir</UButton> -->
+          <UButton icon="lucide:printer" variant="subtle" color="neutral" >Imprimir</UButton>
         </div>
       </template>
       <strong class="flex justify-center font-bold">Prenómina</strong>
-      <UTable :data="workerStore.workers" :columns="columns" sticky class="h-96" />
+      <UTable :data="workers" :columns="columns" sticky class="h-96" />
 
     </UCard>
   </div>

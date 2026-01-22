@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { workers, loadWorkers } from '~/stores/workerStoreC'
+import { workers, loadWorkers,workersPending } from '~/stores/workerStoreC'
 
 definePageMeta({
     title: 'Trabajadores'
