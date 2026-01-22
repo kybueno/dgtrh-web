@@ -33,11 +33,11 @@ onMounted(async () => {
 });
 
 interface Props {
-  data: WorkerInfo[]
+  data: WorkerDetailed[]
 }
 const { data } = defineProps<Props>()
 
-const columns: TableColumn<WorkerInfo>[] = [
+const columns: TableColumn<WorkerDetailed>[] = [
   {
     id: 'select',
     header: ({ table }) => h(UCheckbox, {
@@ -62,7 +62,7 @@ const columns: TableColumn<WorkerInfo>[] = [
     cell: ({ row }) => `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`
   }, {
     header: "Cargo",
-    cell: ({ row }) => row.original.position_code
+    cell: ({ row }) => row.original.position.description ?? row.original.position_code
 
   }, {
     header: "Incidencias del tiempo no laborado",
