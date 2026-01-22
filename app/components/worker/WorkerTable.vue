@@ -3,17 +3,6 @@ import { page } from '#build/ui';
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
-
-
-const selectedRows = ref<WorkerInfo[]>([])
-const showConfirm = ref(false)
-const workerToDelete = ref<WorkerInfo | null>(null)
-
-
-
-
-
-
 interface Props {
     data: WorkerDetailed[]
     loading?: boolean
@@ -110,7 +99,7 @@ const table = useTemplateRef('table')
 const sorting = ref([])
 </script>
 <template>
-    <div class="border border-muted bg-muted rounded-md">
+   <div class="border border-muted bg-muted rounded-md">
         <Flex class="pt-1 px-1 justify-end">
             <ColumnsControl :table="table" />
         </Flex>
