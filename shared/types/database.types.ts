@@ -93,48 +93,30 @@ export type Database = {
         Row: {
           created_at: string | null
           desde: string | null
-          first_name: string | null
-          group_id: number | null
           hasta: string | null
           id: string
           incorporacion: string | null
-          last_name: string | null
-          middle_name: string | null
           motivo: string | null
-          record_number: string | null
-          second_last_name: string | null
           tiempo: unknown
           worker_id: string | null
         }
         Insert: {
           created_at?: string | null
           desde?: string | null
-          first_name?: string | null
-          group_id?: number | null
           hasta?: string | null
           id?: string
           incorporacion?: string | null
-          last_name?: string | null
-          middle_name?: string | null
           motivo?: string | null
-          record_number?: string | null
-          second_last_name?: string | null
           tiempo?: unknown
           worker_id?: string | null
         }
         Update: {
           created_at?: string | null
           desde?: string | null
-          first_name?: string | null
-          group_id?: number | null
           hasta?: string | null
           id?: string
           incorporacion?: string | null
-          last_name?: string | null
-          middle_name?: string | null
           motivo?: string | null
-          record_number?: string | null
-          second_last_name?: string | null
           tiempo?: unknown
           worker_id?: string | null
         }
@@ -614,6 +596,7 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string | null
+          roles: string[] | null
           user_id: string | null
           worker: Database["public"]["Tables"]["workers"]["Row"] | null
           worker_id: string | null
