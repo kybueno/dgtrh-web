@@ -165,7 +165,7 @@ onMounted(() => {
                 <!--Grupo de Trabajo-->>
                 <UFormField label="Grupo de Trabajo" class="col-span-2">
                     <USelect required v-model="formData.group_id" :items="workGroups" class="w-full"
-                        value-key="workGroups" label-key="description">
+                        value-key="id" label-key="name">
                     </USelect>
                 </UFormField>
 
