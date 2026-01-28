@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { loadGroups, workGroups } from '@/stores/groupStore'
+
 const supabase = useSupabaseClient()
 const workerStore = useWorkerStore();
 
@@ -16,6 +18,7 @@ const formData = ref<WorkerInsert>({
     gender: null,
     tel: null,
     position_code: null,
+    group_id: null,
 })
 
 const loading = ref(false)
@@ -39,6 +42,7 @@ async function handleAddWorker() {
             gender: null,
             tel: null,
             position_code: null,
+            group_id: null,
         };
 
         navigateTo('/people')
@@ -52,6 +56,7 @@ async function handleAddWorker() {
 onMounted(() => {
     if (!organizations.value.length) loadOrganizations()
     if (!positions.value.length) loadPositions()
+    loadGroups()
 })
 </script>
 
@@ -156,6 +161,14 @@ onMounted(() => {
                         </template>
                     </USelect>
                 </UFormField>
+
+                <!--Grupo de Trabajo-->>
+                <UFormField label="Grupo de Trabajo" class="col-span-2">
+                    <USelect required v-model="formData.group_id" :items="workGroups" class="w-full"
+                        value-key="workGroups" label-key="description">
+                    </USelect>
+                </UFormField>
+
                 <!-- Estado -->
                 <UFormField label="Estado" class="col-span-2">
                     <USelect required v-model="formData.status" :items="WORKER_STATUS_OPTIONS" class="w-full" />

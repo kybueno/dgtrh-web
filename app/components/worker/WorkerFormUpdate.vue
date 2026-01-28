@@ -21,6 +21,7 @@ function handleSubmit() {
 onMounted(() => {
     if (!organizations.value.length) loadOrganizations()
     if (!positions.value.length) loadPositions()
+    loadGroups()
 })
 </script>
 
@@ -47,7 +48,7 @@ onMounted(() => {
 
                 <!-- Segundo Apellido -->
                 <UFormField label="Segundo Apellido" class="col-span-1">
-                    <UInput v-model="formData.second_last_name" />
+                    <UInput v-model="formData.second_last_name" required/>
                 </UFormField>
 
                 <!-- CI -->
@@ -57,7 +58,7 @@ onMounted(() => {
 
                 <!-- Número expediente -->
                 <UFormField label="Número de expediente" class="col-span-1">
-                    <UInput v-model="formData.record_number" />
+                    <UInput v-model="formData.record_number" required/>
                 </UFormField>
                 <!-- Nivel -->
                 <UFormField class="col-span-2" label="Nivel educativo">
@@ -123,6 +124,14 @@ onMounted(() => {
                         </template>
                     </USelect>
                 </UFormField>
+
+                <!--Grupo de Trabajo-->>
+                <UFormField label="Grupo de trabajo" class="col-span-2">
+                    <USelect required v-model="formData.group_id" :items="workGroups" class="w-full"
+                        value-key="groups" label-key="description">
+                    </USelect>
+                </UFormField>
+
                 <!-- Estado -->
                 <UFormField label="Estado" class="col-span-2">
                     <USelect required v-model="formData.status" :items="WORKER_STATUS_OPTIONS" class="w-full" />
