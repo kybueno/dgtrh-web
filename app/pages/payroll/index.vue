@@ -15,6 +15,7 @@ import { usePayrollPDF } from './payrollHelpers';
 import { loadWorkers, workers } from '~/stores/workerStoreC';
 import { loadIncidents } from '~/stores/incidentStore';
 import { useIncidentTypeStore } from '~/stores/incidentTypeStore';
+import { loadPayroll } from '~/stores/payrollStore'
 
 const email = ref('')
 const incidentTypeStore = useIncidentTypeStore()
@@ -24,7 +25,9 @@ onMounted(async () => {
   await Promise.all([
     loadWorkers(),
     loadIncidents(),
-    incidentTypeStore.loadIncidentTypes()
+    incidentTypeStore.loadIncidentTypes(),
+    loadPayroll(),
+    loadExtraWorks()
   ]);
 });
 
@@ -60,7 +63,7 @@ const columns: TableColumn<WorkerDetailed>[] = [
 
   }, {
     header: "Incidencias del tiempo no laborado",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => row.original.incidentType
 
   }, {
     header: "Trabajo Extraordinario",
