@@ -7,7 +7,7 @@ const toast = useToast()
 const open = ref(false)
 const roles = ['director', 'system_admin', 'hr_manager', 'worker']
 
-const links = [[{
+const protectedLinks = [{
   label: 'Panel principal',
   icon: 'i-lucide-house',
   to: '/dashboard',
@@ -36,7 +36,7 @@ const links = [[{
   icon: 'mdi:attach-money',
   color: 'green',
   to: '/payroll',
-  role: "['director', 'system_admin', 'hr_manager']",
+  role: ['director', 'system_admin', 'hr_manager'],
   defaultOpen: true,
   type: 'trigger',
   children: [
@@ -44,7 +44,15 @@ const links = [[{
       label: 'Prenómina',
       icon: 'lucide:file-spreadsheet',
       to: '/payroll',
-      role: "['director', 'system_admin', 'hr_manager']",
+      role: ['director', 'system_admin', 'hr_manager'],
+      onSelect: () => {
+        open.value = false
+      }
+    },{
+      label: 'Incidencias',
+      icon: 'lucide:file',
+      to: '/incident',
+      role: ['hr_manager'],
       onSelect: () => {
         open.value = false
       }
@@ -52,7 +60,7 @@ const links = [[{
       label: 'Catálogo de claves',
       icon: 'lucide:file',
       to: '/incident/type',
-      role: "['hr_manager']",
+      role: ['hr_manager'],
       onSelect: () => {
         open.value = false
       }
@@ -60,7 +68,7 @@ const links = [[{
       label: 'Anexo 14',
       icon: 'lucide:file',
       to: '/positions',
-      role: "['hr_manager', 'system_admin']",
+      role: ['hr_manager', 'system_admin'],
       onSelect: () => {
         open.value = false
       }
@@ -68,7 +76,7 @@ const links = [[{
       label: 'Anexo 14-B',
       icon: 'lucide:file',
       to: '/people/14-B',
-      role: "['hr_manager']",
+      role: ['hr_manager'],
       onSelect: () => {
         open.value = false
       }
@@ -77,7 +85,7 @@ const links = [[{
 }, {
   label: 'Personal',
   to: '/people',
-  role: "['hr_manager', 'system_admin']",
+  role: ['hr_manager', 'system_admin'],
   icon: 'lucide:users',
   color: 'blue',
   defaultOpen: true,
@@ -85,7 +93,7 @@ const links = [[{
   children: [{
     label: 'Trabajadores',
     to: '/people',
-    role: "['hr_manager', 'system_admin']",
+    role: ['hr_manager', 'system_admin'],
     exact: true,
     onSelect: () => {
       open.value = false
@@ -93,21 +101,21 @@ const links = [[{
   }, {
     label: 'Grupos de trabajo',
     to: '/groups',
-    role: "['hr_manager', 'system_admin']",
+    role: ['hr_manager', 'system_admin'],
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Evaluación de desempeño',
     to: '/evaluations',
-    role: "['director', 'system_admin', 'hr_manager']",
+    role: ['director', 'system_admin', 'hr_manager'],
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Organizaciones',
     to: '/organizations',
-    role: "['hr_manager', 'system_admin']",
+    role: ['hr_manager', 'system_admin'],
     onSelect: () => {
       open.value = false
     }
@@ -115,7 +123,7 @@ const links = [[{
 }, {
   label: 'Reportes',
   to: '/',
-  role: "['hr_manager', 'system_admin']",
+  role: ['hr_manager', 'system_admin'],
   icon: 'lucide:file',
   color: "amber",
   defaultOpen: true,
@@ -123,14 +131,14 @@ const links = [[{
   children: [{
     label: 'Hojas de Firma',
     to: '/signsheets',
-    role: "['hr_manager', 'system_admin']",
+    role: ['hr_manager', 'system_admin'],
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Vacaciones',
     to: '/holidays',
-    role: "['hr_manager', 'system_admin']",
+    role: ['hr_manager', 'system_admin'],
     onSelect: () => {
       open.value = false
     }
@@ -139,7 +147,7 @@ const links = [[{
 }, {
   label: 'Modelos',
   to: '/',
-  role: "['hr_manager', 'system_admin']",
+  role: ['hr_manager', 'system_admin'],
   icon: 'lucide:users',
   color: 'teal',
   defaultOpen: true,
@@ -147,7 +155,7 @@ const links = [[{
   children: [{
     label: 'Modelo de Vacaciones',
     to: '/model',
-    role: "['hr_manager', 'system_admin']",
+    role: ['hr_manager', 'system_admin'],
     exact: true,
     onSelect: () => {
       open.value = false
@@ -155,14 +163,15 @@ const links = [[{
   }, {
     label: 'Modelo de certificado',
     to: '/model/certificado',
-    role: "['hr_manager', 'system_admin']",
+    role: ['hr_manager', 'system_admin'],
     exact: true,
     onSelect: () => {
       open.value = false
     }
   },]
 
-}], [{
+}] satisfies NavigationMenuItem[]
+const publicLinks = [{
   label: 'Directorio UCI',
   icon: 'lucide:book-user',
   to: 'https://directorio.uci.cu/',
@@ -177,12 +186,13 @@ const links = [[{
   icon: 'lucide:info',
   to: 'https://uci.cu',
   target: '_blank'
-}]] satisfies NavigationMenuItem[][]
+}] satisfies NavigationMenuItem[]
+
 
 const groups = computed(() => [{
   id: 'links',
   label: 'Go to',
-  items: links.flat()
+  items: protectedLinks
 }, {
   id: 'code',
   label: 'Code',
@@ -224,7 +234,14 @@ onMounted(async () => {
 })
 
 const loggedUser = useSupabaseUser()
-
+const filteredProtectedLinks = computed(()=>{
+  return protectedLinks.filter((link)=>{
+    if(link.role){
+      return link.role.includes(loggedUser.value?.user_metadata.role)
+    }
+    return true
+  })
+})
 
 
 </script>
@@ -247,10 +264,10 @@ const loggedUser = useSupabaseUser()
 
         <UDashboardSearchButton v-if="loggedUser" :collapsed="collapsed" class="bg-transparent ring-default" />
 
-        <UNavigationMenu v-if="loggedUser" :collapsed="collapsed" :items="links[0]" orientation="vertical" tooltip
+        <UNavigationMenu v-if="loggedUser" :collapsed="collapsed" :items="protectedLinks" orientation="vertical" tooltip
           popover />
 
-        <UNavigationMenu :collapsed="collapsed" :items="links[1]" orientation="vertical" tooltip class="mt-auto" />
+        <UNavigationMenu :collapsed="collapsed" :items="publicLinks" orientation="vertical" tooltip class="mt-auto" />
       </template>
 
       <template #footer="{ collapsed }">
@@ -262,7 +279,7 @@ const loggedUser = useSupabaseUser()
     <UDashboardPanel>
       <template #header>
         <UDashboardNavbar
-          :title="String($route.meta.title || links[0]?.find(item => item.to === $route.path)?.label || capitalizeFirstLetter(String($route.name)) || $route.path)">
+          :title="String(route.meta.title || protectedLinks.find(item => item.to === route.path)?.label || capitalizeFirstLetter(String(route.name)) || route.path)">
           <template #leading>
             <UDashboardSidebarCollapse />
           </template>

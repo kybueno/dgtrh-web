@@ -45,7 +45,7 @@ export default defineNuxtConfig({
     supabase: {
     redirectOptions: {
       login: "/auth/login",
-      callback: "/confirm",
+      callback: "/dashboard",
       include: undefined,
       exclude: ["/auth/*"],
       saveRedirectToCookie: false,

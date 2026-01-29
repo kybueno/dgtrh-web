@@ -33,7 +33,7 @@ export async function createIncident(newIncidentData: TablesInsert<"incidents">)
   }
   if (error) {
     console.error(error);
-    notifyError({ error, title: "Error al crear incidente" });
+    notifyError({ error, title: "Error al crear incidencia" });
   }
 
   return response;
@@ -51,7 +51,7 @@ export async function loadIncidents() {
   }
   if (error) {
     console.error(error);
-    notifyError({ error, title: "Error al cargar incidentes" });
+    notifyError({ error, title: "Error al cargar incidencias" });
   }
 
   return response;
@@ -76,7 +76,7 @@ export async function updateIncident(id: string, updatedIncidentData: TablesUpda
   }
   if (error) {
     console.error(error);
-    notifyError({ error, title: "Error al actualizar incidente" });
+    notifyError({ error, title: "Error al actualizar incidencia" });
   }
 
   return response;
@@ -92,7 +92,7 @@ export async function deleteIncident(id: string) {
 
   if (error) {
     console.error(error);
-    notifyError({ error, title: "Error al eliminar incidente" });
+    notifyError({ error, title: "Error al eliminar incidencia" });
     return { error };
   }
 
