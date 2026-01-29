@@ -48,7 +48,7 @@ onMounted(() => {
 
                 <!-- Segundo Apellido -->
                 <UFormField label="Segundo Apellido" class="col-span-1">
-                    <UInput v-model="formData.second_last_name" required/>
+                    <UInput v-model="formData.second_last_name" required />
                 </UFormField>
 
                 <!-- CI -->
@@ -58,7 +58,7 @@ onMounted(() => {
 
                 <!-- Número expediente -->
                 <UFormField label="Número de expediente" class="col-span-1">
-                    <UInput v-model="formData.record_number" required/>
+                    <UInput v-model="formData.record_number" required />
                 </UFormField>
                 <!-- Nivel -->
                 <UFormField class="col-span-2" label="Nivel educativo">
@@ -93,18 +93,14 @@ onMounted(() => {
 
                 <!-- Organizaciones -->
                 <UFormField class="col-span-2" label="Organizaciones">
-                    <USelect multiple class="w-full" :items="organizations" value-key="code" label-key="code"
+                    <USelect multiple class="w-full"
+                        :items="organizations.map(o => ({ value: o.code, label: o.acronym, description: o.name }))"
                         v-model="formData.organizations_codes" :loading="organizationsPending"
                         :disabled="organizations.length == 0">
                         <span v-for="o in formData.organizations_codes">{{ o.toUpperCase() }}</span>
-                        <template #item="{ item }">
-                            <HStack class="p-4">
-                                <UAvatar :src="item.img || undefined" :alt="item.acronym || undefined" />
-                                <Stack>
-                                    <p class="mr-2">{{ item.acronym ?? item.code?.toUpperCase() }}</p>
-                                    <span v-if="item.name" class="text-muted">{{ item.name }}</span>
-                                </Stack>
-                            </HStack>
+
+                        <template #item-leading="{ item }">
+                            <UAvatar :src="item.img || undefined" :alt="item.acronym || undefined" />
                         </template>
                         <template #content-top>
                             <UButton to="/organizations/new" color="neutral" variant="ghost" icon="mdi:plus">Nueva
@@ -116,8 +112,8 @@ onMounted(() => {
 
                 <!-- Cargo -->
                 <UFormField label="Cargo que ocupa" class="col-span-2">
-                    <USelect required v-model="formData.position_code" :items="positions" class="w-full"
-                        value-key="code" label-key="description">
+                    <USelect required v-model="formData.position_code"
+                        :items="positions.map(p => ({ value: p.code, label: p.description }))" class="w-full">
                         <template #content-top>
                             <UButton to="/positions/new" color="neutral" variant="ghost" icon="mdi:plus">Nuevo cargo
                             </UButton>
@@ -125,10 +121,10 @@ onMounted(() => {
                     </USelect>
                 </UFormField>
 
-                <!--Grupo de Trabajo-->>
+                <!--Grupo de Trabajo-->
                 <UFormField label="Grupo de trabajo" class="col-span-2">
-                    <USelect required v-model="formData.group_id" :items="workGroups" class="w-full"
-                        value-key="id" label-key="name">
+                    <USelect required v-model="formData.group_id" :items="workGroups" class="w-full" value-key="id"
+                        label-key="name">
                     </USelect>
                 </UFormField>
 

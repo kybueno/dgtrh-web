@@ -8,8 +8,6 @@ interface WorkerDetailed extends WorkerInfo {
     group: {name:string};
     leaderAtGroup: {name:string};
     position: Omit<Tables<"positions","id">>;
-    payroll: {};
-    incidentType: {};
 
 }
 type WorkerInsert = TablesInsert<"workers"> 
