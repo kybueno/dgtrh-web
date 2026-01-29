@@ -59,7 +59,7 @@ const columns: TableColumn<IncidentType>[] = [
         <template #header>
             <div class="flex justify-between">
                 <UInput placeholder="Busca.." icon="mdi:search" />
-                <UButton to="newincident">Añadir</UButton>
+                <UButton to="/incident-types/new">Añadir</UButton>
             </div>
         </template>
         <UTable :columns="columns" :data="data" />

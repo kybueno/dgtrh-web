@@ -1,9 +1,9 @@
 <script setup lang="ts">
 definePageMeta({
-  title: 'Nueva Incidencia'
+  title: 'Nuevo tipo de Incidencia'
 })
 useHead({
-  title: 'Nueva Incidencia'
+  title: 'Nuevo tipo de Incidencia'
 })
 
 import IncidentTypeForm from '~/components/incident/type/IncidentTypeForm.vue';

@@ -51,7 +51,7 @@ const links = [[{
     }, {
       label: 'Catálogo de claves',
       icon: 'lucide:file',
-      to: '/incident-types',
+      to: '/incident/type',
       role: "['hr_manager']",
       onSelect: () => {
         open.value = false

@@ -4,9 +4,12 @@ interface Stat {
   title: string
   icon: string
   value: number | string
+  loading?: boolean
+  color?: string
+  to?: string
 }
 
-const {icon,title,value} = defineProps<Stat>()
+const { icon, title, value, loading = false, color = 'primary' } = defineProps<Stat>()
 
 function formatCurrency(value: number): string {
   return value.toLocaleString('es-CU', {
@@ -22,8 +25,9 @@ function formatCurrency(value: number): string {
   <UPageCard
     :icon="icon"
     :title="title"
-    to="/customers"
+    :to="to"
     variant="subtle"
+    color="green"
     :ui="{
       container: 'gap-y-1.5',
       wrapper: 'items-start',
@@ -33,7 +37,8 @@ function formatCurrency(value: number): string {
     class="lg:rounded-none first:rounded-l-lg last:rounded-r-lg hover:z-1"
   >
     <div class="flex items-center gap-2">
-      <span class="text-2xl font-semibold text-highlighted">
+      <USkeleton v-if="loading" class="h-7 w-20" />
+      <span v-else class="text-2xl font-semibold text-highlighted">
         {{ value }}
       </span>
 
