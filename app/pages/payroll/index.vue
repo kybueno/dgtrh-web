@@ -62,15 +62,15 @@ const columns: TableColumn<WorkerDetailed>[] = [
     cell: ({ row }) => row.original.position.description ?? row.original.position_code
 
   }, {
-    header: "Incidencias del tiempo no laborado",
-    cell: ({ row }) => row.original.incidentType
+    header: "Incidencias", //Incidencias del tiempo no laborado
+    cell: ({ row }) => incidents.value.filter((incident) => incident.worker_id === row.original.id)?.length
 
   }, {
     header: "Trabajo Extraordinario",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => "-"
   }, {
     header: "Observaciones",
-    cell: ({ row }) => row.original
+    cell: ({ row }) => "-"
   }, 
 
 ]
@@ -87,8 +87,7 @@ const columns: TableColumn<WorkerDetailed>[] = [
           <UButton icon="lucide:printer" variant="subtle" color="neutral" >Imprimir</UButton>
         </div>
       </template>
-      <strong class="flex justify-center font-bold">Prenómina</strong>
-      <UTable :data="workers" :columns="columns" sticky class="h-96" />
+      <UTable :data="workers" :columns="columns" sticky class="min-h-96" />
 
     </UCard>
   </div>
