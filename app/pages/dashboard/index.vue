@@ -65,15 +65,31 @@ const toggleMode = () => {
   successMessage.value = ''
 }
 const authStore = useAuthStore()
+
+onMounted(()=>{
+  if(!workers.value.length) loadWorkers()
+  if(!incidents.value.length) loadIncidents()
+})
+
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center p-4 h-[80%]">
-    <template v-if="authStore.loggedUserProfile">
-      <p class="font-semibold text-3xl text-gray-400">
-        No hay noticias por ahora, {{
-          authStore.loggedUserProfile.value?.worker?.first_name }}
-      </p>
-    </template>
-  </div>
+  <UContainer class="p-4 gap-8 h-full flex flex-col">
+  
+  <UPageGrid class="lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-px ">
+    <dashboard-stat icon="mdi:account" title="Empleados" :value="workers.length"/>
+    <dashboard-stat icon="mdi:alert" title="Incidencias" :value="incidents.length"/>
+    <dashboard-stat icon="mdi:account-clock" title="Trabajo Extraordinario" :value="workers.length"/>
+  </UPageGrid>
+    <UCard class="flex-1" variant="subtle">
+      <template v-if="authStore.loggedUserProfile">
+        <div class="flex items-center justify-center h-full">
+          <p class="font-semibold text-xl text-muted/50">
+            No hay noticias por ahora, {{
+              authStore.loggedUserProfile.value?.worker?.first_name }}
+          </p>
+        </div>
+      </template>
+    </UCard>
+  </UContainer>
 </template>
