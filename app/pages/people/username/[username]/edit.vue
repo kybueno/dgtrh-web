@@ -55,8 +55,9 @@ onMounted(async () => {
 });
 
 async function handleUpdateWorker(newWorkerData: TablesUpdate<'workers'>) {
-
-    const { error } = await updateWorker(newWorkerData);
+    if (!worker.value) return;
+    
+    const { error } = await updateWorker(worker.value.id, newWorkerData);
 
     if (error) {
       console.error('Error updating worker:', error);

@@ -1,7 +1,7 @@
 import { defaultRhTableStyles } from "~/lib/documents-generation/styles";
 
 export const exportSignSheet = (
-  worker: WorkerInfo,
+  worker: WorkerDetailed,
   date: Date = new Date()
 ) => {
   const month = date.getMonth();
@@ -97,7 +97,7 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
     77.25, // Overtime End
     62.8, // Signature
   ];
- 
+
   const HOLIDAYS = [
     // Formato: MM-DD
     "01-01", // Año Nuevo
@@ -106,12 +106,12 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
     "10-10", // Inicio de las guerras de independencia
     "12-25", // Navidad
   ];
-  
+
   function isHoliday(date: Date) {
     const mmdd = date.toISOString().slice(5, 10);
     return HOLIDAYS.includes(mmdd);
   }
-  
+
   function isWeekend(date: Date) {
     const d = date.getDay(); // 0 domingo, 6 sábado
     return d === 0 || d === 6;
@@ -122,7 +122,6 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
     if (isWeekend(date)) return "#E0E0E0"; // gris para fin de semana
     return null;
   }
-  
 
   // Create day rows (1-16 on left, 17-31 on right)
   const dayRows = [];
@@ -132,10 +131,12 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
 
     const leftDate = new Date(date.getFullYear(), date.getMonth(), dayLeft);
     const rightDate =
-      dayRight <= 31 ? new Date(date.getFullYear(), date.getMonth(), dayRight) : null;
-  
+      dayRight <= 31
+        ? new Date(date.getFullYear(), date.getMonth(), dayRight)
+        : null;
+
     const bgLeft = getBackgroundForDay(leftDate);
-    const bgRight = rightDate ? getBackgroundForDay(rightDate) : null;   
+    const bgRight = rightDate ? getBackgroundForDay(rightDate) : null;
 
     dayRows.push([
       { text: dayLeft.toString(), style: "dayCell", fillColor: bgLeft },
@@ -146,14 +147,18 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
       { text: "", style: "timeCell", fillColor: bgLeft },
       { text: "", style: "timeCell", fillColor: bgLeft },
       { text: "", style: "signatureCell" },
-      { text: dayRight <= 31 ? dayRight.toString() : "", style: "dayCell",  fillColor: bgRight },
+      {
+        text: dayRight <= 31 ? dayRight.toString() : "",
+        style: "dayCell",
+        fillColor: bgRight,
+      },
       { text: "", style: "timeCell", fillColor: bgRight },
-      { text: "", style: "timeCell",  fillColor: bgRight },
-      { text: "", style: "timeCell",  fillColor: bgRight },
-      { text: "", style: "timeCell",  fillColor: bgRight },
-      { text: "", style: "timeCell",  fillColor: bgRight },
-      { text: "", style: "timeCell",  fillColor: bgRight },
-      { text: "", style: "signatureCell",  fillColor: bgRight },
+      { text: "", style: "timeCell", fillColor: bgRight },
+      { text: "", style: "timeCell", fillColor: bgRight },
+      { text: "", style: "timeCell", fillColor: bgRight },
+      { text: "", style: "timeCell", fillColor: bgRight },
+      { text: "", style: "timeCell", fillColor: bgRight },
+      { text: "", style: "signatureCell", fillColor: bgRight },
     ]);
   }
 
@@ -201,7 +206,7 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
             ],
             [
               {
-                text: `Área:  `,
+                text: `Área: ${worker.group_id} `,
                 style: "orgInfo",
                 border: [true, false, true, true],
               },
@@ -313,7 +318,7 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
       {
         stack: [
           {
-            text: "Nombre y Apellido:_________________________",
+            text: "Nombre y Apellido: Lester Rodriguez Vallejo",
             alignment: "left",
             fontSize: 10,
             margin: [10, 10, 0, 0],
@@ -324,7 +329,6 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
             fontSize: 10,
             margin: [0, 0, 0, 2],
           },
-         
         ],
         alignment: "right",
         margin: [0, 10, 10, 0],

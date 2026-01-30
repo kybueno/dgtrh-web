@@ -14,15 +14,15 @@ const protectedLinks = [{
   onSelect: () => {
     open.value = false
   }
-}, {
-  label: 'Notificaciones',
-  icon: 'i-lucide-inbox',
-  to: '/inbox',
-  badge: '4',
-  onSelect: () => {
-    open.value = false
-  }
-},
+}, //{
+  //label: 'Notificaciones',
+ // icon: 'i-lucide-inbox',
+ // to: '/inbox',
+ // badge: '4',
+ // onSelect: () => {
+  //  open.value = false
+ // }
+//},
 // { 
 //   label: 'Perfiles',
 //   icon: 'i-lucide',

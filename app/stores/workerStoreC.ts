@@ -1,56 +1,80 @@
-import { ref } from 'vue';
+import { ref } from "vue";
 
-type WorkerStatus = 'active' | 'terminated' | 'inactive';
+type WorkerStatus = "active" | "terminated" | "inactive";
 
 export const WORKER_STATUS = {
-  ACTIVE: 'active',
-  TERMINATED: 'terminated',
-  INACTIVE: 'inactive'
+  ACTIVE: "active",
+  TERMINATED: "terminated",
+  INACTIVE: "inactive",
 } as const;
 
 export const WORKER_STATUS_CONFIG = {
   [WORKER_STATUS.ACTIVE]: {
-    label: 'Activo',
-    color: 'success',
+    label: "Activo",
+    color: "success",
   },
   [WORKER_STATUS.TERMINATED]: {
-    label: 'Baja',
-    color: 'error',
+    label: "Baja",
+    color: "error",
   },
   [WORKER_STATUS.INACTIVE]: {
-    label: 'No activo',
-    color: 'neutral',
+    label: "No activo",
+    color: "neutral",
   },
   default: {
-    label: '—',
-    color: 'neutral',
+    label: "—",
+    color: "neutral",
   },
 } as const;
 
 // Select field options
-export const WORKER_STATUS_OPTIONS: { label: string, value: string }[] = [
-  { label: WORKER_STATUS_CONFIG[WORKER_STATUS.ACTIVE].label, value: WORKER_STATUS.ACTIVE },
-  { label: WORKER_STATUS_CONFIG[WORKER_STATUS.INACTIVE].label, value: WORKER_STATUS.INACTIVE },
-  { label: WORKER_STATUS_CONFIG[WORKER_STATUS.TERMINATED].label, value: WORKER_STATUS.TERMINATED },
-]
+export const WORKER_STATUS_OPTIONS: { label: string; value: string }[] = [
+  {
+    label: WORKER_STATUS_CONFIG[WORKER_STATUS.ACTIVE].label,
+    value: WORKER_STATUS.ACTIVE,
+  },
+  {
+    label: WORKER_STATUS_CONFIG[WORKER_STATUS.INACTIVE].label,
+    value: WORKER_STATUS.INACTIVE,
+  },
+  {
+    label: WORKER_STATUS_CONFIG[WORKER_STATUS.TERMINATED].label,
+    value: WORKER_STATUS.TERMINATED,
+  },
+];
 
 export function getWorkerStatusLabel(status?: WorkerStatus): string {
   if (!status) return WORKER_STATUS_CONFIG.default.label;
-  return WORKER_STATUS_CONFIG[status as keyof typeof WORKER_STATUS_CONFIG]?.label || status;
+  return (
+    WORKER_STATUS_CONFIG[status as keyof typeof WORKER_STATUS_CONFIG]?.label ||
+    status
+  );
 }
 
-export function getWorkerStatusColor(status?: WorkerStatus): "success" | "error" | "neutral" | "primary" | "secondary" | "info" | "warning" {
+export function getWorkerStatusColor(
+  status?: WorkerStatus
+):
+  | "success"
+  | "error"
+  | "neutral"
+  | "primary"
+  | "secondary"
+  | "info"
+  | "warning" {
   if (!status) return WORKER_STATUS_CONFIG.default.color;
-  return WORKER_STATUS_CONFIG[status as keyof typeof WORKER_STATUS_CONFIG]?.color || WORKER_STATUS_CONFIG.default.color;
+  return (
+    WORKER_STATUS_CONFIG[status as keyof typeof WORKER_STATUS_CONFIG]?.color ||
+    WORKER_STATUS_CONFIG.default.color
+  );
 }
 
 export const workers = ref<WorkerDetailed[]>([]);
 export const workersPending = ref<boolean>(false);
 export const WORKER_QUERY = {
-  detailed: "*, group:groups!workers_group_id_fkey(name), position:positions(*)",
+  detailed:
+    "*, group:groups!workers_group_id_fkey(name), position:positions(*)",
   basic: "*",
-}
-
+};
 
 //No mutation functions
 export async function fetchWorkersBasic() {
@@ -61,17 +85,16 @@ export async function fetchWorkersDetailed() {
   const supabase = useSupabaseClient();
   return await supabase.from("workers").select(WORKER_QUERY.detailed);
 }
-export async function queryWorkerCreate(newWorkerData: TablesInsert<"workers">) {
+export async function queryWorkerCreate(
+  newWorkerData: TablesInsert<"workers">
+) {
   const supabase = useSupabaseClient();
-  return await supabase
-    .from("workers")
-    .insert([newWorkerData])
-    .select();
+  return await supabase.from("workers").insert([newWorkerData]).select();
 }
 
 // CREATE
 export async function createWorker(newWorkerData: TablesInsert<"workers">) {
-  const response = await queryWorkerCreate(newWorkerData)
+  const response = await queryWorkerCreate(newWorkerData);
 
   const { data, error } = response;
 
@@ -88,9 +111,8 @@ export async function createWorker(newWorkerData: TablesInsert<"workers">) {
 
 // READ
 export async function loadWorkers() {
-
   workersPending.value = true;
-  const response = await fetchWorkersDetailed()
+  const response = await fetchWorkersDetailed();
   const { data, error } = response;
   workersPending.value = false;
 
@@ -106,19 +128,22 @@ export async function loadWorkers() {
 }
 
 // UPDATE
-export async function updateWorker(id:string,updatedWorkerData: TablesUpdate<"workers">) {
+export async function updateWorker(
+  id: string,
+  updatedWorkerData: TablesUpdate<"workers">
+) {
   const supabase = useSupabaseClient();
   const response = await supabase
     .from("workers")
     .update(updatedWorkerData)
-    .eq('id', id)
+    .eq("id", id)
     .select();
 
   const { data, error } = response;
 
   if (data && data[0]) {
     // Update the worker in the local state
-    const index = workers.value.findIndex(w => w.id === updatedWorkerData.id);
+    const index = workers.value.findIndex((w) => w.id === updatedWorkerData.id);
     if (index !== -1) {
       workers.value[index] = { ...workers.value[index], ...data[0] };
     }
@@ -134,10 +159,7 @@ export async function updateWorker(id:string,updatedWorkerData: TablesUpdate<"wo
 // DELETE
 export async function deleteWorker(id: UUID) {
   const supabase = useSupabaseClient();
-  const { error } = await supabase
-    .from("workers")
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from("workers").delete().eq("id", id);
 
   if (error) {
     console.error(error);
@@ -146,22 +168,22 @@ export async function deleteWorker(id: UUID) {
   }
 
   // Remove the worker from the local state
-  workers.value = workers.value.filter(worker => worker.id !== id);
+  workers.value = workers.value.filter((worker) => worker.id !== id);
   return { error: null };
 }
 
 // Helper functions
 export async function getWorkerById(id: string) {
   // Try to find in local store first
-  const localWorker = workers.value.find(worker => worker.id === id);
+  const localWorker = workers.value.find((worker) => worker.id === id);
   if (localWorker) return localWorker;
 
   // If not found locally, try to fetch from Supabase
   const supabase = useSupabaseClient();
   const { data, error } = await supabase
-    .from('workers')
-    .select('*')
-    .eq('id', id)
+    .from("workers")
+    .select("*")
+    .eq("id", id)
     .single();
 
   if (data) {
@@ -171,22 +193,26 @@ export async function getWorkerById(id: string) {
   }
 
   if (error) {
-    console.error('Error fetching worker by ID:', error);
+    console.error("Error fetching worker by ID:", error);
   }
   return null;
 }
 
-export async function getWorkerByRecordNumber(recordNumber: string): Promise<WorkerDetailed | null> {
+export async function getWorkerByRecordNumber(
+  recordNumber: string
+): Promise<WorkerDetailed | null> {
   // Try to find in local store first
-  const localWorker = workers.value.find(worker => worker.record_number === recordNumber);
+  const localWorker = workers.value.find(
+    (worker) => worker.record_number === recordNumber
+  );
   if (localWorker) return localWorker;
 
   // If not found locally, try to fetch from Supabase
   const supabase = useSupabaseClient();
   const { data, error } = await supabase
-    .from('workers')
+    .from("workers")
     .select(WORKER_QUERY.detailed)
-    .eq('record_number', recordNumber)
+    .eq("record_number", recordNumber)
     .single();
 
   if (data) {
@@ -196,7 +222,7 @@ export async function getWorkerByRecordNumber(recordNumber: string): Promise<Wor
   }
 
   if (error) {
-    console.error('Error fetching worker by record number:', error);
+    console.error("Error fetching worker by record number:", error);
   }
   return null;
 }
@@ -204,16 +230,16 @@ export async function getWorkerByRecordNumber(recordNumber: string): Promise<Wor
 export async function getWorkerByUsername(username: string) {
   // Try to find in local store first
   const localWorker = workers.value.find(
-    worker => worker.email?.split("@")[0] === username
+    (worker) => worker.email?.split("@")[0] === username
   );
   if (localWorker) return localWorker;
 
   // If not found locally, try to fetch from Supabase
   const supabase = useSupabaseClient();
   const { data, error } = await supabase
-    .from('workers')
-    .select('*')
-    .ilike('email', `${username}@%`)
+    .from("workers")
+    .select("*")
+    .ilike("email", `${username}@%`)
     .single();
 
   if (data) {
@@ -223,7 +249,7 @@ export async function getWorkerByUsername(username: string) {
   }
 
   if (error) {
-    console.error('Error fetching worker by username:', error);
+    console.error("Error fetching worker by username:", error);
   }
   return null;
 }

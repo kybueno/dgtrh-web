@@ -9,7 +9,7 @@ useHead({
 import { onMounted, ref } from 'vue';
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
-import { usePayrollPDF } from './payrollHelpers';
+import { generatePrenomina, usePayrollPDF } from './payrollHelpers';
 
 // Import store functions and state
 import { loadWorkers, workers } from '~/stores/workerStoreC';
@@ -56,10 +56,10 @@ const columns: TableColumn<WorkerDetailed>[] = [
     
   }, {
     header: "Nombre y Apellidos",
-    cell: ({ row }) => `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`
+    cell: ({ row }) => h('span', { class: "cursor-pointer", onClick: () => navigateTo(`/payroll/${row.original.record_number}`) }, `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`)
   }, {
     header: "Cargo",
-    cell: ({ row }) => row.original.position.description ?? row.original.position_code
+    cell: ({ row }) => row.original.position.description ?? row.original.position.description
 
   }, {
     header: "Incidencias", //Incidencias del tiempo no laborado
@@ -84,7 +84,7 @@ const columns: TableColumn<WorkerDetailed>[] = [
           <UInput placeholder="Busca.." />
          <div class="flex-1"></div> 
          <!-- <UButton icon="mdi:add" to="payroll/new">Añadir</UButton> -->
-          <UButton icon="lucide:printer" variant="subtle" color="neutral" >Imprimir</UButton>
+          <UButton icon="lucide:printer" variant="subtle" color="neutral" @click="generatePrenomina(workers)" >Imprimir</UButton>
         </div>
       </template>
       <UTable :data="workers" :columns="columns" sticky class="min-h-96" />
