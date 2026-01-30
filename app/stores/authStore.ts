@@ -1,3 +1,4 @@
+export const logoutPending = ref(false)
 
 // composables/useProfileStore.ts
 export const useAuthStore = () => {

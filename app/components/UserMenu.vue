@@ -104,7 +104,15 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   label: 'Cerrar sesión',
   icon: 'i-lucide-log-out',
   onSelect:async()=>{
+   try{
+    logoutPending.value = true
     await supabase.auth.signOut()
+    } catch(error){
+      console.error(error)
+    } finally {
+      logoutPending.value = false
+    }
+    authStore.clearLoggedUser()
     navigateTo('/auth/login')
   }
 }]
@@ -118,7 +126,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
   >
     <UButton
-      :label="collapsed ? undefined : authStore.loggedUserProfile.value?.worker?.first_name",
+      :label="collapsed ? undefined : logoutPending ? 'Cerrando sesión...' : authStore.loggedUserProfile.value?.worker?.first_name",
       :trailingIcon="collapsed ? undefined : 'i-lucide-chevrons-up-down'"
       color="neutral"
       variant="ghost"
@@ -128,6 +136,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       :ui="{
         trailingIcon: 'text-dimmed'
       }"
+      :loading="logoutPending"
     />
 
     <template #chip-leading="{ item }">

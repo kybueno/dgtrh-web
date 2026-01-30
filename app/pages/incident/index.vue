@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { incidents, loadIncidents, incidentsPending } from '~/stores/incidentStore'
+import { incidents, loadIncidents, incidentsPending, deleteIncident } from '~/stores/incidentStore'
 
 definePageMeta({
   title: 'Incidencias'
@@ -14,6 +14,16 @@ onMounted(() => { if (!incidentsPending.value && !incidents.value.length) loadIn
 
 function handleReload() {
   if (!incidentsPending.value) loadIncidents()
+}
+
+async function handleDelete(incident: Incident) {
+  const confirmed = confirm(`¿Está seguro de que desea eliminar la incidencia #${incident.incident_code}?`)
+  if (!confirmed) return
+  
+  const { error } = await deleteIncident(incident.id)
+  if (!error) {
+    notifySuccess({ title: 'Incidencia eliminada correctamente' })
+  }
 }
 
 const filteredIncidents = computed(() => {
@@ -32,6 +42,21 @@ const columns = [
   { header: 'Inicio', cell: ({ row }: any) => new Date(row.original.start_date).toLocaleDateString() },
   { header: 'Fin', cell: ({ row }: any) => row.original.end_date ? new Date(row.original.end_date).toLocaleDateString() : '-' },
   { header: 'Descripción', cell: ({ row }: any) => row.original.description ?? '' },
+  { 
+    header: 'Acciones', 
+    cell: ({ row }: any) => {
+      const incident = row.original
+      return h('div', { class: 'flex gap-2' }, [
+        h(UButton, {
+          size: '2xs',
+          color: 'red',
+          variant: 'ghost',
+          icon: 'i-lucide-trash-2',
+          onClick: () => handleDelete(incident)
+        })
+      ])
+    }
+  },
 ]
 </script>
 
@@ -40,6 +65,9 @@ const columns = [
     <div class="flex justify-between">
       <UInput v-model="searchTerm" class="max-w-lg" icon="i-lucide-search" placeholder="Buscar incidencias..." />
       <div class="flex gap-3">
+        <UButton to="/incident/new" color="primary" icon="i-lucide-plus">
+          Nueva Incidencia
+        </UButton>
         <UButton @click="handleReload" variant="ghost" icon="i-lucide-refresh-cw" title="Refrescar lista" :disabled="incidentsPending" :loading="incidentsPending" />
       </div>
     </div>

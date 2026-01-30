@@ -49,7 +49,8 @@ const handleAuth = async () => {
         if(data.session) {
         successMessage.value = '¡Inicio de sesión exitoso! Redirigiendo..'
       // Redirect to dashboard after successful login
-      navigateTo('/dashboard')}
+      navigateTo('/dashboard',{replace:true})
+    }
       
     }
     }

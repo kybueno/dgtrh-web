@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import type { TablesInsert, TablesUpdate } from '~/types/supabase';
+
 
 export const incidents = ref<Incident[]>([]);
 export const incidentsPending = ref<boolean>(false);
@@ -15,7 +15,7 @@ export async function queryIncidents() {
   return await supabase.from("incidents").select(INCIDENT_QUERY.detailed);
 }
 
-export async function queryIncidentCreate(newIncidentData: TablesInsert<"incidents">) {
+export async function queryIncidentCreate(newIncidentData: any) {
   const supabase = useSupabaseClient();
   return await supabase
     .from("incidents")
@@ -24,7 +24,7 @@ export async function queryIncidentCreate(newIncidentData: TablesInsert<"inciden
 }
 
 // CREATE
-export async function createIncident(newIncidentData: TablesInsert<"incidents">) {
+export async function createIncident(newIncidentData: any) {
   const response = await queryIncidentCreate(newIncidentData);
   const { data, error } = response;
 
@@ -58,7 +58,7 @@ export async function loadIncidents() {
 }
 
 // UPDATE
-export async function updateIncident(id: string, updatedIncidentData: TablesUpdate<"incidents">) {
+export async function updateIncident(id: string, updatedIncidentData: any) {
   const supabase = useSupabaseClient();
   const response = await supabase
     .from("incidents")

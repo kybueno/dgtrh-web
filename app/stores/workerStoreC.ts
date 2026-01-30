@@ -212,7 +212,7 @@ export async function getWorkerByUsername(username: string) {
   const supabase = useSupabaseClient();
   const { data, error } = await supabase
     .from('workers')
-    .select('*')
+    .select(WORKER_QUERY.detailed)
     .ilike('email', `${username}@%`)
     .single();
 
