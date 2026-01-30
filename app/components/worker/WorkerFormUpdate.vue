@@ -62,12 +62,8 @@ onMounted(() => {
                 </UFormField>
                 <!-- Nivel -->
                 <UFormField class="col-span-2" label="Nivel educativo">
-                    <USelect class="w-full" :items="(EDUCATION_LEVELS as unknown as EducationLevel[])" value-key="code"
-                        label-key="label" v-model="(formData.level as EducationLevelCode)">
-                        <template #item-label="{ item }">
-                            <p>{{ item.label }}</p>
-                            <span class="text-muted">{{ item.description }}</span>
-                        </template>
+                    <USelect class="w-full" :items="(EDUCATION_LEVELS as unknown as EducationLevel[]).map(e => ({ value: e.code, label: e.label, description: e.description }))"
+                       v-model="(formData.level as EducationLevelCode)">
                     </USelect>
                 </UFormField>
                 <!-- Dirección -->
