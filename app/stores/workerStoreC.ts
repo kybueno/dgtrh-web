@@ -89,7 +89,7 @@ export async function queryWorkerCreate(
   newWorkerData: TablesInsert<"workers">
 ) {
   const supabase = useSupabaseClient();
-  return await supabase.from("workers").insert([newWorkerData]).select();
+  return await supabase.from("workers").insert([newWorkerData]).select(WORKER_QUERY.detailed);
 }
 
 // CREATE
@@ -137,7 +137,8 @@ export async function updateWorker(
     .from("workers")
     .update(updatedWorkerData)
     .eq("id", id)
-    .select();
+    .select(WORKER_QUERY.detailed)
+    .single();
 
   const { data, error } = response;
 
