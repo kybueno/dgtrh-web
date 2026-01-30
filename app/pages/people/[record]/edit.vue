@@ -53,10 +53,7 @@ async function handleUpdateWorker(newWorkerData: TablesUpdate<'workers'>) {
   if (!worker.value?.id) return;
   
   try {
-    const { error } = await updateWorker({
-      ...newWorkerData,
-      id: worker.value.id
-    });
+    const { error } = await updateWorker(worker.value.id,newWorkerData);
     
     if (!error) {
       useRouter().push(`/people/${newWorkerData.record_number}`);
