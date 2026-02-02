@@ -1,0 +1,239 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User authentication model
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String   @unique
+  password  String   // hashed password
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  profile   Profile?
+
+  @@map("users")
+}
+
+// Profile links User to Worker (replaces Supabase profile)
+model Profile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  workerId  String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  worker    Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+// System roles for RBAC
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workers     WorkerRole[]
+
+  @@map("roles")
+}
+
+// Worker roles (many-to-many relationship)
+model WorkerRole {
+  id        String   @id @default(cuid())
+  workerId  String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  worker    Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([workerId, roleId])
+  @@map("worker_roles")
+}
+
+// Worker/Organization model
+model Organization {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workers     Worker[]
+
+  @@map("organizations")
+}
+
+// Work groups/teams
+model Group {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workers     Worker[]
+
+  @@map("groups")
+}
+
+// Job positions (Anexo 14)
+model Position {
+  id            String   @id @default(cuid())
+  code          Int      @unique
+  name          String
+  description   String?
+  category      String?
+  level         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workers       Worker[]
+
+  @@map("positions")
+}
+
+// Worker status enum
+enum WorkerStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  ON_LEAVE
+}
+
+// Main Worker model
+model Worker {
+  id                String        @id @default(cuid())
+  recordNumber      String        @unique
+  firstName         String
+  lastName          String
+  middleName        String?
+  secondLastName    String?
+  ci                String?       @unique
+  email             String?       @unique
+  tel               String?
+  address           String?
+  gender            String?
+  level             String?
+  groupId           String?
+  positionCode      Int?
+  status            WorkerStatus  @default(ACTIVE)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  // Relations
+  group             Group?        @relation(fields: [groupId], references: [id])
+  position          Position?     @relation(fields: [positionCode], references: [code])
+  profile           Profile?
+  roles             WorkerRole[]
+  incidents         Incident[]
+  payroll           Payroll[]
+  holidays          Holiday[]
+  extraWork         ExtraWork[]
+  organizations     Organization[]
+
+  @@map("workers")
+}
+
+// Incident types
+model IncidentType {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  code        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  incidents   Incident[]
+
+  @@map("incident_types")
+}
+
+// HR Incidents
+model Incident {
+  id            String   @id @default(cuid())
+  workerId      String
+  incidentTypeId String
+  description   String
+  date          DateTime
+  severity      String?
+  status        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  worker        Worker         @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  incidentType  IncidentType   @relation(fields: [incidentTypeId], references: [id])
+
+  @@map("incidents")
+}
+
+// Payroll records
+model Payroll {
+  id          String   @id @default(cuid())
+  workerId    String
+  month       Int
+  year        Int
+  baseSalary  Decimal?
+  deductions  Decimal?
+  bonuses     Decimal?
+  netSalary   Decimal?
+  status      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  worker      Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@unique([workerId, month, year])
+  @@map("payroll")
+}
+
+// Holiday/Vacation management
+model Holiday {
+  id          String   @id @default(cuid())
+  workerId    String
+  startDate   DateTime
+  endDate     DateTime
+  type        String?  // vacation, sick, personal
+  status      String?
+  approvedBy  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  worker      Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@map("holidays")
+}
+
+// Extra work/overtime
+model ExtraWork {
+  id          String   @id @default(cuid())
+  workerId    String
+  date        DateTime
+  hours       Decimal
+  description String?
+  rate        Decimal?
+  approvedBy  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  worker      Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@map("extra_work")
+}

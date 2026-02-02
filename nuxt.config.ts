@@ -6,7 +6,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     "shadcn-nuxt",
-    "@nuxtjs/supabase",
     "@pinia/nuxt",
     "@vueuse/nuxt",
     "@compodium/nuxt",
@@ -42,19 +41,4 @@ export default defineNuxtConfig({
     },
   },
   //ssr:false,//Disable SSR because it causes hydration mismatches with NuxtUI USelect item labels when there are object fields with names like label and description
-    supabase: {
-    redirectOptions: {
-      login: "/auth/login",
-      callback: "/dashboard",
-      include: undefined,
-      exclude: ["/auth/*"],
-      saveRedirectToCookie: false,
-    },
-    types: "./shared/types/database.types.ts",
-    // clientOptions: {
-    //   db: {
-    //     schema: "public",
-    //   },
-    // },
-  },
 });
