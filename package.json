@@ -7,7 +7,7 @@
     "dev": "nuxt dev --host --port 3004",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
+    "postinstall": "nuxt prepare && prisma generate",
     "generate-supabase-types": "bunx supabase gen types typescript --project-id $SUPABASE_ID --schema public > ./shared/types/database.types.ts"
   },
   "dependencies": {
