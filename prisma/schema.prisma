@@ -42,7 +42,7 @@ model Worker {
   second_last_name    String
   record_number       String
   ci                  String?
-  email               String?
+  email               String?       @unique
   level               String?
   address             String?
   gender              String?
