@@ -67,7 +67,7 @@ const columns: TableColumn<typeof data[0]>[] = [
         id:'position',
         accessorKey: 'position',
         header: "Cargo",
-        cell: ({ row }) => row.original.position.description ?? row.original.position_code
+        cell: ({ row }) => row.original.position?.description ?? row.original.position_code
     }, {
         id:'address',
         accessorKey: 'address',

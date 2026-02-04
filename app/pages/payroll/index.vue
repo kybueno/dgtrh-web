@@ -59,7 +59,7 @@ const columns: TableColumn<WorkerDetailed>[] = [
     cell: ({ row }) => h('span', { class: "cursor-pointer", onClick: () => navigateTo(`/payroll/${row.original.record_number}`) }, `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`)
   }, {
     header: "Cargo",
-    cell: ({ row }) => row.original.position.description ?? row.original.position.description
+    cell: ({ row }) => row.original.position?.description ?? row.original.position_code
 
   }, {
     header: "Incidencias", //Incidencias del tiempo no laborado

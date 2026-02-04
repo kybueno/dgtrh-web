@@ -125,7 +125,7 @@ onMounted(() => {
       </UCard>
       <template v-else>
         <NuxtLink href="/dashboard">
-          <Button>Ir al Panel de Información</Button>
+          <UButton>Ir al Panel de Información</UButton>
         </NuxtLink>
       </template>
     </div>
