@@ -30,7 +30,7 @@ onMounted(async () => {
     <UPageGrid class="lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-px ">
       <dashboard-stat to="/people" :loading="!workers.length && workersPending" icon="mdi:account" title="Empleados" :value="workers.length" />
       <dashboard-stat to="/groups" :loading="!workGroups.length && groupsPending" icon="mdi:account-group" title="Grupos de Trabajo" :value="workGroups.length" color="secondary" />
-      <dashboard-stat to="/incidents" :loading="!incidents.length && incidentsPending" icon="mdi:alert" title="Incidencias" :value="incidents.length" color="warning" />
+      <dashboard-stat to="/incident" :loading="!incidents.length && incidentsPending" icon="mdi:alert" title="Incidencias" :value="incidents.length" color="warning" />
       <dashboard-stat to="/extra" :loading="!extraWork.length && extraWorkPending" icon="mdi:account-clock" title="Trabajo Extraordinario" :value="extraWork.length" color="green" />
     </UPageGrid>
     <UCard class="flex-1" variant="subtle">
