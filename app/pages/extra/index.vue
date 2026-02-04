@@ -32,7 +32,11 @@
 import { loadExtraWorks } from '~/stores/extraWorkStore';
 
 // Data fetching
-const { data: extraWorks, pending } = await useAsyncData('extra-works', () => loadExtraWorks());
+const { data: extraWorks, pending } = await useAsyncData('extra-works', async () => {
+  const response = await loadExtraWorks()
+  if (response.error) throw response.error
+  return response.data ?? []
+});
 
 // Table columns
 const columns = [

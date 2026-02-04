@@ -1,128 +1,123 @@
-import { ref } from 'vue';
-import type { TablesInsert, TablesUpdate } from '~/types/supabase';
+import { ref } from 'vue'
+import type { TablesInsert, TablesUpdate } from '~/shared/types/database.types'
 
-export const incidents = ref<Incident[]>([]);
-export const incidentsPending = ref<boolean>(false);
+export const incidents = ref<Incident[]>([])
+export const incidentsPending = ref<boolean>(false)
 
 export const INCIDENT_QUERY = {
-  detailed: "*",
-  basic: "*",
-};
+  detailed: '*',
+  basic: '*',
+}
 
-// No mutation functions
+async function wrapFetch<T>(promise: Promise<T>) {
+  try {
+    const data = await promise
+    return { data, error: null as any }
+  } catch (error) {
+    return { data: null as any, error }
+  }
+}
+
 export async function queryIncidents() {
-  const supabase = useSupabaseClient();
-  return await supabase.from("incidents").select(INCIDENT_QUERY.detailed);
+  return wrapFetch($fetch<Incident[]>('/api/incidents'))
 }
 
-export async function queryIncidentCreate(newIncidentData: TablesInsert<"incidents">) {
-  const supabase = useSupabaseClient();
-  return await supabase
-    .from("incidents")
-    .insert([newIncidentData])
-    .select();
+export async function queryIncidentCreate(newIncidentData: TablesInsert<'incidents'>) {
+  return wrapFetch(
+    $fetch<Incident>('/api/incidents', {
+      method: 'POST',
+      body: newIncidentData,
+    })
+  )
 }
 
-// CREATE
-export async function createIncident(newIncidentData: TablesInsert<"incidents">) {
-  const response = await queryIncidentCreate(newIncidentData);
-  const { data, error } = response;
-
-  if (data && data[0]) {
-    incidents.value.push(data[0]);
-  }
-  if (error) {
-    console.error(error);
-    notifyError({ error, title: "Error al crear incidencia" });
-  }
-
-  return response;
-}
-
-// READ
-export async function loadIncidents() {
-  incidentsPending.value = true;
-  const response = await queryIncidents();
-  const { data, error } = response;
-  incidentsPending.value = false;
+export async function createIncident(newIncidentData: TablesInsert<'incidents'>) {
+  const response = await queryIncidentCreate(newIncidentData)
+  const { data, error } = response
 
   if (data) {
-    incidents.value = data;
+    incidents.value.push(data)
   }
   if (error) {
-    console.error(error);
-    notifyError({ error, title: "Error al cargar incidencias" });
+    console.error(error)
+    notifyError({ error, title: 'Error al crear incidencia' })
   }
 
-  return response;
+  return response
 }
 
-// UPDATE
-export async function updateIncident(id: string, updatedIncidentData: TablesUpdate<"incidents">) {
-  const supabase = useSupabaseClient();
-  const response = await supabase
-    .from("incidents")
-    .update(updatedIncidentData)
-    .eq('id', id)
-    .select();
+export async function loadIncidents() {
+  incidentsPending.value = true
+  const response = await queryIncidents()
+  const { data, error } = response
+  incidentsPending.value = false
 
-  const { data, error } = response;
+  if (data) {
+    incidents.value = data
+  }
+  if (error) {
+    console.error(error)
+    notifyError({ error, title: 'Error al cargar incidencias' })
+  }
 
-  if (data && data[0]) {
-    const index = incidents.value.findIndex(i => i.id === id);
+  return response
+}
+
+export async function updateIncident(
+  id: string,
+  updatedIncidentData: TablesUpdate<'incidents'>
+) {
+  const response = await wrapFetch(
+    $fetch<Incident>(`/api/incidents/${id}`, {
+      method: 'PUT',
+      body: updatedIncidentData,
+    })
+  )
+
+  const { data, error } = response
+
+  if (data) {
+    const index = incidents.value.findIndex((i) => i.id === id)
     if (index !== -1) {
-      incidents.value[index] = { ...incidents.value[index], ...data[0] };
+      incidents.value[index] = { ...incidents.value[index], ...data }
     }
   }
   if (error) {
-    console.error(error);
-    notifyError({ error, title: "Error al actualizar incidencia" });
+    console.error(error)
+    notifyError({ error, title: 'Error al actualizar incidencia' })
   }
 
-  return response;
+  return response
 }
 
-// DELETE
 export async function deleteIncident(id: string) {
-  const supabase = useSupabaseClient();
-  const { error } = await supabase
-    .from("incidents")
-    .delete()
-    .eq('id', id);
+  const response = await wrapFetch(
+    $fetch(`/api/incidents/${id}`, { method: 'DELETE' })
+  )
 
-  if (error) {
-    console.error(error);
-    notifyError({ error, title: "Error al eliminar incidencia" });
-    return { error };
+  if (response.error) {
+    console.error(response.error)
+    notifyError({ error: response.error, title: 'Error al eliminar incidencia' })
+    return { error: response.error }
   }
 
-  // Remove the incident from the local state
-  incidents.value = incidents.value.filter(incident => incident.id !== id);
-  return { error: null };
+  incidents.value = incidents.value.filter((incident) => incident.id !== id)
+  return { error: null }
 }
 
-// Helper functions
 export async function getIncidentById(id: string) {
-  // Try to find in local store first
-  const localIncident = incidents.value.find(incident => incident.id === id);
-  if (localIncident) return localIncident;
+  const localIncident = incidents.value.find((incident) => incident.id === id)
+  if (localIncident) return localIncident
 
-  // If not found locally, try to fetch from Supabase
-  const supabase = useSupabaseClient();
-  const { data, error } = await supabase
-    .from('incidents')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const response = await wrapFetch($fetch<Incident>(`/api/incidents/${id}`))
 
-  if (data) {
-    // Add to local store for future use
-    incidents.value.push(data);
-    return data;
+  if (response.data) {
+    incidents.value.push(response.data)
+    return response.data
   }
 
-  if (error) {
-    console.error('Error fetching incident by ID:', error);
+  if (response.error) {
+    console.error('Error fetching incident by ID:', response.error)
   }
-  return null;
+  return null
 }

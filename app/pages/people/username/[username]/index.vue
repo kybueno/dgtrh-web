@@ -61,7 +61,6 @@ useHead({
 import { useRoute } from 'vue-router';
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted, ref } from 'vue';
-const supabase = useSupabaseClient()
 const route = useRoute();
 const username = route.params.username as string;
 const workerStore = useWorkerStore();
@@ -72,7 +71,7 @@ async function handleDelete(){
     if(!worker.value?.id || !confirm("Seguro de que desea eliminar permanentemente a @"+ username )) return
 
     const response = await workerStore.deleteWorker(worker.value.id)
-    errorMessage.value = response.error?.details || ''
+    errorMessage.value = response.error?.message || ''
 
 }
 
@@ -81,4 +80,3 @@ onMounted(async () => {
     worker.value = workerStore.getWorkerByUsername(username) || null;
 });
 </script>
-

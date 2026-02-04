@@ -8,8 +8,6 @@ useHead({
 
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
-import { useWorkerStore } from '~/stores/workerStore'
-const supabase = useSupabaseClient()
 
 onMounted(() => loadWorkers())
 
@@ -40,7 +38,7 @@ const columns: TableColumn<WorkerDetailed>[] = [
     
   }, {
     header: "Órganos y Cargos",
-    cell: ({ row }) => row.original.position.description ?? row.original.position_code
+    cell: ({ row }) => row.original.position?.description ?? row.original.position_code
   }, {
     header: "CO",
     cell:  "T"
@@ -60,13 +58,13 @@ const columns: TableColumn<WorkerDetailed>[] = [
 
   }, {
     header: "Grupo Escala",
-    cell: ({ row }) => row.original.position.group_escale 
+    cell: ({ row }) => row.original.position?.group_escale 
   }, {
     header: "Total",
-    cell: ({ row }) => row.original.position.total
+    cell: ({ row }) => row.original.position?.total
   }, {
     header: "Escala",
-    cell: ({ row }) => row.original.position.scale
+    cell: ({ row }) => row.original.position?.scale
   }, {
     header: "CLA",
     cell: "0.00"

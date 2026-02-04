@@ -6,53 +6,43 @@ useHead({
   title: 'Inicio de Sesión'
 })
 
-import { ref } from 'vue'
-const supabase = useSupabaseClient()
-const mode = ref<'login' | 'signup'>('login') // 'login' or 'signup'
+import { ref, computed } from 'vue'
+
+const mode = ref<'login' | 'signup'>('login')
 const username = ref('')
 const password = ref('')
 const loading = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
 const showPassword = ref(false)
-const router = useRouter()
+const authStore = useAuthStore()
+
+const loggedUser = computed(() => authStore.loggedUserProfile.value?.user)
+
 const handleAuth = async () => {
   loading.value = true
   errorMessage.value = ''
   successMessage.value = ''
 
-  // Derive UCI email from username
   const email = `${username.value}@uci.cu`
 
   try {
     if (mode.value === 'signup') {
-      // Sign up new user
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password: password.value
+      await $fetch('/api/auth/register', {
+        method: 'POST',
+        body: { email, password: password.value }
       })
-
-      if (error) throw error
-
-      if(data.user && !data.session) successMessage.value = '¡Registro exitoso! Por favor verifica tu correo electrónico para completar el proceso.'
-      if(data.user && data.session) successMessage.value = '¡Registro exitoso! Está autenticado.'
+      successMessage.value = '¡Registro exitoso!'
     } else {
-      //MODE != signup. Log in existing user
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password: password.value
+      await $fetch('/api/auth/login', {
+        method: 'POST',
+        body: { email, password: password.value }
       })
-
-      if (error) throw error
-
-      if(data) {
-        if(data.session) {
-        successMessage.value = '¡Inicio de sesión exitoso! Redirigiendo..'
-      // Redirect to dashboard after successful login
-      navigateTo('/dashboard')}
-      
+      successMessage.value = '¡Inicio de sesión exitoso! Redirigiendo..'
     }
-    }
+
+    await authStore.fetchLoggedUserProfile()
+    navigateTo('/dashboard')
   } catch (error) {
     console.error('Authentication error:', error)
     errorMessage.value = (error as Error).message || 'Ocurrió un error. Por favor inténtalo de nuevo.'
@@ -63,12 +53,13 @@ const handleAuth = async () => {
 
 const toggleMode = () => {
   mode.value = mode.value === 'signup' ? 'login' : 'signup'
-  // username.value = ''
-  // password.value = ''
   errorMessage.value = ''
   successMessage.value = ''
 }
-const loggedUser = useSupabaseUser()
+
+onMounted(() => {
+  authStore.fetchLoggedUserProfile()
+})
 </script>
 
 <template>
@@ -134,7 +125,7 @@ const loggedUser = useSupabaseUser()
       </UCard>
       <template v-else>
         <NuxtLink href="/dashboard">
-          <Button>Ir al Panel de Información</Button>
+          <UButton>Ir al Panel de Información</UButton>
         </NuxtLink>
       </template>
     </div>

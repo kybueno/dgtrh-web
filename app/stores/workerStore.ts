@@ -1,53 +1,44 @@
-import { defineStore } from "pinia";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { defineStore } from 'pinia'
 
-export const useWorkerStore = defineStore("workerStore", {
+export const useWorkerStore = defineStore('workerStore', {
   state: () => ({
-    workers: [] as WorkerInfo[],//primero esta vacío y al cargar la pagina se llena de los trabajadores
-    
+    workers: [] as WorkerInfo[],
   }),
   actions: {
-    //función 1 
-    async loadWorkers() {    //I
-   //1 return //2//si hay trabajadores no va a cargar trabajadores
-      const supabase = useSupabaseClient()
-      const { data, error } = await supabase.from("workers").select("*"); //3
-      if (data) this.workers = data;  //4
-      if (error) console.error(error); //5
-    }, //F
-    //función 2
-    async createWorker(newWorkerData: WorkerInsert, supabase: SupabaseClient) {
-      const { data, error } = await supabase //van a devolver error y data, si la creo sin problema error va a ser nulo y el data va a ser algo, y viceversa
-        .from("workers")
-        .insert(newWorkerData);
-
-      if (data) this.workers.push(data[0]);
-      if (error) console.error(error);   
+    async loadWorkers() {
+      const data = await $fetch<WorkerInfo[]>('/api/workers')
+      this.workers = data
     },
-    
+    async createWorker(newWorkerData: WorkerInsert) {
+      const worker = await $fetch<WorkerInfo>('/api/workers', {
+        method: 'POST',
+        body: newWorkerData,
+      })
+
+      if (worker) this.workers.push(worker)
+      return worker
+    },
+
     async deleteWorker(id: UUID) {
-      const supabase = useSupabaseClient()
-    
-      const response = await supabase.from("workers").delete().eq('id', id)
-      const {error} = response
-      if (error) console.error(error)
-      
-      return response
+      try {
+        await $fetch(`/api/workers/${id}`, { method: 'DELETE' })
+        this.workers = this.workers.filter((worker) => worker.id !== id)
+        return { error: null as any }
+      } catch (error) {
+        return { error }
+      }
     },
 
-    //función 3
     getWorkerById(id: string) {
-      return this.workers.find((worker: { id: string; }) => worker.id === id);
+      return this.workers.find((worker) => worker.id === id)
     },
     getWorkerByRecordNumber(recordNumber: string) {
-      return this.workers.find(
-        (worker: { record_number: string; }) => worker.record_number === recordNumber
-      );
+      return this.workers.find((worker) => worker.record_number === recordNumber)
     },
     getWorkerByUsername(username: string) {
       return this.workers.find(
-        (worker: { email: string; }) => worker.email?.split("@")[0] === username
-      );
+        (worker) => worker.email?.split('@')[0] === username
+      )
     },
   },
-});
+})

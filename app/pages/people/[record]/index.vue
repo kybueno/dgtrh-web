@@ -59,8 +59,8 @@
         <CardSection title="Información Laboral">
           <DescriptionList>
             <DescriptionListItem label="Fecha de inicio" :value="formattedStartDate" />
-            <DescriptionListItem label="Grupo de trabajo" :value="worker.group.name || '—'" />
-            <DescriptionListItem label="Cargo" :value="worker.position.description || '—'" />
+            <DescriptionListItem label="Grupo de trabajo" :value="worker.group?.name || '—'" />
+            <DescriptionListItem label="Cargo" :value="worker.position?.description || '—'" />
             <DescriptionListItem label="Organizaciones"
               :value="worker.organizations_codes.join(', ').toUpperCase() || '—'" />
           </DescriptionList>
@@ -127,7 +127,7 @@ async function handleDelete() {
   if (!worker.value?.id || !confirm("Seguro de que desea eliminar permanentemente el registro #" + recordNumber + "?")) return
 
   const response = await deleteWorker(worker.value.id)
-  errorMessage.value = response.error?.details || ''
+  errorMessage.value = response.error?.message || ''
 }
 
 onMounted(loadWorkerData);

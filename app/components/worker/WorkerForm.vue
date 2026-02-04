@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { loadGroups, workGroups } from '@/stores/groupStore'
-
-const supabase = useSupabaseClient()
 const workerStore = useWorkerStore();
 
 const formData = ref<WorkerInsert>({
@@ -26,7 +24,7 @@ const loading = ref(false)
 async function handleAddWorker() {
     loading.value = true
     try {
-        await workerStore.createWorker(formData.value, supabase);
+        await workerStore.createWorker(formData.value);
 
         formData.value = {
             email: '',
@@ -99,12 +97,8 @@ onMounted(() => {
 
                 <!-- Nivel -->
                 <UFormField class="col-span-2" label="Nivel educativo">
-                    <USelect class="w-full" :items="(EDUCATION_LEVELS as unknown as EducationLevel[])" value-key="code"
+                    <USelect class="w-full" :items="(EDUCATION_LEVELS as unknown as EducationLevel[]).map(e => ({ value: e.code, label: e.label, description: e.description }))"
                         v-model="(formData.level as EducationLevelCode)">
-                        <template #item-label="{ item }">
-                            <p>{{ item.label }}</p>
-                            <span class="text-muted">{{ item.description }}</span>
-                        </template>
                     </USelect>
                 </UFormField>
 
@@ -131,12 +125,12 @@ onMounted(() => {
 
                 <!-- Organizaciones -->
                 <UFormField class="col-span-2" label="Organizaciones">
-                    <USelect multiple class="w-full" :items="organizations.map(o => ({ value: o.code, label: o.acronym, description: o.name }))" value-key="code" label-key="acronym"
+                    <USelect multiple class="w-full" :items="organizations.map(o => ({img:o.img,  value: o.code, label: o.acronym || o.code?.toUpperCase(), description: o.name || '' }))" 
                         v-model="formData.organizations_codes" :loading="organizationsPending"
                         :disabled="organizations.length == 0">
                         <span v-for="o in formData.organizations_codes">{{ o.toUpperCase() }}</span>
                         <template #item-leading="{ item }">
-                            <UAvatar :src="item.img || undefined" :alt="item.acronym || undefined" />
+                            <UAvatar :src="item.img || undefined" :alt="item.label || undefined" />
                         </template>
                         <template #content-top>
                             <UButton to="/organizations/new" color="neutral" variant="ghost" icon="mdi:plus">Nueva

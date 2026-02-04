@@ -1,17 +1,24 @@
 export const payroll = ref<PayrollInfo[]>([])
 
 export const payrollPending = ref(false)
-export interface PayrollInfo extends Tables<"payroll"> { }
+export interface PayrollInfo extends Tables<'payroll'> {}
+
+async function wrapFetch<T>(promise: Promise<T>) {
+  try {
+    const data = await promise
+    return { data, error: null as any }
+  } catch (error) {
+    return { data: null as any, error }
+  }
+}
 
 export async function loadPayroll() {
-  const supabase = useSupabaseClient() // funcion que devuelve el cliente de supabase
-
   payrollPending.value = true
-  const response = await supabase.from("payroll").select("*");
+  const response = await wrapFetch($fetch<PayrollInfo[]>('/api/payroll'))
   const { data, error } = response
-  payrollPending.value = false //antes de buscar en la base de datos lo pone en true y después lo busca
-  if (data) payroll.value = data;
-  if (error) console.error(error);
+  payrollPending.value = false
+  if (data) payroll.value = data
+  if (error) console.error(error)
 
   return response
 }

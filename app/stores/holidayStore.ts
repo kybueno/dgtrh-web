@@ -1,33 +1,40 @@
 export const holidays = ref<HolidaysInfo[]>([])
 
 export const holidaysPending = ref(false)
-export interface HolidaysInfo extends Tables<"holidays"> { }
+export interface HolidaysInfo extends Tables<'holidays'> {}
+
+async function wrapFetch<T>(promise: Promise<T>) {
+  try {
+    const data = await promise
+    return { data, error: null as any }
+  } catch (error) {
+    return { data: null as any, error }
+  }
+}
 
 export async function loadHolidays() {
-  const supabase = useSupabaseClient() // funcion que devuelve el cliente de supabase
-
   holidaysPending.value = true
-  const response = await supabase.from("holidays").select("*");
+  const response = await wrapFetch($fetch<HolidaysInfo[]>('/api/holidays'))
   const { data, error } = response
-  holidaysPending.value = false //antes de buscar en la base de datos lo pone en true y después lo busca
-  if (data) holidays.value = data;
-  if (error) console.error(error);
+  holidaysPending.value = false
+  if (data) holidays.value = data
+  if (error) console.error(error)
 
   return response
 }
 
-export async function addHoliday(newHolidayData: TablesInsert<"holidays">) {
-  const supabase = useSupabaseClient()
+export async function addHoliday(newHolidayData: TablesInsert<'holidays'>) {
+  const response = await wrapFetch(
+    $fetch<HolidaysInfo>('/api/holidays', {
+      method: 'POST',
+      body: newHolidayData,
+    })
+  )
 
-  const response = await supabase
-    .from("holidays")
-    .insert([newHolidayData])
-    .select();
+  const { data, error } = response
 
-  const { data, error } = response;
-
-  if (data) console.log(data);
-  if (error) console.error(error);
+  if (data) console.log(data)
+  if (error) console.error(error)
 
   return response
 }

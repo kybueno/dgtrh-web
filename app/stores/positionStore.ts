@@ -1,47 +1,51 @@
 export const positions = ref<PositionInfo[]>([])
 
 export const positionsPending = ref(false)
-export interface PositionInfo extends Tables<"positions"> { }
+export interface PositionInfo extends Tables<'positions'> {}
+
+async function wrapFetch<T>(promise: Promise<T>) {
+  try {
+    const data = await promise
+    return { data, error: null as any }
+  } catch (error) {
+    return { data: null as any, error }
+  }
+}
 
 export async function loadPositions() {
-  const supabase = useSupabaseClient() // funcion que devuelve el cliente de supabase
-
   positionsPending.value = true
-  const response = await supabase.from("positions").select("*");
+  const response = await wrapFetch($fetch<PositionInfo[]>('/api/positions'))
   const { data, error } = response
-  positionsPending.value = false //antes de buscar en la base de datos lo pone en true y después lo busca
-  if (data) positions.value = data;
-  if (error) console.error(error);
+  positionsPending.value = false
+  if (data) positions.value = data
+  if (error) console.error(error)
 
   return response
 }
 
-export async function addPosition(newPositionData: TablesInsert<"positions">) {
-  const supabase = useSupabaseClient()
+export async function addPosition(newPositionData: TablesInsert<'positions'>) {
+  const response = await wrapFetch(
+    $fetch<PositionInfo>('/api/positions', {
+      method: 'POST',
+      body: newPositionData,
+    })
+  )
 
-  const response = await supabase
-    .from("positions")
-    .insert([newPositionData])
-    .select();
+  const { data, error } = response
 
-  const { data, error } = response;
-
-  if (data) console.log(data);
-  if (error) console.error(error);
+  if (data) console.log(data)
+  if (error) console.error(error)
 
   return response
 }
 
 export async function deletePosition(id: number) {
-  const supabase = useSupabaseClient()
+  const response = await wrapFetch($fetch(`/api/positions/${id}`, { method: 'DELETE' }))
+  if (response.error) console.error(response.error)
 
-  const { error } = await supabase.from("positions").delete().eq('id', id)
-  if (error) console.error(error)
-
-  return error
+  return response.error
 }
 
 export function getPositionById(code: number) {
-  return positions.value.find(position => position.code === code)
+  return positions.value.find((position) => position.code === code)
 }
-
