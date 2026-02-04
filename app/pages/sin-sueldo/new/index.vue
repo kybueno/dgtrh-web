@@ -65,7 +65,6 @@ useHead({
 })
 
 import { useWorkerStore } from '~/stores/workerStore'
-const supabase = useSupabaseClient()
 
 const workerStore = useWorkerStore()
 

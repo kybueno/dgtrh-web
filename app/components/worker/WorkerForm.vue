@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { loadGroups, workGroups } from '@/stores/groupStore'
-
-const supabase = useSupabaseClient()
 const workerStore = useWorkerStore();
 
 const formData = ref<WorkerInsert>({
@@ -26,7 +24,7 @@ const loading = ref(false)
 async function handleAddWorker() {
     loading.value = true
     try {
-        await workerStore.createWorker(formData.value, supabase);
+        await workerStore.createWorker(formData.value);
 
         formData.value = {
             email: '',

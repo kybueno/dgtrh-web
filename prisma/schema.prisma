@@ -7,10 +7,172 @@ datasource db {
   provider = "postgresql"
 }
 
+enum WorkerStatus {
+  active
+  inactive
+  terminated
+
+  @@map("worker_status")
+}
+
+enum UserRole {
+  hr_manager
+  director
+  employee
+}
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         UserRole @default(employee)
+  workerId     String?  @unique @map("worker_id") @db.Uuid
+  worker       Worker?  @relation(fields: [workerId], references: [id])
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Worker {
+  id                  String        @id @default(uuid()) @db.Uuid
+  first_name          String
+  middle_name         String?
+  last_name           String
+  second_last_name    String
+  record_number       String
+  ci                  String?
+  email               String?
+  level               String?
+  address             String?
+  gender              String?
+  tel                 String?
+  organizations_codes String[]      @default([])
+  parent1_name        String?
+  parent2_name        String?
+  status              WorkerStatus  @default(active)
+  group_id            Int?
+  group               Group?        @relation("GroupMembers", fields: [group_id], references: [id])
+  position_code       Int?
+  position            Position?     @relation(fields: [position_code], references: [code])
+  created_at          DateTime?     @default(now())
+  updated_at          DateTime?     @updatedAt
+  user                User?
+  led_groups          Group[]       @relation("GroupLeader")
+  extra_work           ExtraWork[]
+  incidents           Incident[]
+  holidays            Holiday[]
+  payroll_created     Payroll[]     @relation("payroll_created")
+  payroll_revised     Payroll[]     @relation("payroll_revised")
+
+  @@map("workers")
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  leader_id String   @db.Uuid
+  leader    Worker   @relation("GroupLeader", fields: [leader_id], references: [id])
+  workers   Worker[] @relation("GroupMembers")
+
+  @@map("groups")
+}
+
+model Position {
+  id           Int      @id @default(autoincrement())
+  code         Int      @unique
+  category     String
+  description  String
+  group_escale String
+  level        String
+  scale        Int?
+  total        Int?
+  created_at   DateTime @default(now())
+  workers      Worker[]
+
+  @@map("positions")
+}
+
+model Organization {
+  id          Int     @id @default(autoincrement())
+  acronym     String?
+  code        String?
+  description String?
+  img         String?
+  name        String?
+
+  @@map("organizations")
+}
+
+model ExtraWork {
+  id         String   @id @default(uuid()) @db.Uuid
+  worker_id  String   @db.Uuid
+  worker     Worker   @relation(fields: [worker_id], references: [id])
+  start_date DateTime
+  end_date   DateTime?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("extra_work")
+}
+
+model IncidentType {
+  code               Int      @id
+  name               String
+  classification     String
+  description        String?
+  pay_for            String?
+  time_classification String?
+  deductible         Boolean?
+  incentive          Boolean  @default(false)
+  avg                Boolean  @default(false)
+  sum                Boolean  @default(false)
+  created_at         DateTime? @default(now())
+  updated_at         DateTime? @updatedAt
+  incidents          Incident[]
+
+  @@map("incident_types")
+}
+
+model Incident {
+  id            String       @id @default(uuid()) @db.Uuid
+  worker_id     String       @db.Uuid
+  worker        Worker       @relation(fields: [worker_id], references: [id])
+  incident_code Int
+  incident_type IncidentType @relation(fields: [incident_code], references: [code])
+  description   String?
+  start_date    DateTime
+  end_date      DateTime?
+  created_at    DateTime?    @default(now())
+  updated_at    DateTime?    @updatedAt
+
+  @@map("incidents")
+}
+
+model Holiday {
+  id            String   @id @default(uuid()) @db.Uuid
+  worker_id     String?  @db.Uuid
+  worker        Worker?  @relation(fields: [worker_id], references: [id])
+  desde         DateTime?
+  hasta         DateTime?
+  incorporacion DateTime?
+  motivo        String?
+  tiempo        Json?
+  created_at    DateTime? @default(now())
+
+  @@map("holidays")
+}
+
+model Payroll {
+  id          Int      @id @default(autoincrement())
+  month       Int
+  year        Int
+  status      String
+  created_at  DateTime @default(now())
+  created_by  String?  @db.Uuid
+  revised_by  String?  @db.Uuid
+  creator     Worker?  @relation("payroll_created", fields: [created_by], references: [id])
+  reviewer    Worker?  @relation("payroll_revised", fields: [revised_by], references: [id])
+
+  @@map("payroll")
 }

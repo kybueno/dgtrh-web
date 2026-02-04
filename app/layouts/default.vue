@@ -189,6 +189,8 @@ const publicLinks = [{
 }] satisfies NavigationMenuItem[]
 
 
+const authStore = useAuthStore()
+
 const groups = computed(() => [{
   id: 'links',
   label: 'Go to',
@@ -206,8 +208,7 @@ const groups = computed(() => [{
 }])
 
 onMounted(async () => {
-
-  useAuthStore().fetchLoggedUserProfile()
+  authStore.fetchLoggedUserProfile()
 
   const cookie = useCookie('cookie-consent')
   if (cookie.value === 'accepted') {
@@ -233,11 +234,11 @@ onMounted(async () => {
   })
 })
 
-const loggedUser = useSupabaseUser()
-const filteredProtectedLinks = computed(()=>{
-  return protectedLinks.filter((link)=>{
-    if(link.role){
-      return link.role.includes(loggedUser.value?.user_metadata.role)
+const loggedUser = computed(() => authStore.loggedUserProfile.value?.user)
+const filteredProtectedLinks = computed(() => {
+  return protectedLinks.filter((link) => {
+    if (link.role) {
+      return link.role.includes(loggedUser.value?.role)
     }
     return true
   })
@@ -264,7 +265,7 @@ const filteredProtectedLinks = computed(()=>{
 
         <UDashboardSearchButton v-if="loggedUser" :collapsed="collapsed" class="bg-transparent ring-default" />
 
-        <UNavigationMenu v-if="loggedUser" :collapsed="collapsed" :items="protectedLinks" orientation="vertical" tooltip
+        <UNavigationMenu v-if="loggedUser" :collapsed="collapsed" :items="filteredProtectedLinks" orientation="vertical" tooltip
           popover />
 
         <UNavigationMenu :collapsed="collapsed" :items="publicLinks" orientation="vertical" tooltip class="mt-auto" />

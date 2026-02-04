@@ -9,7 +9,6 @@ useHead({
 import { useWorkerStore } from '~/stores/workerStore';
 import { onMounted } from 'vue';
 import { exportSignSheet, generateSignSheet } from './signSheetUtils';
-const supabase = useSupabaseClient()
 const workerStore = useWorkerStore();
 
 onMounted(async () => {

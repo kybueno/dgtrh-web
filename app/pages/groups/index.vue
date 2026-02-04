@@ -6,9 +6,6 @@ useHead({
   title: 'Grupos de trabajo'
 })
 
-import { useWorkerStore } from "~/stores/workerStore";
-const supabase = useSupabaseClient();
-const workerStore = useWorkerStore();
 
 onMounted(loadGroups);
 

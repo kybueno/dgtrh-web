@@ -11,8 +11,6 @@ import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
 
-const supabase = useSupabaseClient()
-
 const workerStore = useWorkerStore()
 
 onMounted(() => workerStore.loadWorkers())

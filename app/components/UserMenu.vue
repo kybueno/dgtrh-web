@@ -9,7 +9,6 @@ const appConfig = useAppConfig()
 
 const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']
 const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
-const supabase = useSupabaseClient()
 const authStore = useAuthStore()
 const worker = computed(()=> authStore.loggedUserProfile.value?.worker)
 const items = computed<DropdownMenuItem[][]>(() => ([[{
@@ -104,7 +103,8 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   label: 'Cerrar sesión',
   icon: 'i-lucide-log-out',
   onSelect:async()=>{
-    await supabase.auth.signOut()
+    await $fetch('/api/auth/logout', { method: 'POST' })
+    authStore.clearLoggedUser()
     navigateTo('/auth/login')
   }
 }]

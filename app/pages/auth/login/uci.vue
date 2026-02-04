@@ -6,27 +6,12 @@ useHead({
   title: 'Inicio de Sesión UCI'
 })
 
-const supabase = useSupabaseClient()
-const username = ref('')
-
-const signInWithOtp = async () => {
-  const { error } = await supabase.auth.signInWithOtp({
-    email: username.value + '@uci.cu',
-    options: {
-      emailRedirectTo: 'http://dgtrrhh.pages.dev/',
-    }
-  })
-  if (error) console.log(error)
-}
+const goToLogin = () => navigateTo('/auth/login')
 </script>
+
 <template>
-  <div>
-    <Button @click="signInWithOtp">
-      Iniciar sesión
-    </Button>
-    <Label>
-      Nombre de usuario UCI
-      <Input v-model="username" />
-    </Label>
+  <div class="space-y-4">
+    <p>Este método de acceso ya no está disponible. Use el inicio de sesión estándar.</p>
+    <Button @click="goToLogin">Ir a Inicio de Sesión</Button>
   </div>
 </template>

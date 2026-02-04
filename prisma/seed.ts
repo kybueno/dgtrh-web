@@ -1,21 +1,40 @@
 import 'dotenv/config'
-import { PrismaClient } from './generated/client'
+import { PrismaClient, UserRole, WorkerStatus } from './generated/client'
 import { PrismaPg } from '@prisma/adapter-pg'
+import bcrypt from 'bcrypt'
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  // Create a test user
-  const user = await prisma.user.upsert({
-    where: { email: 'test@prisma.io' },
+  const passwordHash = await bcrypt.hash('ChangeMe123!', 10)
+
+  const worker = await prisma.worker.upsert({
+    where: { email: 'hr_manager@uci.cu' },
     update: {},
     create: {
-      email: 'test@prisma.io',
-      name: 'Test User',
+      email: 'hr_manager@uci.cu',
+      first_name: 'HR',
+      last_name: 'Manager',
+      second_last_name: 'User',
+      record_number: 'HR-001',
+      organizations_codes: [],
+      status: WorkerStatus.active,
     },
   })
-  console.log(`✅ Created/updated user: ${user.name} (${user.email})`)
+
+  const user = await prisma.user.upsert({
+    where: { email: 'hr_manager@uci.cu' },
+    update: { workerId: worker.id },
+    create: {
+      email: 'hr_manager@uci.cu',
+      passwordHash,
+      role: UserRole.hr_manager,
+      workerId: worker.id,
+    },
+  })
+
+  console.log(`✅ Seeded user: ${user.email}`)
 }
 
 main()
