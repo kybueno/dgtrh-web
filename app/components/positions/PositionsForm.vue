@@ -6,7 +6,7 @@
 
       <UFormField label="Código" name="code">
         <UInput placeholder="Introduzca el código del nuevo cargo" v-model="formData.code"
-          error="Please enter a valid code." />
+          error="Please enter a valid code." type="number" />
       </UFormField>
 
       <UFormField label="Descripción" name="description">

@@ -23,7 +23,8 @@ const {loggedUserProfile:user} = useAuthStore()
         <div class="flex justify-between">
             <UInput v-model="searchTerm" class="max-w-lg" icon="i-lucide-search" placeholder="Buscar trabajadores..." />
             <div class="flex gap-3">
-                <UButton v-if="user?.roles?.some((r)=>(['director','hr_manager'].includes(r)))" icon="i-lucide-plus" to="people/new" variant="ghost">Nuevo trabajador</UButton>
+                <!-- v-if="user?.roles?.some((r)=>(['director','hr_manager'].includes(r)))"  -->
+                <UButton icon="i-lucide-plus" to="people/new" variant="ghost">Nuevo trabajador</UButton>
                 <UButton @click="handleLoadWorkers" variant="ghost" icon="i-lucide-refresh-cw"
                     title="Refrescar lista" :disabled="workersPending" :loading="workersPending" />
             </div>

@@ -24,6 +24,8 @@ export async function loadPositions() {
 }
 
 export async function addPosition(newPositionData: TablesInsert<'positions'>) {
+
+  
   const response = await wrapFetch(
     $fetch<PositionInfo>('/api/positions', {
       method: 'POST',
