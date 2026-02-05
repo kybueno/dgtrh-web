@@ -2,12 +2,18 @@ import 'dotenv/config'
 import { PrismaClient, UserRole, WorkerStatus } from './generated/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import bcrypt from 'bcrypt'
+import { organizationsSeedData } from './seed-data/organizations'
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
   const passwordHash = await bcrypt.hash('ChangeMe123!', 10)
+
+  await prisma.organization.createMany({
+    data: organizationsSeedData,
+    skipDuplicates: true,
+  })
 
   const worker = await prisma.worker.upsert({
     where: { email: 'hr_manager@uci.cu' },
