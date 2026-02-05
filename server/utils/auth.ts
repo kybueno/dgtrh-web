@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { getCookie, setCookie, deleteCookie, createError } from 'h3'
-import { AUTH_COOKIE } from '../../shared/constants/auth'
+import { AUTH_COOKIE } from '#shared/constants/auth'
 
 const TOKEN_TTL_SECONDS = 60 * 60 * 24 * 7
 

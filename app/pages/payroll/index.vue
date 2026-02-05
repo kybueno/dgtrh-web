@@ -9,7 +9,7 @@ useHead({
 import { onMounted, ref } from 'vue'
 import { UCheckbox } from '#components'
 import type { TableColumn } from '@nuxt/ui'
-import { generatePrenomina, usePayrollPDF } from './payrollHelpers'
+import { generatePrenomina } from './payrollHelpers'
 
 // Import store functions and state
 import { loadWorkers, workers } from '~/stores/workerStoreC';

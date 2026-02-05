@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { resolve } from "pathe";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
@@ -32,6 +33,9 @@ export default defineNuxtConfig({
       // guard for uncompressed bundle size, will fail the build if exceeds
       sizeLimitKb: 256,
     },
+  },
+  alias: {
+    "#shared": resolve("./shared"),
   },
   vite: { plugins: [tailwindcss()] },
   app: {

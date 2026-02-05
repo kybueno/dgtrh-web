@@ -1,4 +1,4 @@
-import { AUTH_COOKIE } from '../../shared/constants/auth'
+import { AUTH_COOKIE } from '#shared/constants/auth'
 
 export default defineNuxtRouteMiddleware(async (to) => {
   if (to.path.startsWith('/auth')) return
