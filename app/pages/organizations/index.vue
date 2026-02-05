@@ -2,11 +2,12 @@
     <div class="flex flex-col w-full p-4">
         <div class="flex items-center justify-between mb-6">
             <h3 class="font-semibold text-lg">Lista de organizaciones</h3>
-        <div class="flex items-center gap-2">
-        <DataViewToggle v-model="viewMode" />
-        <UButton icon="mdi:refresh" variant="ghost" @click="loadOrganizations()" :disabled="organizationsPending">
-        </UButton>
-                <UButton icon="i-lucide-plus" to="/organizations/new">Añadir</UButton>
+            <div class="flex items-center gap-2">
+                <DataViewToggle v-model="viewMode" />
+                <UButton icon="mdi:refresh" variant="ghost" @click="loadOrganizations()"
+                    :disabled="organizationsPending">
+                </UButton>
+                <UButton icon="i-lucide-plus" to="/organizations/new" variant="ghost">Nueva organización</UButton>
             </div>
         </div>
         <UTable v-if="viewMode === 'table'" :data="organizations" :columns="columns" class="w-full h-full" />
@@ -16,10 +17,10 @@
 
 <script setup lang="ts">
 definePageMeta({
-  title: 'Organizaciones'
+    title: 'Organizaciones'
 })
 useHead({
-  title: 'Organizaciones'
+    title: 'Organizaciones'
 })
 
 import { UButton, UCheckbox } from '#components';
@@ -28,9 +29,9 @@ import type { TableColumn } from '@nuxt/ui';
 onMounted(loadOrganizations);
 
 function handleDeleteOrganization(organization: OrganizationInfo) {
-  if (confirm(`¿Está seguro de que desea eliminar la organización ${organization.name}?`)) {
-    deleteOrganization(organization.id)
-  }
+    if (confirm(`¿Está seguro de que desea eliminar la organización ${organization.name}?`)) {
+        deleteOrganization(organization.id)
+    }
 }
 
 interface Props {
@@ -56,7 +57,8 @@ const columns: TableColumn<OrganizationInfo>[] = [
         enableSorting: false,
         enableHiding: false
     },
-    {   id: "avatar",
+    {
+        id: "avatar",
         header: "Logo",
         cell: ({ row }) => h('img', {
             src: row.original.img || '',
@@ -65,7 +67,8 @@ const columns: TableColumn<OrganizationInfo>[] = [
         }),
         enableSorting: false
     },
-    {   id: "name",
+    {
+        id: "name",
         header: "Nombre",
         cell: ({ row }) => h('div', { class: 'max-w-[280px] whitespace-normal break-words' }, row.original.name)
     },
@@ -81,12 +84,13 @@ const columns: TableColumn<OrganizationInfo>[] = [
         header: "Siglas",
         cell: ({ row }) => row.original.acronym || row.original.code?.toUpperCase() || '—'
     },
-    {   id: "actions",
+    {
+        id: "actions",
         header: "Acciones",
         cell: ({ row }) => h('div', { class: 'flex items-center gap-2' }, [
             h(UButton, {
                 size: 'sm',
-                icon: 'i-lucide-pencil',
+                icon: 'i-lucide-edit',
                 color: 'neutral',
                 variant: 'ghost',
                 title: 'Editar',

@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { page } from '#build/ui';
-import { UCheckbox } from '#components';
-import type { TableColumn } from '@nuxt/ui';
+import { page } from '#build/ui'
+import { UAvatar, UButton, UCheckbox } from '#components'
+import type { TableColumn } from '@nuxt/ui'
 
 interface Props {
     data: WorkerDetailed[]
     loading?: boolean
+    viewMode?: 'table' | 'grid'
 }
-const { data, loading } = defineProps<Props>()
+const { data, loading, viewMode = 'table' } = defineProps<Props>()
 
 const columns: TableColumn<typeof data[0]>[] = [
     {
@@ -35,7 +36,7 @@ const columns: TableColumn<typeof data[0]>[] = [
         id:'name',
         accessorKey: 'name',
         header: "Nombre y Apellidos",
-        cell: ({ row }) => h('span', { class: "cursor-pointer", onClick: () => navigateTo(`/people/${row.original.record_number}`) }, `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`)
+        cell: ({ row }) => h('span', { class: "cursor-pointer", onClick: () => navigateTo(`/people/${row.original.record_number}`) }, getDisplayName(row.original))
     }, {
         id: 'ci',
         accessorKey: 'ci',
@@ -84,6 +85,38 @@ const columns: TableColumn<typeof data[0]>[] = [
         header: "Nivel de preparación",
         cell: ({ row }) => getEducationLevelByCode(row.original.level as EducationLevelCode)?.label
     },
+    {
+        id: 'actions',
+        header: 'Acciones',
+        cell: ({ row }) => h('div', { class: 'flex items-center gap-2 justify-end' }, [
+            h(UButton, {
+                size: 'sm',
+                icon: 'i-lucide-eye',
+                color: 'neutral',
+                variant: 'ghost',
+                title: 'Ver',
+                to: `/people/${row.original.record_number}`
+            }),
+            h(UButton, {
+                size: 'sm',
+                icon: 'i-lucide-edit',
+                color: 'neutral',
+                variant: 'ghost',
+                title: 'Editar',
+                to: `/people/${row.original.record_number}/edit`
+            }),
+            h(UButton, {
+                size: 'sm',
+                icon: 'i-lucide-trash-2',
+                color: 'neutral',
+                variant: 'ghost',
+                title: 'Eliminar',
+                onClick: () => {deleteWorker(row.original.id)}
+            })
+        ]),
+        enableSorting: false,
+        enableHiding: false
+    },
 ]
 const initialTableState = {
     columnVisibility: {
@@ -99,13 +132,24 @@ const table = useTemplateRef('table')
 const sorting = ref([])
 </script>
 <template>
-   <div class="border border-muted bg-muted rounded-md">
-        <Flex class="pt-1 px-1 justify-end">
+    <div class="border border-muted bg-muted/70 rounded-md">
+        <Flex v-if="viewMode === 'table'" class="pt-1 px-1 justify-end">
             <ColumnsControl :table="table" />
         </Flex>
-        <UTable v-model:sorting="sorting" :initial-state="initialTableState" ref="table" :loading="loading || workersPending" :data="data"
-            :columns="columns" class="w-full h-full" :paginate="true" :page-size="10" />
-        <div class="flex justify-center py-4">
+        <UTable
+            v-if="viewMode === 'table'"
+            v-model:sorting="sorting"
+            :initial-state="initialTableState"
+            ref="table"
+            :loading="loading || workersPending"
+            :data="data"
+            :columns="columns"
+            class="w-full h-full"
+            :paginate="true"
+            :page-size="10"
+        />
+        <DataGrid v-else class="p-4" :data="data" :columns="columns" />
+        <div v-if="viewMode === 'table'" class="flex justify-center py-4">
             <UPagination v-model="page" :total="data.length" :page-size="10" />
         </div>
     </div>

@@ -14,10 +14,9 @@ function setMode(mode: 'table' | 'grid') {
 </script>
 
 <template>
-  <div class="flex items-center gap-1 rounded-md bg-muted p-1">
+  <UFieldGroup size="sm" >
     <UButton
-      size="xs"
-      :variant="modelValue === 'table' ? 'subtle' : 'ghost'"
+      :variant="modelValue === 'table' ? 'subtle' : 'outline'"
       color="primary"
       icon="i-lucide-table"
       @click="setMode('table')"
@@ -25,13 +24,12 @@ function setMode(mode: 'table' | 'grid') {
       Tabla
     </UButton>
     <UButton
-      size="xs"
-      :variant="modelValue === 'grid' ? 'subtle' : 'ghost'"
+      :variant="modelValue === 'grid' ? 'subtle' : 'outline'"
       color="primary"
       icon="i-lucide-layout-grid"
       @click="setMode('grid')"
     >
       Tarjetas
     </UButton>
-  </div>
+  </UFieldGroup>
 </template>
