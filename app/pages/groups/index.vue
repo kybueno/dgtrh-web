@@ -34,7 +34,13 @@ function handleDeleteGroup(group:WorkGroupInfo){
             </div>
 
             <!-- Contenedor de grupos -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-if="!groupsPending && workGroups.length === 0">
+                <EmptyState
+                    message="No hay grupos de trabajo para mostrar"
+                    @retry="loadGroups()"
+                />
+            </div>
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <template v-if="groupsPending">
                     <USkeleton v-for="i in 6" class="h-52" />
                 </template>
