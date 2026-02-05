@@ -30,18 +30,19 @@ export async function addOrganization(newOrganizationData: TablesInsert<'organiz
 }
 
 export async function loadOrganizations() {
-  organizationsPending.value = true
+  const hasCached = organizations.value.length > 0
+  if (!hasCached) organizationsPending.value = true
 
   const response = await wrapFetch($fetch<OrganizationInfo[]>('/api/organizations'))
 
   const { data, error } = response
 
-  organizationsPending.value = false
+  if (!hasCached) organizationsPending.value = false
 
   if (data) organizations.value = data
   if (error) {
     console.error(error)
-    notifyError({ error, title: 'Error al cargar organizaciones' })
+    if (!hasCached) notifyError({ error, title: 'Error al cargar organizaciones' })
   }
 
   return response
