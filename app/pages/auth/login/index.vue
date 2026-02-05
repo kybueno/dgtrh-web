@@ -62,8 +62,15 @@ const toggleMode = () => {
   successMessage.value = ''
 }
 
-onMounted(() => {
-  authStore.fetchLoggedUserProfile()
+onMounted(async() => {
+  if(authStore.loggedUserProfile.value?.user) {
+    navigateTo('/dashboard')
+    return
+  }
+  await authStore.fetchLoggedUserProfile()
+  if (authStore.loggedUserProfile.value?.user) {
+    navigateTo('/dashboard')
+  }
 })
 </script>
 

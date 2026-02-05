@@ -3,7 +3,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   const authStore = useAuthStore()
   if (!authStore.loggedUserProfile.value) {
-    await authStore.fetchLoggedUserProfile()
+    const headers = import.meta.server ? useRequestHeaders(['cookie']) : undefined
+    await authStore.fetchLoggedUserProfile({ headers })
   }
 
   const loggedUser = authStore.loggedUserProfile.value?.user

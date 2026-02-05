@@ -14,9 +14,13 @@ export const useAuthStore = () => {
     () => null
   )
 
-  const fetchLoggedUserProfile = async () => {
+  const fetchLoggedUserProfile = async (options?: {
+    headers?: HeadersInit
+  }) => {
     try {
-      const data = await $fetch<LoggedUserProfile>('/api/auth/me')
+      const data = await $fetch<LoggedUserProfile>('/api/auth/me', {
+        headers: options?.headers,
+      })
       loggedUserProfile.value = data
       return data
     } catch (error) {
