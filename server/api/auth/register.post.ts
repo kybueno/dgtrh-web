@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt'
-import { createError } from 'h3'
 import { prisma } from '../../utils/db'
 import { signAuthToken, setAuthCookie } from '../../utils/auth'
+import { Errors } from '../../utils/errors'
+import { ErrorCodes } from '../../../shared/types/errorCodes'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ email?: string; password?: string }>(event)
@@ -9,17 +10,17 @@ export default defineEventHandler(async (event) => {
   const password = body.password
 
   if (!email || !password) {
-    throw createError({ statusCode: 400, statusMessage: 'Correo y contraseña requeridos' })
+    Errors.badRequest('Correo y contraseña requeridos', ErrorCodes.AUTH.MISSING_FIELDS)
   }
 
   const existingUser = await prisma.user.findUnique({ where: { email } })
   if (existingUser) {
-    throw createError({ statusCode: 400, statusMessage: 'Este usuario ya existe' })
+    Errors.badRequest('Este usuario ya existe', ErrorCodes.AUTH.USER_EXISTS)
   }
 
   const worker = await prisma.worker.findFirst({ where: { email } })
   if (!worker) {
-    throw createError({ statusCode: 400, statusMessage: 'Trabajador no encontrado con este correo' })
+    Errors.badRequest('Trabajador no encontrado con este correo', ErrorCodes.AUTH.WORKER_NOT_FOUND)
   }
 
   const passwordHash = await bcrypt.hash(password, 10)

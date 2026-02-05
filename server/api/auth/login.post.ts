@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt'
-import { createError } from 'h3'
 import { prisma } from '../../utils/db'
 import { signAuthToken, setAuthCookie } from '../../utils/auth'
+import { Errors } from '../../utils/errors'
+import { ErrorCodes } from '../../../shared/types/errorCodes'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ email?: string; password?: string }>(event)
@@ -9,17 +10,17 @@ export default defineEventHandler(async (event) => {
   const password = body.password
 
   if (!email || !password) {
-    throw createError({ statusCode: 400, statusMessage: 'Correo y contraseña requeridos' })
+    Errors.badRequest('Correo y contraseña requeridos', ErrorCodes.AUTH.MISSING_FIELDS)
   }
 
   const user = await prisma.user.findUnique({ where: { email } })
   if (!user) {
-    throw createError({ statusCode: 401, statusMessage: 'Credenciales inválidas' })
+    Errors.unauthorized('Credenciales inválidas', ErrorCodes.AUTH.INVALID_CREDENTIALS)
   }
 
   const isValid = await bcrypt.compare(password, user.passwordHash)
   if (!isValid) {
-    throw createError({ statusCode: 401, statusMessage: 'Credenciales inválidas' })
+    Errors.unauthorized('Credenciales inválidas', ErrorCodes.AUTH.INVALID_CREDENTIALS)
   }
 
   const worker = user.workerId

@@ -7,6 +7,7 @@ useHead({
 })
 
 import { ref, computed } from 'vue'
+import type { ApiError } from '~/shared/types/http'
 
 const mode = ref<'login' | 'signup'>('login')
 const username = ref('')
@@ -43,9 +44,13 @@ const handleAuth = async () => {
 
     await authStore.fetchLoggedUserProfile()
     navigateTo('/dashboard')
-  } catch (error) {
+  } catch (error: ApiError) {
     console.error('Authentication error:', error)
-    errorMessage.value = (error as StandardErrorResponse).statusMessage || (error as StandardErrorResponse).message || 'Ocurrió un error. Por favor inténtalo de nuevo.'
+    errorMessage.value =
+      error?.data?.message ||
+      error?.data?.statusMessage ||
+      error?.message ||
+      'Ocurrió un error. Por favor inténtalo de nuevo.'
   } finally {
     loading.value = false
   }
