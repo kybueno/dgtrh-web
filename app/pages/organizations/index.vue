@@ -26,7 +26,9 @@ import type { TableColumn } from '@nuxt/ui';
 onMounted(loadOrganizations);
 
 function handleDeleteOrganization(organization: OrganizationInfo) {
-    if (confirm(`¿Está seguro de que desea eliminar el cargo ${organization.name}?`)) deleteGroup(organization.id)
+  if (confirm(`¿Está seguro de que desea eliminar la organización ${organization.name}?`)) {
+    deleteOrganization(organization.id)
+  }
 }
 
 interface Props {
@@ -63,5 +65,19 @@ const columns: TableColumn<OrganizationInfo>[] = [
         header: "Siglas",
         cell: ({ row }) => row.original.acronym
     },
+    {
+        header: "Acciones",
+        cell: ({ row }) => h('div', { class: 'flex items-center gap-2' }, [
+            h(UButton, {
+                icon: 'i-lucide-trash-2',
+                color: 'red',
+                variant: 'ghost',
+                title: 'Eliminar',
+                onClick: () => handleDeleteOrganization(row.original)
+            })
+        ]),
+        enableSorting: false,
+        enableHiding: false
+    }
 ]
 </script>
