@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { getCookie, setCookie, deleteCookie, createError } from 'h3'
+import { AUTH_COOKIE } from '../../shared/constants/auth'
 
-const AUTH_COOKIE = 'dgtrh_token'
 const TOKEN_TTL_SECONDS = 60 * 60 * 24 * 7
 
 export type AuthPayload = {
