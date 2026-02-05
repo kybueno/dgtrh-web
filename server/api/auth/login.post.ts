@@ -9,17 +9,17 @@ export default defineEventHandler(async (event) => {
   const password = body.password
 
   if (!email || !password) {
-    throw createError({ statusCode: 400, statusMessage: 'Email and password are required' })
+    throw createError({ statusCode: 400, statusMessage: 'Correo y contraseña requeridos' })
   }
 
   const user = await prisma.user.findUnique({ where: { email } })
   if (!user) {
-    throw createError({ statusCode: 401, statusMessage: 'Invalid credentials' })
+    throw createError({ statusCode: 401, statusMessage: 'Credenciales inválidas' })
   }
 
   const isValid = await bcrypt.compare(password, user.passwordHash)
   if (!isValid) {
-    throw createError({ statusCode: 401, statusMessage: 'Invalid credentials' })
+    throw createError({ statusCode: 401, statusMessage: 'Credenciales inválidas' })
   }
 
   const worker = user.workerId

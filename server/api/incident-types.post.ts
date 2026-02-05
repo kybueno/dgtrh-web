@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   requireUser(event)
   const body = await readBody(event)
   if (!body?.code || !body?.name || !body?.classification) {
-    throw createError({ statusCode: 400, statusMessage: 'code, name and classification are required' })
+    throw createError({ statusCode: 400, statusMessage: 'EL código, el nombre y la clasificación son requeridos' })
   }
 
   const incidentType = await prisma.incidentType.create({

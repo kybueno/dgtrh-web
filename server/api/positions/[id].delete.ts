@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   const idParam = event.context.params?.id
   const id = idParam ? Number(idParam) : NaN
   if (!id || Number.isNaN(id)) {
-    throw createError({ statusCode: 400, statusMessage: 'Valid position id is required' })
+    throw createError({ statusCode: 400, statusMessage: 'Se requiere un ID de cargo válido' })
   }
 
   await prisma.position.delete({ where: { id } })

@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
   if (!body?.first_name || !body?.last_name || !body?.second_last_name || !body?.record_number) {
-    throw createError({ statusCode: 400, statusMessage: 'Missing required worker fields' })
+    throw createError({ statusCode: 400, statusMessage: 'Faltan campos obligatorios del Trabajador' })
   }
 
   const worker = await prisma.worker.create({

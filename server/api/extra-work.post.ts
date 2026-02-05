@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
   if (!body?.worker_id || !body?.start_date) {
-    throw createError({ statusCode: 400, statusMessage: 'worker_id and start_date are required' })
+    throw createError({ statusCode: 400, statusMessage: 'El id del trabajador y la fecha de inicio son obligatorios' })
   }
 
   const extraWork = await prisma.extraWork.create({

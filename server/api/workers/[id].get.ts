@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   requireUser(event)
   const id = event.context.params?.id
   if (!id) {
-    throw createError({ statusCode: 400, statusMessage: 'Worker id is required' })
+    throw createError({ statusCode: 400, statusMessage: 'Se requiere un ID de trabajador válido' })
   }
 
   const worker = await prisma.worker.findUnique({
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   })
 
   if (!worker) {
-    throw createError({ statusCode: 404, statusMessage: 'Worker not found' })
+    throw createError({ statusCode: 404, statusMessage: 'Trabajador no encontrado' })
   }
 
   return worker

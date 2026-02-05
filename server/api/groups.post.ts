@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   requireUser(event)
   const body = await readBody<{ leader_id?: string; name?: string | null }>(event)
   if (!body?.leader_id) {
-    throw createError({ statusCode: 400, statusMessage: 'leader_id is required' })
+    throw createError({ statusCode: 400, statusMessage: 'Es requerido el id del líder del grupo' })
   }
 
   const group = await prisma.group.create({

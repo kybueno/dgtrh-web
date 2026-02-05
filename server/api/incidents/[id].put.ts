@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   requireUser(event)
   const id = event.context.params?.id
   if (!id) {
-    throw createError({ statusCode: 400, statusMessage: 'Incident id is required' })
+    throw createError({ statusCode: 400, statusMessage: 'Se requiere un ID de incidencias válido' })
   }
 
   const body = await readBody(event)

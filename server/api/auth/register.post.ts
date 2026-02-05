@@ -9,17 +9,17 @@ export default defineEventHandler(async (event) => {
   const password = body.password
 
   if (!email || !password) {
-    throw createError({ statusCode: 400, statusMessage: 'Email and password are required' })
+    throw createError({ statusCode: 400, statusMessage: 'Correo y contraseña requeridos' })
   }
 
   const existingUser = await prisma.user.findUnique({ where: { email } })
   if (existingUser) {
-    throw createError({ statusCode: 400, statusMessage: 'User already exists' })
+    throw createError({ statusCode: 400, statusMessage: 'Este usuario ya existe' })
   }
 
   const worker = await prisma.worker.findFirst({ where: { email } })
   if (!worker) {
-    throw createError({ statusCode: 400, statusMessage: 'Worker not found for this email' })
+    throw createError({ statusCode: 400, statusMessage: 'Trabajador no encontrado con este correo' })
   }
 
   const passwordHash = await bcrypt.hash(password, 10)

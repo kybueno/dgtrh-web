@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   requireUser(event)
   const id = event.context.params?.id
   if (!id) {
-    throw createError({ statusCode: 400, statusMessage: 'Extra work id is required' })
+    throw createError({ statusCode: 400, statusMessage: 'Se requiere el ID de trabajo adicional' })
   }
 
   const body = await readBody(event)
