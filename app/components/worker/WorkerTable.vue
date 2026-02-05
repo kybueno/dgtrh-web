@@ -29,12 +29,14 @@ const columns: TableColumn<typeof data[0]>[] = [
     {
         id: 'record',
         accessorKey: 'record',
+        accessorFn: (row) => row.record_number,
         header: "Expediente",
         cell: ({ row }) => row.original.record_number,
     }, {
         enableSorting: true,
         id:'name',
         accessorKey: 'name',
+        accessorFn: (row) => getDisplayName(row),
         header: "Nombre y Apellidos",
         cell: ({ row }) => h('span', { class: "cursor-pointer", onClick: () => navigateTo(`/people/${row.original.record_number}`) }, getDisplayName(row.original))
     }, {
@@ -104,14 +106,6 @@ const columns: TableColumn<typeof data[0]>[] = [
                 variant: 'ghost',
                 title: 'Editar',
                 to: `/people/${row.original.record_number}/edit`
-            }),
-            h(UButton, {
-                size: 'sm',
-                icon: 'i-lucide-trash-2',
-                color: 'neutral',
-                variant: 'ghost',
-                title: 'Eliminar',
-                onClick: () => {deleteWorker(row.original.id)}
             })
         ]),
         enableSorting: false,
@@ -134,6 +128,7 @@ const sorting = ref([])
 <template>
     <div class="border border-muted bg-muted/70 rounded-md">
         <Flex v-if="viewMode === 'table'" class="pt-1 px-1 justify-end">
+            <TableSearch :table="table" column-id="name" placeholder="Buscar por nombre" input-class="max-w-sm m-2" />
             <ColumnsControl :table="table" />
         </Flex>
         <UTable

@@ -32,38 +32,50 @@ const columns: TableColumn<WorkerInfo>[] = [
     enableHiding: false
   },
   {
+    id: 'record_number',
+    accessorKey: 'record_number',
     header: "No.Exp",
-     cell: ({ row }) => `${row.original.record_number}`
-    
+    cell: ({ row }) => `${row.original.record_number}`
   }, {
+    id: 'name',
+    accessorKey: 'name',
+    accessorFn: (row) => getDisplayName(row),
     header: "Nombre y Apellidos del trabajador",
-    cell: ({ row }) => `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`
+    cell: ({ row }) => getDisplayName(row.original)
   }, {
+    id: 'initial',
     header: "Inicial/Cont.",
     cell: ({ row }) => row.original
   }, {
+    id: 'desde',
     header: "Desde",
     cell: ({ row }) => row.original
 
   }, {
+    id: 'hasta',
     header: "Hasta",
     cell: ({ row }) => row.original
 
   }, {
+    id: 'enfermedad',
     header: "Enfermedad",
     cell: ({ row }) => row.original
   }, {
+    id: 'entrada',
     header: "Entrada",
     cell: ({ row }) => row.original
   }, {
+    id: 'firma',
     header: "Firma",
     cell: ({ row }) => row.original
   }, {
+    id: 'dias',
     header: "Dias en prenomina",
     cell: ({ row }) => row.original
   }, 
 
 ]
+const table = useTemplateRef('table')
 </script>
 
 <template>
@@ -74,8 +86,11 @@ const columns: TableColumn<WorkerInfo>[] = [
 	  <h2 class="text-center font-semibold">
 		Anexo E: REGISTRO DE Certificados Médicos
 	  </h2>
-    <UButton to="/medical/newmedical">Añadir</UButton>
-  <UTable :data="workerStore.workers" :columns="columns" />
+    <div class="flex items-center justify-between gap-2">
+      <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
+      <UButton to="/medical/newmedical">Añadir</UButton>
+    </div>
+  <UTable ref="table" :data="workerStore.workers" :columns="columns" />
   
   </div>
 </template>

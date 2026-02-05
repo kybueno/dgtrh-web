@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { UCheckbox, UInput } from '#components';
+import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
 
@@ -26,42 +26,53 @@ const columns: TableColumn<IncidentType>[] = [
         enableHiding: false
     },
     {
+        id: 'code',
+        accessorKey: 'code',
         header: "Code",
         cell: ({ row }) => row.original.code,
-        
     }, {
+        id: 'description',
+        accessorKey: 'description',
         header: "Descripción",
         cell: ({ row }) => row.original.description
     }, {
+        id: 'classification',
+        accessorKey: 'classification',
         header: "Clasificación",
         cell: ({ row }) => row.original.classification
     }, {
+        id: 'pay_for',
+        accessorKey: 'pay_for',
         header: "A pagar por",
         cell: ({ row }) => row.original.pay_for
-
     }, {
         header: "%",
         cell: () => 0.00
 
     }, {
+        id: 'deductible',
+        accessorKey: 'deductible',
         header: "Deductible",
         cell: ({ row }) => row.original.deductible
     }, {
+        id: 'time_classification',
+        accessorKey: 'time_classification',
         header: "Clasifc. Fondo Tiempo",
         cell: ({ row }) => row.original.time_classification
     },
 
 
 ]
+const table = useTemplateRef('table')
 </script>
 <template>
     <UCard class="border border-muted rounded-md overflow-auto max-w-full">
         <template #header>
-            <div class="flex justify-between">
-                <UInput placeholder="Busca.." icon="mdi:search" />
+            <div class="flex justify-between gap-2">
+                <TableSearch :table="table" column-id="description" placeholder="Buscar descripción..." input-class="max-w-sm" />
                 <UButton to="/incident-types/new">Añadir</UButton>
             </div>
         </template>
-        <UTable :columns="columns" :data="data" />
+        <UTable ref="table" :columns="columns" :data="data" />
     </UCard>
 </template>

@@ -3,6 +3,7 @@
         <div class="flex items-center justify-between mb-6">
             <h3 class="font-semibold text-lg">Lista de organizaciones</h3>
             <div class="flex items-center gap-2">
+                <TableSearch v-if="viewMode === 'table'" :table="table" column-id="name" placeholder="Buscar organización..." input-class="max-w-sm" />
                 <DataViewToggle v-model="viewMode" />
                 <UButton icon="mdi:refresh" variant="ghost" @click="loadOrganizations()"
                     :disabled="organizationsPending">
@@ -10,7 +11,7 @@
                 <UButton icon="i-lucide-plus" to="/organizations/new" variant="ghost">Nueva organización</UButton>
             </div>
         </div>
-        <UTable v-if="viewMode === 'table'" :data="organizations" :columns="columns" class="w-full h-full" />
+        <UTable v-if="viewMode === 'table'" ref="table" :data="organizations" :columns="columns" class="w-full h-full" />
         <DataGrid v-else :data="organizations" :columns="columns" />
     </div>
 </template>
@@ -40,6 +41,7 @@ interface Props {
 const { data } = defineProps<Props>()
 
 const viewMode = ref<'table' | 'grid'>('table')
+const table = useTemplateRef('table')
 
 const columns: TableColumn<OrganizationInfo>[] = [
     {
@@ -69,11 +71,13 @@ const columns: TableColumn<OrganizationInfo>[] = [
     },
     {
         id: "name",
+        accessorKey: 'name',
         header: "Nombre",
         cell: ({ row }) => h('div', { class: 'max-w-[280px] whitespace-normal break-words' }, row.original.name)
     },
     {
         id: "description",
+        accessorKey: 'description',
         header: "Descripción",
         cell: ({ row }) => h('div', {
             class: 'max-w-[420px] whitespace-normal break-words',
@@ -81,6 +85,8 @@ const columns: TableColumn<OrganizationInfo>[] = [
         }, row.original.description || '')
     },
     {
+        id: "acronym",
+        accessorKey: 'acronym',
         header: "Siglas",
         cell: ({ row }) => row.original.acronym || row.original.code?.toUpperCase() || '—'
     },

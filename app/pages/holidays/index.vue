@@ -32,34 +32,50 @@ const columns: TableColumn<HolidaysInfo>[] = [
     enableHiding: false
   },
   {
+    id: 'record_number',
+    accessorKey: 'record_number',
     header: "No.Exp",
-     cell: ({ row }) => `${row.original.record_number}`
-    
+    cell: ({ row }) => `${row.original.record_number}`
   }, {
+    id: 'name',
+    accessorKey: 'name',
+    accessorFn: (row) => getDisplayName(row),
     header: "Nombre y Apellidos del trabajador",
-    cell: ({ row }) => `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`
+    cell: ({ row }) => getDisplayName(row.original)
   }, {
+    id: 'group',
+    accessorKey: 'group',
     header: "Área",
     cell: ({ row }) => row.original.group?.name || row.original.leaderAtGroup?.name || row.original.group_id
   }, {
+    id: 'desde',
+    accessorKey: 'desde',
     header: "Desde",
     cell: ({ row }) => row.original.desde
   }, {
+    id: 'hasta',
+    accessorKey: 'hasta',
     header: "Hasta",
     cell: ({ row }) => row.original.hasta
-
   }, {
+    id: 'tiempo',
+    accessorKey: 'tiempo',
     header: "Tiempo",
     cell: ({ row }) => row.original.tiempo
   }, {
+    id: 'incorporacion',
+    accessorKey: 'incorporacion',
     header: "Incorporación",
     cell: ({ row }) => row.original.incorporacion
   }, {
+    id: 'motivo',
+    accessorKey: 'motivo',
     header: "Motivo",
     cell: ({ row }) => row.original.motivo
   }, 
 
 ]
+const table = useTemplateRef('table')
 </script>
 
 <template>
@@ -67,8 +83,11 @@ const columns: TableColumn<HolidaysInfo>[] = [
 	  <h2 class="text-center font-semibold">
 		Registro de Vacaciones
 	  </h2>
-    <UButton to="holidays/new">Añadir</UButton>
-    <UTable :data="workers" class="flex-1" :columns="columns"/>
+    <div class="flex items-center justify-between gap-2">
+      <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
+      <UButton to="holidays/new">Añadir</UButton>
+    </div>
+    <UTable ref="table" :data="workers" class="flex-1" :columns="columns"/>
   </div>
 
 

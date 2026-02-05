@@ -34,56 +34,80 @@ const columns: TableColumn<WorkerDetailed>[] = [
     enableHiding: false
   },
   {
+    id: 'number',
     header: "No.",
-    
   }, {
+    id: 'position',
+    accessorKey: 'position',
     header: "Órganos y Cargos",
     cell: ({ row }) => row.original.position?.description ?? row.original.position_code
   }, {
+    id: 'co',
     header: "CO",
     cell:  "T"
   }, {
+    id: 'name',
+    accessorKey: 'name',
+    accessorFn: (row) => getDisplayName(row),
     header: "Nombre y Apellidos del trabajador",
-    cell: ({ row }) => `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`
+    cell: ({ row }) => getDisplayName(row.original)
   }, {
+    id: 'ci',
+    accessorKey: 'ci',
     header: "CI",
     cell: ({ row }) => row.original.ci
   }, {
+    id: 'gender',
+    accessorKey: 'gender',
     header: "Sexo",
     cell: ({ row }) => getGenderLabel(row.original.gender as GenderValue)
 
   }, {
+    id: 'level',
+    accessorKey: 'level',
     header: "Nivel de Preparación",
     cell: ({ row }) => row.original.level
 
   }, {
+    id: 'group_escale',
+    accessorKey: 'group_escale',
     header: "Grupo Escala",
     cell: ({ row }) => row.original.position?.group_escale 
   }, {
+    id: 'total',
+    accessorKey: 'total',
     header: "Total",
     cell: ({ row }) => row.original.position?.total
   }, {
+    id: 'scale',
+    accessorKey: 'scale',
     header: "Escala",
     cell: ({ row }) => row.original.position?.scale
   }, {
+    id: 'cla',
     header: "CLA",
     cell: "0.00"
   }, {
+    id: 'turnos',
     header: "Turnos nocturnos y Mixtos",
     cell: ({ row }) => row.original
   }, {
+    id: 'masters',
     header: "Maestría o Doctorados",
     cell: "0.00"
   }, {
+    id: 'years',
     header: "Años de Servicio",
     cell: "0.00"
   }, {
+    id: 'otros',
     header: "Otros",
     cell: "0.00"
     
   },
 
 ]
+const table = useTemplateRef('table')
 
 </script>
 
@@ -93,12 +117,12 @@ const columns: TableColumn<WorkerDetailed>[] = [
       <template #header>
 
         <div class="flex justify-between">
-          <UInput placeholder="Busca.." />
+          <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
         </div>
       </template>
       <strong class="flex justify-center">Anexo No.14-B</strong>
       <div class="flex justify-center">De la Plantilla de cargos y registro de trabajadores</div>
-      <UTable :data="workers" :columns="columns" sticky class="h-96" />
+      <UTable ref="table" :data="workers" :columns="columns" sticky class="h-96" />
       
 
     </UCard>

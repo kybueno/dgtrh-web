@@ -32,56 +32,75 @@ const columns: TableColumn<WorkerInfo>[] = [
     enableHiding: false
   },
   {
+    id: 'record_number',
+    accessorKey: 'record_number',
     header: "No.Exp",
-     cell: ({ row }) => `${row.original.record_number}`
-    
+    cell: ({ row }) => `${row.original.record_number}`
   }, {
+    id: 'name',
+    accessorKey: 'name',
+    accessorFn: (row) => getDisplayName(row),
     header: "Nombre y Apellidos del trabajador",
-    cell: ({ row }) => `${row.original.first_name} ${row.original.middle_name && row.original.middle_name.at(0) + '.'}  ${row.original.last_name}  ${row.original.second_last_name}`
+    cell: ({ row }) => getDisplayName(row.original)
   },  {
+    id: 'desde',
+    accessorKey: 'desde',
     header: "Desde",
     cell: ({ row }) => row.original
 
   }, {
+    id: 'hasta',
+    accessorKey: 'hasta',
     header: "Hasta",
     cell: ({ row }) => row.original
 
   }, {
+    id: 'pago',
+    accessorKey: 'pago',
     header: "Pago en",
     cell: ({ row }) => row.original
   }, {
+    id: 'desde_2',
     header: "Desde",
     cell: ({ row }) => row.original
 
   }, {
+    id: 'hasta_2',
     header: "Hasta",
     cell: ({ row }) => row.original
 
   }, {
+    id: 'pago_2',
     header: "Pago en",
     cell: ({ row }) => row.original
   },  {
+    id: 'desde_3',
     header: "Desde",
     cell: ({ row }) => row.original
 
   }, {
+    id: 'hasta_3',
     header: "Hasta",
     cell: ({ row }) => row.original
 
   }, {
+    id: 'pago_3',
     header: "Pago en",
     cell: ({ row }) => row.original
   },  {
+    id: 'desde_4',
     header: "Desde",
     cell: ({ row }) => row.original
 
   }, {
+    id: 'hasta_4',
     header: "Hasta",
     cell: ({ row }) => row.original
 
   }, 
 
 ]
+const table = useTemplateRef('table')
 </script>
 
 <template>
@@ -107,8 +126,11 @@ const columns: TableColumn<WorkerInfo>[] = [
 		</div>
 	  </div>
   
-	   <UButton to="maternidad/newmaternidad">Añadir</UButton>
-	  <UTable :data="workerStore.workers" :columns="columns" />
+	   <div class="flex items-center justify-between gap-2">
+        <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
+        <UButton to="maternidad/newmaternidad">Añadir</UButton>
+      </div>
+	  <UTable ref="table" :data="workerStore.workers" :columns="columns" />
 
   
   

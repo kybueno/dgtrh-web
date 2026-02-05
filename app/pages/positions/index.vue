@@ -42,15 +42,22 @@ const columns: TableColumn<PositionInfo>[] = [
         enableHiding: false
     },
     {
+        id: 'code',
+        accessorKey: 'code',
         header: "Código",
         cell: ({ row }) => row.original.code
     }, {
+        id: 'description',
+        accessorKey: 'description',
         header: "Descripción",
         cell: ({ row }) => row.original.description
     }, {
+        id: 'category',
+        accessorKey: 'category',
         header: "Categoría",
         cell: ({ row }) => row.original.category
     }, {
+        id: 'count',
         header: "Cantidad",
         cell: ({ row }) => {
           const positionCode = row.original.code;
@@ -58,13 +65,18 @@ const columns: TableColumn<PositionInfo>[] = [
           return count || 0;
         }
     }, {
+        id: 'level',
+        accessorKey: 'level',
         header: "Nivel",
         cell: ({ row }) => row.original.level
     }, {
+        id: 'group_escale',
+        accessorKey: 'group_escale',
         header: "Grupo/Escala",
         cell: ({ row }) => row.original.group_escale
     },
 ]
+const table = useTemplateRef('table')
 
 
 
@@ -77,13 +89,14 @@ const columns: TableColumn<PositionInfo>[] = [
             <h3 class="font-semibold text-lg">Anexo 14</h3>
 
             <div class="flex gap-2">
+                <TableSearch :table="table" column-id="description" placeholder="Buscar cargo..." input-class="max-w-sm" />
                 <UButton icon="mdi:refresh" variant="ghost" @click="loadPositions()" :disabled="positionsPending">
                 </UButton>
 
                 <UButton icon="i-lucide-plus" to="/positions/new">Añadir</UButton>
             </div>
         </div>
-        <UTable :data="positions" :columns="columns" class="w-full h-full" />
+        <UTable ref="table" :data="positions" :columns="columns" class="w-full h-full" />
 
     </div>
 </template>

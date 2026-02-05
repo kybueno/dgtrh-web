@@ -25,12 +25,12 @@ withDefaults(defineProps<{
     :content="{ align: 'end' }"
   >
     <UButton
-      label="Columns"
+      label="Columnas"
       color="neutral"
       :variant="variant"
       trailing-icon="i-lucide-chevron-down"
       class="ml-auto"
-      aria-label="Columns select dropdown"
+      aria-label="Selección de columnas"
     />
   </UDropdownMenu>
 </template>
