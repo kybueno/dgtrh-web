@@ -16,7 +16,7 @@ function handleLoadWorkers() {
     if (!workersPending.value) loadWorkers()
 }
 
-const {loggedUserProfile:user} = useAuthStore()
+const authStore = useAuthStore()
 </script>
 <template>
     <div class="space-y-8 mt-8">
