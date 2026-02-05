@@ -24,3 +24,13 @@ type OrganizationInfo = Tables<"organizations">
 type PositionInfo = Tables<"positions">
 type HolidaysInfo = Tables<"holidays">
 type HolidaysInsert = TablesInsert<"holidays">
+
+
+interface StandardErrorResponse {
+  error: true,
+  url: string,
+  statusCode: number,
+  statusMessage: string,
+  message: string,
+  stack: string[]
+}

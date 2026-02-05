@@ -45,7 +45,7 @@ const handleAuth = async () => {
     navigateTo('/dashboard')
   } catch (error) {
     console.error('Authentication error:', error)
-    errorMessage.value = (error as Error).message || 'Ocurrió un error. Por favor inténtalo de nuevo.'
+    errorMessage.value = (error as StandardErrorResponse).statusMessage || (error as StandardErrorResponse).message || 'Ocurrió un error. Por favor inténtalo de nuevo.'
   } finally {
     loading.value = false
   }
@@ -73,7 +73,7 @@ onMounted(() => {
           <h2 class="text-center text-2xl font-bold">
             Bienvenido
           </h2>
-          <p class="max-w-xs mx-auto text-muted">{{ mode === 'signup' ? 'Puede registrarse en el sistema' : 'Inicie su sesión en el sistema' }}</p>
+          <p class="max-w-xs mx-auto text-muted">{{ mode === 'signup' ? 'Puede definir su contraseña' : 'Inicie su sesión en el sistema' }}</p>
         </Stack>
         <div class="p-6">
     
@@ -82,22 +82,22 @@ onMounted(() => {
             <div class="space-y-4 flex flex-col items-center">
               <Stack>
                 <UFormField label="Nombre de usuario" hint="@uci.cu" >
-                  <UInput size="xl" v-model="username" placeholder="Enter your email" class="w-full" />
+                  <UInput size="xl" v-model="username" placeholder="juanperez.." class="w-full" />
                 </UFormField>
                 <UFormField label="Contraseña" :error="errorMessage.toLowerCase().includes('password') && errorMessage">
-                  <UInput size="xl" v-model="password" placeholder="Password" :type="showPassword ? 'text' : 'password'"
+                  <UInput size="xl" v-model="password"  :type="showPassword ? 'text' : 'password'"
                     class="w-full" :ui="{ trailing: 'pe-1' }" required>
                     <template #trailing>
                       <UButton color="neutral" variant="link" size="sm"
                         :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                        :aria-label="showPassword ? 'Hide password' : 'Show password'" :aria-pressed="showPassword"
+                        :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'" :aria-pressed="showPassword"
                         aria-controls="password" @click="showPassword = !showPassword" />
                     </template>
                   </UInput>
                 </UFormField>
     
                 <UButton class="mt-4 w-full justify-center" size="lg" variant="subtle" :icon="mode==='signup' ? 'mdi:account-plus-outline' : 'mdi:login'" :loading="loading" type="submit" >
-                {{ mode === 'signup' ? 'Registrarme' : 'Entrar' }}
+                Entrar
               </UButton>
               </Stack>
     
@@ -114,10 +114,10 @@ onMounted(() => {
           <div class="py-5 space-y-6 text-muted">
             <HStack class="justify-center items-center">
               <p>
-                {{ mode === 'signup' ? '¿Ya tiene una cuenta?' : '¿No tiene una cuenta?' }}
+                {{ mode === 'signup' ? '¿Ya tiene una cuenta?' : '¿Primera vez?' }}
               </p>
                 <UButton variant="soft" @click="toggleMode">
-                  {{ mode === 'signup' ? 'Inicie sesión' : 'Regístrese' }}
+                  {{ mode === 'signup' ? 'Entre con su contraseña' : 'Defina una contraseña' }}
                 </UButton>
             </HStack>
           </div>

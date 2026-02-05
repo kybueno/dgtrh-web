@@ -11,22 +11,25 @@ const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 
 const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
 const authStore = useAuthStore()
 const worker = computed(()=> authStore.loggedUserProfile.value?.worker)
-const items = computed<DropdownMenuItem[][]>(() => ([[{
+const items = computed<DropdownMenuItem[][]>(() => ([
+  
+authStore.loggedUserProfile.value?.user ? [{
   type: 'label',
   label: worker.value?.first_name,
   avatar: {
     alt: worker.value?.first_name
   },
-}], [
+}]:[], [
 //   {
 //   label: 'Profile',
 //   icon: 'i-lucide-user'
 // },
- {
-  label: 'Ajustes',
-  icon: 'i-lucide-settings',
-  to: '/settings'
-}], [{
+//  {
+//   label: 'Ajustes',
+//   icon: 'i-lucide-settings',
+//   to: '/settings'
+// }
+], [{
   label: 'Tema',
   icon: 'i-lucide-palette',
   children: [{
@@ -99,7 +102,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   }]
 }]
 ,
-[{
+authStore.loggedUserProfile.value?.user ? [{
   label: 'Cerrar sesión',
   icon: 'i-lucide-log-out',
   onSelect:async()=>{
@@ -107,7 +110,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     authStore.clearLoggedUser()
     navigateTo('/auth/login')
   }
-}]
+}]:[]
 ]))
 </script>
 
@@ -118,7 +121,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
   >
     <UButton
-      :label="collapsed ? undefined : authStore.loggedUserProfile.value?.worker?.first_name",
+      :label="collapsed ? undefined : authStore.loggedUserProfile.value?.worker?.first_name || 'Ajustes'",
       :trailingIcon="collapsed ? undefined : 'i-lucide-chevrons-up-down'"
       color="neutral"
       variant="ghost"
