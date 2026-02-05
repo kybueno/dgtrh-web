@@ -10,6 +10,7 @@
       ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
     ],
     "cSpell.words": [
+      "AEREA",
       "categoria",
       "codigo",
       "descripcion",
@@ -22,11 +23,13 @@
       "incorporacion",
       "lucide",
       "maska",
+      "Nery",
       "pdfmake",
       "perfomance",
       "preparacion",
       "signsheets",
-      "useposition"
+      "useposition",
+      "Valdes"
     ]
   }
   
