@@ -2,13 +2,15 @@
     <div class="flex flex-col w-full p-4">
         <div class="flex items-center justify-between mb-6">
             <h3 class="font-semibold text-lg">Lista de organizaciones</h3>
-            <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2">
+        <DataViewToggle v-model="viewMode" />
         <UButton icon="mdi:refresh" variant="ghost" @click="loadOrganizations()" :disabled="organizationsPending">
         </UButton>
                 <UButton icon="i-lucide-plus" to="/organizations/new">Añadir</UButton>
             </div>
         </div>
-        <UTable :data="organizations" :columns="columns" class="w-full h-full" />
+        <UTable v-if="viewMode === 'table'" :data="organizations" :columns="columns" class="w-full h-full" />
+        <DataGrid v-else :data="organizations" :columns="columns" />
     </div>
 </template>
 
@@ -36,6 +38,8 @@ interface Props {
 }
 const { data } = defineProps<Props>()
 
+const viewMode = ref<'table' | 'grid'>('table')
+
 const columns: TableColumn<OrganizationInfo>[] = [
     {
         id: 'select',
@@ -52,7 +56,7 @@ const columns: TableColumn<OrganizationInfo>[] = [
         enableSorting: false,
         enableHiding: false
     },
-    {
+    {   id: "avatar",
         header: "Logo",
         cell: ({ row }) => h('img', {
             src: row.original.img || '',
@@ -61,11 +65,12 @@ const columns: TableColumn<OrganizationInfo>[] = [
         }),
         enableSorting: false
     },
-    {
+    {   id: "name",
         header: "Nombre",
         cell: ({ row }) => h('div', { class: 'max-w-[280px] whitespace-normal break-words' }, row.original.name)
     },
     {
+        id: "description",
         header: "Descripción",
         cell: ({ row }) => h('div', {
             class: 'max-w-[420px] whitespace-normal break-words',
@@ -76,7 +81,7 @@ const columns: TableColumn<OrganizationInfo>[] = [
         header: "Siglas",
         cell: ({ row }) => row.original.acronym || row.original.code?.toUpperCase() || '—'
     },
-    {
+    {   id: "actions",
         header: "Acciones",
         cell: ({ row }) => h('div', { class: 'flex items-center gap-2' }, [
             h(UButton, {
