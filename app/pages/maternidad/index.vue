@@ -15,6 +15,7 @@ const workerStore = useWorkerStore()
 
 onMounted(() => workerStore.loadWorkers())
 
+const viewMode = ref<'table' | 'grid'>('table')
 const columns: TableColumn<WorkerInfo>[] = [
   {
     id: 'select',
@@ -104,7 +105,17 @@ const table = useTemplateRef('table')
 </script>
 
 <template>
-	<div class="p-6 space-y-6">
+	<div class="flex flex-col w-full p-4">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-semibold text-lg">Licencias de Maternidad</h3>
+        <div class="flex items-center gap-2">
+          <TableSearch v-if="viewMode === 'table'" :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
+          <DataViewToggle v-model="viewMode" />
+          <UButton icon="mdi:refresh" variant="ghost" @click="workerStore.loadWorkers()" />
+          <UButton icon="i-lucide-plus" to="maternidad/newmaternidad" variant="ghost">Añadir</UButton>
+        </div>
+      </div>
+
 	  <h1 class="text-center text-xl font-bold">
 		UNIVERSIDAD DE LAS CIENCIAS INFORMÁTICAS
 	  </h1>
@@ -112,27 +123,14 @@ const table = useTemplateRef('table')
 		REGISTRO DE LICENCIAS DE MATERNIDAD Y PREST. SOCIAL
 	  </h2>
   
-	  <div class="grid grid-cols-3 gap-4 mt-4">
-		<div>Año:__________
-
-		</div>
-  
-		<div>Área:_________
-		 
-		</div>
-  
-		<div>MES:_________
-		
-		</div>
+	  <div class="grid grid-cols-3 gap-4 mt-4 mb-4">
+		<div>Año:__________</div>
+		<div>Área:_________</div>
+		<div>MES:_________</div>
 	  </div>
-  
-	   <div class="flex items-center justify-between gap-2">
-        <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
-        <UButton to="maternidad/newmaternidad">Añadir</UButton>
-      </div>
-	  <UTable ref="table" :data="workerStore.workers" :columns="columns" />
 
-  
+	  <UTable v-if="viewMode === 'table'" ref="table" :data="workerStore.workers" :columns="columns" />
+      <DataGrid v-else :data="workerStore.workers" :columns="columns" />
   
 	  <div class="flex justify-between items-center mt-4">
 		<div class="flex items-center space-x-2">

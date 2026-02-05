@@ -25,6 +25,7 @@ interface Props {
 }
 const { data } = defineProps<Props>()
 
+const viewMode = ref<'table' | 'grid'>('table')
 const columns: TableColumn<PositionInfo>[] = [
     {
         id: 'select',
@@ -89,14 +90,16 @@ const table = useTemplateRef('table')
             <h3 class="font-semibold text-lg">Anexo 14</h3>
 
             <div class="flex gap-2">
-                <TableSearch :table="table" column-id="description" placeholder="Buscar cargo..." input-class="max-w-sm" />
+                <TableSearch v-if="viewMode === 'table'" :table="table" column-id="description" placeholder="Buscar cargo..." input-class="max-w-sm" />
+                <DataViewToggle v-model="viewMode" />
                 <UButton icon="mdi:refresh" variant="ghost" @click="loadPositions()" :disabled="positionsPending">
                 </UButton>
 
-                <UButton icon="i-lucide-plus" to="/positions/new">Añadir</UButton>
+                <UButton icon="i-lucide-plus" to="/positions/new" variant="ghost">Añadir</UButton>
             </div>
         </div>
-        <UTable ref="table" :data="positions" :columns="columns" class="w-full h-full" />
+        <UTable v-if="viewMode === 'table'" ref="table" :data="positions" :columns="columns" class="w-full h-full" />
+        <DataGrid v-else :data="positions" :columns="columns" />
 
     </div>
 </template>

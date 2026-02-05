@@ -11,6 +11,7 @@ import type { TableColumn } from '@nuxt/ui';
 
 onMounted(() => loadWorkers())
 
+const viewMode = ref<'table' | 'grid'>('table')
 
 interface Props {
   data: WorkerDetailed[]
@@ -112,19 +113,20 @@ const table = useTemplateRef('table')
 </script>
 
 <template>
-  <div>
-    <UCard>
-      <template #header>
+  <div class="flex flex-col w-full p-4">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-semibold text-lg">Anexo 14-B</h3>
+      <div class="flex items-center gap-2">
+        <TableSearch v-if="viewMode === 'table'" :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
+        <DataViewToggle v-model="viewMode" />
+        <UButton icon="mdi:refresh" variant="ghost" @click="loadWorkers()" />
+        <UButton icon="i-lucide-plus" to="/people/new" variant="ghost">Añadir</UButton>
+      </div>
+    </div>
 
-        <div class="flex justify-between">
-          <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
-        </div>
-      </template>
-      <strong class="flex justify-center">Anexo No.14-B</strong>
-      <div class="flex justify-center">De la Plantilla de cargos y registro de trabajadores</div>
-      <UTable ref="table" :data="workers" :columns="columns" sticky class="h-96" />
-      
-
-    </UCard>
+    <strong class="flex justify-center">Anexo No.14-B</strong>
+    <div class="flex justify-center mb-4">De la Plantilla de cargos y registro de trabajadores</div>
+    <UTable v-if="viewMode === 'table'" ref="table" :data="workers" :columns="columns" sticky class="h-96" />
+    <DataGrid v-else :data="workers" :columns="columns" />
   </div>
 </template>

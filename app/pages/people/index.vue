@@ -19,15 +19,16 @@ function handleLoadWorkers() {
 const authStore = useAuthStore()
 </script>
 <template>
-    <div class="space-y-8 mt-8">
-        <div class="flex gap-3">
-            <h3>Listado de Trabajadores</h3>
-            <Spacer>
-            <DataViewToggle v-model="viewMode" />
-            <!-- v-if="user?.roles?.some((r)=>(['director','hr_manager'].includes(r)))"  -->
-            <UButton icon="i-lucide-plus" to="people/new" variant="ghost">Nuevo trabajador</UButton>
-            <UButton @click="handleLoadWorkers" variant="ghost" icon="i-lucide-refresh-cw" title="Refrescar lista"
-                :disabled="workersPending" :loading="workersPending" />
+    <div class="flex flex-col w-full p-4">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-semibold text-lg">Trabajadores</h3>
+            <div class="flex items-center gap-2">
+                <DataViewToggle v-model="viewMode" />
+                <!-- v-if="user?.roles?.some((r)=>(['director','hr_manager'].includes(r)))"  -->
+                <UButton icon="i-lucide-plus" to="people/new" variant="ghost">Nuevo trabajador</UButton>
+                <UButton @click="handleLoadWorkers" variant="ghost" icon="mdi:refresh" title="Refrescar lista"
+                    :disabled="workersPending" :loading="workersPending" />
+            </div>
         </div>
 
 

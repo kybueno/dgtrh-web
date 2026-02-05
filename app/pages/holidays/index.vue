@@ -15,6 +15,8 @@ onMounted(() =>loadHolidays())
 
 onMounted(() =>loadWorkers())
 
+const viewMode = ref<'table' | 'grid'>('table')
+
 const columns: TableColumn<HolidaysInfo>[] = [
   {
     id: 'select',
@@ -79,16 +81,17 @@ const table = useTemplateRef('table')
 </script>
 
 <template>
-    <div class="p-6 space-y-6">
-	  <h2 class="text-center font-semibold">
-		Registro de Vacaciones
-	  </h2>
-    <div class="flex items-center justify-between gap-2">
-      <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
-      <UButton to="holidays/new">Añadir</UButton>
+    <div class="flex flex-col w-full p-4">
+	  <div class="flex items-center justify-between mb-6">
+        <h3 class="font-semibold text-lg">Registro de Vacaciones</h3>
+        <div class="flex items-center gap-2">
+          <TableSearch v-if="viewMode === 'table'" :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
+          <DataViewToggle v-model="viewMode" />
+          <UButton icon="mdi:refresh" variant="ghost" @click="loadHolidays()" />
+          <UButton icon="i-lucide-plus" to="holidays/new" variant="ghost">Añadir</UButton>
+        </div>
+      </div>
+      <UTable v-if="viewMode === 'table'" ref="table" :data="workers" class="flex-1" :columns="columns"/>
+      <DataGrid v-else :data="workers" :columns="columns" />
     </div>
-    <UTable ref="table" :data="workers" class="flex-1" :columns="columns"/>
-  </div>
-
-
 </template>

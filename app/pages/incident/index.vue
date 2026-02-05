@@ -15,6 +15,7 @@ function handleReload() {
 }
 
 const table = useTemplateRef('table')
+const viewMode = ref<'table' | 'grid'>('table')
 
 const columns = [
   { id: 'incident_code', accessorKey: 'incident_code', header: 'Código', cell: ({ row }: any) => row.original.incident_code },
@@ -26,16 +27,18 @@ const columns = [
 </script>
 
 <template>
-  <div class="space-y-8 mt-8">
-    <div class="flex justify-between">
-      <TableSearch :table="table" column-id="description" placeholder="Buscar incidencias..." input-class="max-w-lg" />
-      <div class="flex gap-3">
-        <UButton @click="handleReload" variant="ghost" icon="i-lucide-refresh-cw" title="Refrescar lista" :disabled="incidentsPending" :loading="incidentsPending" />
+  <div class="flex flex-col w-full p-4">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-semibold text-lg">Incidencias</h3>
+      <div class="flex items-center gap-2">
+        <TableSearch v-if="viewMode === 'table'" :table="table" column-id="description" placeholder="Buscar incidencias..." input-class="max-w-lg" />
+        <DataViewToggle v-model="viewMode" />
+        <UButton @click="handleReload" variant="ghost" icon="mdi:refresh" title="Refrescar lista" :disabled="incidentsPending" :loading="incidentsPending" />
+        <UButton icon="i-lucide-plus" to="/incident/new" variant="ghost">Añadir</UButton>
       </div>
     </div>
 
-    <UCard class="border border-muted rounded-md overflow-auto max-w-full">
-      <UTable ref="table" :columns="columns" :data="incidents" :loading="incidentsPending" />
-    </UCard>
+    <UTable v-if="viewMode === 'table'" ref="table" :columns="columns" :data="incidents" :loading="incidentsPending" />
+    <DataGrid v-else :data="incidents" :columns="columns" />
   </div>
 </template>

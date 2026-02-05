@@ -15,6 +15,7 @@ const workerStore = useWorkerStore()
 
 onMounted(() => workerStore.loadWorkers())
 
+const viewMode = ref<'table' | 'grid'>('table')
 const columns: TableColumn<WorkerInfo>[] = [
   {
     id: 'select',
@@ -67,19 +68,26 @@ const table = useTemplateRef('table')
 </script>
 
 <template>
-   <div class="p-6 space-y-6">
+   <div class="flex flex-col w-full p-4">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-semibold text-lg">Licencia sin Sueldo</h3>
+        <div class="flex items-center gap-2">
+          <TableSearch v-if="viewMode === 'table'" :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
+          <DataViewToggle v-model="viewMode" />
+          <UButton icon="mdi:refresh" variant="ghost" @click="workerStore.loadWorkers()" />
+          <UButton icon="i-lucide-plus" to="/sin-sueldo/newsin" variant="ghost">Añadir</UButton>
+        </div>
+      </div>
+
 	  <h1 class="text-center text-xl font-bold">
 		UNIVERSIDAD DE LAS CIENCIAS INFORMÁTICAS
 	  </h1>
-	  <h2 class="text-center font-semibold">
+	  <h2 class="text-center font-semibold mb-4">
 		Anexo G: Registro de Licencia sin sueldo
 	  </h2>
 
-    <div class="flex items-center justify-between gap-2">
-      <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
-      <UButton to="/sin-sueldo/newsin">Añadir</UButton>
-    </div>
-  <UTable ref="table" :data="workerStore.workers" :columns="columns" />
+    <UTable v-if="viewMode === 'table'" ref="table" :data="workerStore.workers" :columns="columns" />
+    <DataGrid v-else :data="workerStore.workers" :columns="columns" />
 
   </div>
 </template>

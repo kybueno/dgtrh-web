@@ -6,30 +6,34 @@ useHead({
   title: 'Prenómina'
 })
 
-import { onMounted, ref } from 'vue';
-import { UCheckbox } from '#components';
-import type { TableColumn } from '@nuxt/ui';
-import { generatePrenomina, usePayrollPDF } from './payrollHelpers';
+import { onMounted, ref } from 'vue'
+import { UCheckbox } from '#components'
+import type { TableColumn } from '@nuxt/ui'
+import { generatePrenomina, usePayrollPDF } from './payrollHelpers'
 
 // Import store functions and state
 import { loadWorkers, workers } from '~/stores/workerStoreC';
 import { loadIncidents } from '~/stores/incidentStore';
 import { useIncidentTypeStore } from '~/stores/incidentTypeStore';
 import { loadPayroll } from '~/stores/payrollStore'
+import { loadExtraWorks } from '~/stores/extraWorkStore'
 
 const email = ref('')
 const incidentTypeStore = useIncidentTypeStore()
+const viewMode = ref<'table' | 'grid'>('table')
 
 // Load data
-onMounted(async () => {
+async function handleReload() {
   await Promise.all([
     loadWorkers(),
     loadIncidents(),
     incidentTypeStore.loadIncidentTypes(),
     loadPayroll(),
     loadExtraWorks()
-  ]);
-});
+  ])
+}
+
+onMounted(handleReload)
 
 // Workers data is now available in the workers ref from workerStoreC
 const workerData = workers;
@@ -86,27 +90,19 @@ const columns: TableColumn<WorkerDetailed>[] = [
 const table = useTemplateRef('table')
 </script>
 <template>
-    <div>
-    <UCard>
-      <template #header>
+  <div class="flex flex-col w-full p-4">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-semibold text-lg">Prenómina</h3>
+      <div class="flex items-center gap-2">
+        <TableSearch v-if="viewMode === 'table'" :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
+        <DataViewToggle v-model="viewMode" />
+        <UButton icon="mdi:refresh" variant="ghost" @click="handleReload" />
+        <UButton icon="i-lucide-plus" to="/payroll/new" variant="ghost">Añadir</UButton>
+        <UButton icon="lucide:printer" variant="subtle" color="neutral" @click="generatePrenomina(workers)" >Imprimir</UButton>
+      </div>
+    </div>
 
-        <div class="flex justify-between gap-4">
-          <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
-         <div class="flex-1"></div> 
-         <!-- <UButton icon="mdi:add" to="payroll/new">Añadir</UButton> -->
-          <UButton icon="lucide:printer" variant="subtle" color="neutral" @click="generatePrenomina(workers)" >Imprimir</UButton>
-        </div>
-      </template>
-      <UTable ref="table" :data="workers" :columns="columns" sticky class="min-h-96" />
-
-    </UCard>
+    <UTable v-if="viewMode === 'table'" ref="table" :data="workers" :columns="columns" sticky class="min-h-96" />
+    <DataGrid v-else :data="workers" :columns="columns" />
   </div>
-
-
-    
-
-     
-
-   
-  
 </template>

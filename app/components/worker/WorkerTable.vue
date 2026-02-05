@@ -128,7 +128,7 @@ const sorting = ref([])
 <template>
     <div class="border border-muted bg-muted/70 rounded-md">
         <Flex v-if="viewMode === 'table'" class="pt-1 px-1 justify-end">
-            <TableSearch :table="table" column-id="name" placeholder="Buscar por nombre" input-class="max-w-sm m-2" />
+            <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
             <ColumnsControl :table="table" />
         </Flex>
         <UTable
