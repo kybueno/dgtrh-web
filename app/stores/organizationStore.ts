@@ -74,6 +74,6 @@ export async function deleteOrganization(id: number) {
   return response.error
 }
 
-export function getOrganizationById(code: number) {
-  return organizations.value.find((organization) => organization.code === String(code))
+export function getOrganizationById(id: number) {
+  return organizations.value.find((organization) => organization.id === id)
 }

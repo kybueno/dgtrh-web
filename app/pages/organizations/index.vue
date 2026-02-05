@@ -20,7 +20,7 @@ useHead({
   title: 'Organizaciones'
 })
 
-import { UCheckbox } from '#components';
+import { UButton, UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 
 onMounted(loadOrganizations);
@@ -80,8 +80,17 @@ const columns: TableColumn<OrganizationInfo>[] = [
         header: "Acciones",
         cell: ({ row }) => h('div', { class: 'flex items-center gap-2' }, [
             h(UButton, {
+                size: 'sm',
+                icon: 'i-lucide-pencil',
+                color: 'neutral',
+                variant: 'ghost',
+                title: 'Editar',
+                to: `/organizations/${row.original.id}`
+            }),
+            h(UButton, {
+                size: 'sm',
                 icon: 'i-lucide-trash-2',
-                color: 'red',
+                color: 'neutral',
                 variant: 'ghost',
                 title: 'Eliminar',
                 onClick: () => handleDeleteOrganization(row.original)
