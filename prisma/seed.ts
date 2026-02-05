@@ -19,14 +19,23 @@ async function main() {
     where: { email: 'hr_manager@uci.cu' },
     update: {},
     create: {
-      email: 'hr_manager@uci.cu',
-      first_name: 'HR',
-      last_name: 'Manager',
-      second_last_name: 'User',
-      record_number: 'HR-001',
-      organizations_codes: [],
+      email: 'anairis@uci.cu',
+      first_name: 'Ana',
+      middle_name:'Iris',
+      last_name: 'Valdes',
+      second_last_name: 'Rodríguez',
+      record_number: '08154',
+      organizations_codes: ["cdr","fmc", "ctc" ],
+      position_code: 6330,
+      ci: '78012302018',
+      address: 'AVENIDA 191, NRO. 29608, ENTRE: CALLE 300 Y CALLE 296, LOCALIDAD: PUEBLO EL CHICO, MUNICIPIO: BOYEROS',
+      parent1_name:'Juan de D.',
+      parent2_name:'Isabel',
+      gender:'F',
+      level:'MED',
       status: WorkerStatus.active,
     },
+    
   })
 
   const user = await prisma.user.upsert({
