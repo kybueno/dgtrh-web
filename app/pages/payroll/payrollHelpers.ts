@@ -1,130 +1,167 @@
-export function generatePrenomina(
-  workers: WorkerInfo[],
-  date: Date = new Date()
-) {
-  usePDFMake().createPdf(getPrenominaDefinition(workers, date)).open();
+type PayrollSummaryWorker = {
+  worker: WorkerDetailed
+  incidentDaysByType: Record<number, number>
+  extraWorkHours: number
+  observation: string | null
 }
 
-const getPrenominaDefinition = (
-  workers: WorkerInfo[],
-  date: Date = new Date()
-) => {
-  const monthName = date
-    .toLocaleDateString("es-ES", { month: "long" })
-    .toUpperCase();
-  const year = date.getFullYear();
+type PayrollSummaryPayload = {
+  payroll: PayrollInfo & {
+    creator?: WorkerInfo | null
+    reviewer?: WorkerInfo | null
+  }
+  incidentTypes: IncidentType[]
+  workers: PayrollSummaryWorker[]
+}
+
+const PAYROLL_INCIDENT_CODES = [12, 15, 21, 22, 23, 25, 26, 27, 32, 36]
+
+const formatMonthLabel = (month: number, year: number) => {
+  const name = new Date(year, month - 1, 1).toLocaleDateString('es-ES', {
+    month: 'long'
+  })
+  return `${name} ${year}`
+}
+
+const buildTableRows = (payload: PayrollSummaryPayload) => {
+  const totals = { hours: 0, h060: 0, h115: 0 }
+  const rows: any[] = []
+
+  payload.workers.forEach((entry) => {
+    const incidentCells = PAYROLL_INCIDENT_CODES.map((code) => {
+      const value = entry.incidentDaysByType?.[code] ?? 0
+      return value === 0 ? '' : value
+    })
+
+    const hours = Number(entry.extraWorkHours ?? 0)
+    const h060 = 0
+    const h115 = 0
+
+    totals.hours += hours
+    totals.h060 += h060
+    totals.h115 += h115
+
+    rows.push([
+      entry.worker.record_number ?? '',
+      getDisplayName(entry.worker),
+      entry.worker.position?.description ?? entry.worker.position_code ?? '',
+      ...incidentCells,
+      hours ? hours.toFixed(2) : '',
+      h060 ? h060.toFixed(2) : '',
+      h115 ? h115.toFixed(2) : '',
+      entry.observation ?? ''
+    ])
+  })
+
+  rows.push([
+    { text: 'TOTALES', colSpan: 3 + PAYROLL_INCIDENT_CODES.length, bold: true },
+    ...Array(3 + PAYROLL_INCIDENT_CODES.length - 1).fill(''),
+    totals.hours ? totals.hours.toFixed(2) : '',
+    totals.h060 ? totals.h060.toFixed(2) : '',
+    totals.h115 ? totals.h115.toFixed(2) : '',
+    ''
+  ])
+
+  return rows
+}
+
+export function generatePrenomina(payload: PayrollSummaryPayload) {
+  usePDFMake().createPdf(getPrenominaDefinition(payload)).open()
+}
+
+const getPrenominaDefinition = (payload: PayrollSummaryPayload) => {
+  const payroll = payload.payroll
+  const monthLabel = formatMonthLabel(payroll.month, payroll.year)
+  const createdBy = payroll.creator ? getDisplayName(payroll.creator) : '-'
+  const reviewedBy = payroll.reviewer ? getDisplayName(payroll.reviewer) : '-'
+
+  const incidentHeaderCells = PAYROLL_INCIDENT_CODES.map((code) => String(code))
 
   return {
-    pageOrientation: "landscape",
-    pageSize: "A4",
-    pageMargins: [20, 40, 20, 40],
-
+    pageOrientation: 'landscape',
+    pageSize: 'A4',
+    pageMargins: [20, 30, 20, 30],
     content: [
-      // ===== TÍTULO =====
       {
-        text: [
-          "PRENÓMINA DE PAGO\n",
-          "INCIDENCIAS DEL TIEMPO NO LABORADO\n",
-          "TRABAJO EXTRAORDINARIO",
-        ],
-        style: "mainTitle",
-        alignment: "center",
-        margin: [0, 0, 0, 10],
-      },
-
-      // ===== INFO GENERAL =====
-      {
-        columns: [
-          { text: "Organismo: MES", style: "orgInfo" },
-          {
-            text: `Mes: ${monthName} / Año: ${year}`,
-            alignment: "right",
-            style: "orgInfo",
-          },
-        ],
-        margin: [0, 0, 0, 5],
-      },
-      {
-        text: "Entidad: UCI\nÁrea: Dirección de Gestión Tecnológica",
-        style: "orgInfo",
-        margin: [0, 0, 0, 10],
-      },
-
-      // ===== TABLA PRENÓMINA =====
-      {
-        style: "rhTableStyle",
         table: {
-          headerRows: 1,
-          widths: [60, "*", "*", 60],
+          widths: ['*', '*'],
+          body: [[
+            {
+              text: [
+                'ORGANISMO: MES\n',
+                'ENTIDAD: UCI\n',
+                'AREA: Dirección de Gestión de Tecnología\n',
+                'PRENÓMINA DE PAGO'
+              ],
+              bold: true,
+              alignment: 'left'
+            },
+            {
+              text: [
+                `Fecha: ${monthLabel}\n`,
+                `CONFEC. POR: ${createdBy}\n`,
+                `REVISADO Y APROBADO POR: ${reviewedBy}`
+              ],
+              bold: true,
+              alignment: 'left'
+            }
+          ]]
+        },
+        layout: 'noBorders',
+        margin: [0, 0, 0, 6]
+      },
+      {
+        table: {
+          headerRows: 2,
+          widths: [
+            45,
+            150,
+            95,
+            ...Array(PAYROLL_INCIDENT_CODES.length).fill(24),
+            40,
+            40,
+            40,
+            90
+          ],
           body: [
             [
-              { text: "No. Exp.", style: "tableHeader" },
-              { text: "Nombres y Apellidos", style: "tableHeader" },
-              { text: "Cargo", style: "tableHeader" },
-              { text: "Horas", style: "tableHeader" },
+              { text: 'No.Ex.', rowSpan: 2 },
+              { text: 'Nombres y Apellidos', rowSpan: 2 },
+              { text: 'Cargo', rowSpan: 2 },
+              { text: 'INCIDENCIAS DEL TIEMPO NO LABORADO', colSpan: PAYROLL_INCIDENT_CODES.length },
+              ...Array(PAYROLL_INCIDENT_CODES.length - 1).fill(''),
+              { text: 'TRABAJO EXTRAORDINARIO', colSpan: 3 },
+              '', '',
+              { text: 'Observaciones', rowSpan: 2 }
             ],
-
-            ...workers.map((w) => [
-              w.record_number ?? "",
-              getDisplayName(w),
-              w.position_code ?? "",
-              {
-                text: w.hours ?? w.horas ?? "",
-                alignment: "center",
-              },
-            ]),
-          ],
+            [
+              '',
+              '',
+              '',
+              ...incidentHeaderCells,
+              'Horas',
+              '0.60',
+              '1.15',
+              ''
+            ],
+            ...buildTableRows(payload)
+          ]
         },
         layout: {
-          defaultBorder: true,
-          paddingLeft: () => 4,
-          paddingRight: () => 4,
-          paddingTop: () => 3,
-          paddingBottom: () => 3,
+          hLineWidth: () => 1,
+          vLineWidth: () => 1,
+          hLineColor: () => '#000',
+          vLineColor: () => '#000',
+          paddingLeft: () => 3,
+          paddingRight: () => 3,
+          paddingTop: () => 2,
+          paddingBottom: () => 2
         },
-      },
-
-      // ===== PIE =====
-      {
-        columns: [
-          {
-            stack: [
-              { text: "Confeccionado por:", bold: true },
-              { text: "Ana Iris Valdes Rodríguez" },
-            ],
-            margin: [0, 20, 0, 0],
-          },
-          {
-            stack: [
-              { text: "Aprobado por:", bold: true },
-              { text: "Lester Rodríguez Vallejo" },
-            ],
-            alignment: "right",
-            margin: [0, 20, 0, 0],
-          },
-        ],
-      },
+        fontSize: 9
+      }
     ],
-
-    styles: {
-      mainTitle: {
-        fontSize: 14,
-        bold: true,
-      },
-      orgInfo: {
-        fontSize: 10,
-        bold: true,
-      },
-      tableHeader: {
-        bold: true,
-        fontSize: 10,
-        alignment: "center",
-        fillColor: "#eeeeee",
-      },
-    },
-
     defaultStyle: {
-      fontSize: 9,
-    },
-  };
-};
+      fontSize: 9
+    }
+  }
+}

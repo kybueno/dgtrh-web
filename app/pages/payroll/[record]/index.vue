@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { generatePrenomina } from '../payrollHelpers'
 
 type PayrollWorkerSummary = {
   worker: WorkerDetailed
   incidentDaysByType: Record<number, number>
   totalIncidentDays: number
   extraWorkHours: number
+  observation: string | null
 }
 
 type PayrollDetailResponse = {
@@ -21,6 +23,11 @@ const { data, pending, error, refresh } = await useAsyncData<PayrollDetailRespon
   () => `payroll-${payrollId.value}`,
   () => $fetch(`/api/payroll/${payrollId.value}`)
 )
+
+const handlePrint = () => {
+  if (!data.value) return
+  generatePrenomina(data.value)
+}
 
 const payrollLabel = computed(() => {
   const payroll = data.value?.payroll
@@ -73,6 +80,9 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
       <h3 class="font-semibold text-lg">{{ payrollLabel }}</h3>
       <div class="flex items-center gap-2">
         <UButton icon="mdi:refresh" variant="ghost" @click="refresh" :loading="pending" />
+        <UButton icon="lucide:printer" variant="subtle" color="neutral" @click="handlePrint" :disabled="!data">
+          Imprimir
+        </UButton>
         <UButton to="/payroll" variant="ghost">Volver</UButton>
       </div>
     </div>

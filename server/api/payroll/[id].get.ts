@@ -70,6 +70,21 @@ export default defineEventHandler(async (event) => {
     })
   ])
 
+  const observations = await prisma.payrollWorkerObservation.findMany({
+    where: {
+      payroll_id: payroll.id
+    },
+    select: {
+      worker_id: true,
+      notes: true
+    }
+  })
+
+  const observationsByWorker = new Map<string, string | null>()
+  for (const observation of observations) {
+    observationsByWorker.set(observation.worker_id, observation.notes ?? null)
+  }
+
   const incidentDaysByWorker = new Map<string, Map<number, number>>()
   const totalIncidentDaysByWorker = new Map<string, number>()
 
@@ -115,7 +130,8 @@ export default defineEventHandler(async (event) => {
       worker,
       incidentDaysByType: incidentByType,
       totalIncidentDays: totalIncidentDaysByWorker.get(worker.id) ?? 0,
-      extraWorkHours: extraHoursByWorker.get(worker.id) ?? 0
+      extraWorkHours: extraHoursByWorker.get(worker.id) ?? 0,
+      observation: observationsByWorker.get(worker.id) ?? null
     }
   })
 

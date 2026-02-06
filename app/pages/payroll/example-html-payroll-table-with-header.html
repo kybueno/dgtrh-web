@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+
+@page { size: A4 landscape; }
+
+body { font-family: Arial; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 11px;
+}
+
+th, td {
+  border: 1px solid #000;
+  padding: 3px;
+  text-align: center;
+}
+
+.left { text-align:left; }
+
+.header-box{
+  text-align:left;
+  font-weight:bold;
+  line-height:1.2;
+}
+
+</style>
+</head>
+
+<body>
+
+<table>
+
+<!-- TOP INFO -->
+<tr>
+  <td colspan="6" class="header-box">
+    ORGANISMO: MES<br>
+    ENTIDAD: UCI<br>
+    AREA: Dirección de Gestión de Tecnología<br>
+    PRENOMINA DE PAGO
+  </td>
+
+  <td colspan="11" class="header-box">
+    Fecha: Agosto 2024<br>
+    CONFEC. POR: Ana Iris Valdés Rodríguez<br>
+    REVISADO Y APROBADO POR: Lester Rodríguez Vallejo
+  </td>
+</tr>
+
+<!-- GROUP HEADERS -->
+<tr>
+  <th rowspan="2">No.Ex.</th>
+  <th rowspan="2">Nombres y Apellidos</th>
+  <th rowspan="2">Cargo</th>
+
+  <th colspan="10">INCIDENCIAS DEL TIEMPO NO LABORADO</th>
+  <th colspan="3">TRABAJO EXTRAORDINARIO</th>
+
+  <th rowspan="2">Observaciones</th>
+</tr>
+
+<!-- SUB HEADERS -->
+<tr>
+  <th>12</th><th>15</th><th>21</th><th>22</th><th>23</th>
+  <th>25</th><th>26</th><th>27</th><th>32</th><th>36</th>
+
+  <th>Horas</th>
+  <th>0.60</th>
+  <th>1.15</th>
+</tr>
+
+<tbody id="rows"></tbody>
+
+</table>
+
+<script>
+
+const employees = [
+  {
+    noExp:'06252',
+    name:'DAISY TAPANES',
+    cargo:'TÉCNICO',
+    days:{12:21},
+    extra:{horas:4,h060:2,h115:1},
+    obs:''
+  },
+  {
+    noExp:'07646',
+    name:'LESTER RODRÍGUEZ',
+    cargo:'DIRECTOR',
+    days:{12:19},
+    extra:{horas:5,h060:3,h115:2},
+    obs:'OK'
+  }
+];
+
+const dayKeys=[12,15,21,22,23,25,26,27,32,36];
+
+function renderRows(){
+
+  let totals={horas:0,h060:0,h115:0};
+  const tbody=document.getElementById("rows");
+
+  employees.forEach(e=>{
+    let tr="<tr>";
+
+    tr+=`<td>${e.noExp}</td>`;
+    tr+=`<td class="left">${e.name}</td>`;
+    tr+=`<td>${e.cargo}</td>`;
+
+    dayKeys.forEach(d=>{
+      tr+=`<td>${e.days?.[d]||''}</td>`;
+    });
+
+    tr+=`<td>${e.extra.horas}</td>`;
+    tr+=`<td>${e.extra.h060}</td>`;
+    tr+=`<td>${e.extra.h115}</td>`;
+    tr+=`<td>${e.obs||''}</td>`;
+
+    tr+="</tr>";
+    tbody.innerHTML+=tr;
+
+    totals.horas+=e.extra.horas||0;
+    totals.h060+=e.extra.h060||0;
+    totals.h115+=e.extra.h115||0;
+  });
+
+  // TOTAL ROW
+  tbody.innerHTML+=`
+  <tr>
+    <td colspan="13"><b>TOTALES</b></td>
+    <td><b>${totals.horas}</b></td>
+    <td><b>${totals.h060}</b></td>
+    <td><b>${totals.h115}</b></td>
+    <td></td>
+  </tr>`;
+}
+
+renderRows();
+
+</script>
+
+</body>
+</html>
