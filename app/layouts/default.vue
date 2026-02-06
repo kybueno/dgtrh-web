@@ -42,7 +42,7 @@ const protectedLinks = [{
   type: 'trigger',
   children: [
     {
-      label: 'Prenómina',
+      label: 'Prenóminas',
       icon: 'lucide:file-spreadsheet',
       to: '/payroll',
       role: [UserRole.director, UserRole.system_admin, UserRole.hr_manager],
@@ -59,7 +59,7 @@ const protectedLinks = [{
       }
     }, {
       label: 'Catálogo de claves',
-      icon: 'lucide:file',
+      icon: 'lucide:file-digit',
       to: '/incident/type',
       role: [UserRole.hr_manager],
       onSelect: () => {

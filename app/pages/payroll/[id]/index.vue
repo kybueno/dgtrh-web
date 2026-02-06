@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { h, watch } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
-import { UButton, UTextarea } from '#components'
+import { UBadge, UButton, UTextarea } from '#components'
 import { generatePrenomina } from '../payrollHelpers'
+import HStack from '~/components/HStack.vue'
 
 definePageMeta({
   title: 'Prenómina'
@@ -69,16 +70,16 @@ const saveObservation = async (workerId: string) => {
       workerEntry.observation = notes.length ? notes : null
     }
     observationStatus.value[workerId] = 'saved'
-    setTimeout(() => {
-      if (observationStatus.value[workerId] === 'saved') {
-        observationStatus.value[workerId] = null
-      }
-    }, 2000)
+    // setTimeout(() => {
+    //   if (observationStatus.value[workerId] === 'saved') {
+    //     observationStatus.value[workerId] = null
+    //   }
+    // }, 2000)
   } catch (err) {
     observationStatus.value[workerId] = 'error'
     toast.add({
       title: 'No se pudo guardar la observación',
-      color: 'red'
+      color: 'error'
     })
   } finally {
     observationSaving.value[workerId] = false
@@ -145,19 +146,20 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
               observationDrafts.value[workerId] = value
             }
           }),
-          h(UButton, {
+          h(HStack,{class:'items-center'},[h(UButton, {
             label: 'Guardar',
             size: 'xs',
-            variant: 'soft',
+            variant: 'ghost',
             color: 'primary',
+            icon: observationStatus.value[workerId]=== 'saved' ? 'lucide:check' : 'lucide:save',
             loading: observationSaving.value[workerId] ?? false,
             onClick: () => saveObservation(workerId)
           }),
           observationStatus.value[workerId] === 'saved'
-            ? h('span', { class: 'text-xs text-green-600' }, 'Guardado')
+            ? h(UBadge, { color: 'success', variant:'subtle' }, 'Guardado')
             : observationStatus.value[workerId] === 'error'
-              ? h('span', { class: 'text-xs text-red-600' }, 'Error')
-              : null
+              ? h(UBadge, { color: 'error', variant:'subtle' }, 'Error')
+              : null])
         ])
       }
     }

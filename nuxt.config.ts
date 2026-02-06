@@ -44,5 +44,4 @@ export default defineNuxtConfig({
       titleTemplate: "%s | DGTRH"
     },
   },
-  //ssr:false,//Disable SSR because it causes hydration mismatches with NuxtUI USelect item labels when there are object fields with names like label and description
 });

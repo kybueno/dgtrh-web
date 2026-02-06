@@ -12,10 +12,12 @@ import { UButton } from '#components'
 import type { TableColumn } from '@nuxt/ui'
 import { page } from '#build/ui'
 import { createPayroll, loadPayroll, payroll } from '~/stores/payrollStore'
+import { UserRole } from '~~/prisma/generated/enums'
 
 const viewMode = ref<'table' | 'grid'>('table')
 const sorting = ref([])
 const creatingPayroll = ref(false)
+const loadingPayroll = ref(false)
 
 const now = new Date()
 const currentMonth = now.getMonth() + 1
@@ -31,7 +33,9 @@ const currentPayrollLabel = computed(() => {
 
 // Load data
 async function handleReload() {
+  loadingPayroll.value = true
   await loadPayroll()
+  loadingPayroll.value = false
 }
 
 onMounted(handleReload)
@@ -130,16 +134,18 @@ const table = useTemplateRef('table')
       <div class="flex items-center gap-2">
         <DataViewToggle v-model="viewMode" />
         <UButton icon="mdi:refresh" variant="ghost" @click="handleReload" />
-        <UButton
-          v-if="!currentPayroll"
-          icon="i-lucide-plus"
-          variant="soft"
-          color="primary"
-          :loading="creatingPayroll"
-          @click="handleCreateCurrentPayroll"
-        >
-          Generar prenómina de {{ currentPayrollLabel }}
-        </UButton>
+        <show-if-user v-if="!loadingPayroll" :roles="[UserRole.system_admin, UserRole.hr_manager]">
+          <UButton
+            v-if="!currentPayroll && !loadingPayroll"
+            icon="i-lucide-plus"
+            variant="soft"
+            color="primary"
+            :loading="creatingPayroll"
+            @click="handleCreateCurrentPayroll"
+          >
+            Generar prenómina de {{ currentPayrollLabel }}
+          </UButton>
+        </show-if-user>
       </div>
     </div>
 
