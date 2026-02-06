@@ -176,6 +176,7 @@ model Payroll {
   denier      Worker?  @relation("payroll_denied", fields: [denied_by], references: [id])
   observations PayrollWorkerObservation[]
 
+  @@unique([month, year])
   @@map("payroll")
 }
 

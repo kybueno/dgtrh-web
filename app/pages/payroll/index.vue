@@ -10,10 +10,23 @@ import { h, onMounted, ref } from 'vue'
 import { UButton } from '#components'
 import type { TableColumn } from '@nuxt/ui'
 import { page } from '#build/ui'
-import { loadPayroll, payroll } from '~/stores/payrollStore'
+import { createPayroll, loadPayroll, payroll } from '~/stores/payrollStore'
 
 const viewMode = ref<'table' | 'grid'>('table')
 const sorting = ref([])
+const creatingPayroll = ref(false)
+
+const now = new Date()
+const currentMonth = now.getMonth() + 1
+const currentYear = now.getFullYear()
+
+const currentPayroll = computed(() => {
+  return payroll.value.find((item) => item.month === currentMonth && item.year === currentYear)
+})
+
+const currentPayrollLabel = computed(() => {
+  return new Date(currentYear, currentMonth - 1, 1).toLocaleDateString('es-ES', { month: 'long' })
+})
 
 // Load data
 async function handleReload() {
@@ -21,6 +34,13 @@ async function handleReload() {
 }
 
 onMounted(handleReload)
+
+const handleCreateCurrentPayroll = async () => {
+  if (creatingPayroll.value) return
+  creatingPayroll.value = true
+  await createPayroll({ month: currentMonth, year: currentYear })
+  creatingPayroll.value = false
+}
 
 const formatMonth = (month?: number) => {
   if (!month) return '-'
@@ -109,6 +129,16 @@ const table = useTemplateRef('table')
       <div class="flex items-center gap-2">
         <DataViewToggle v-model="viewMode" />
         <UButton icon="mdi:refresh" variant="ghost" @click="handleReload" />
+        <UButton
+          v-if="!currentPayroll"
+          icon="i-lucide-plus"
+          variant="soft"
+          color="primary"
+          :loading="creatingPayroll"
+          @click="handleCreateCurrentPayroll"
+        >
+          Generar prenómina de {{ currentPayrollLabel }}
+        </UButton>
         <UButton icon="i-lucide-plus" to="/payroll/new" variant="ghost">Añadir</UButton>
       </div>
     </div>
