@@ -21,6 +21,13 @@ const selectedRole = computed({
   }
 })
 
+const uiSelectedRole = computed<string>({
+  get: () => selectedRole.value ?? '',
+  set: (value) => {
+    selectedRole.value = value ? (value as UserRole) : null
+  }
+})
+
 const effectiveRole = computed(() => {
   return getEffectiveRole(
     authStore.loggedUserProfile.value?.user?.role,
@@ -40,12 +47,15 @@ const resetToActual = () => {
       Dev Role
     </div>
     <div class="flex flex-col gap-2">
-      <USelect
-        v-model="selectedRole"
-        :items="roleOptions"
-        placeholder="Use actual role"
-        class="w-full"
-      />
+      <select
+        v-model="uiSelectedRole"
+        class="w-full rounded-md border border-default bg-transparent px-3 py-2 text-sm"
+      >
+        <option value="">Use actual role</option>
+        <option v-for="option in roleOptions" :key="option.value" :value="option.value">
+          {{ option.label }}
+        </option>
+      </select>
       <div class="text-xs text-muted" v-if="!collapsed">
         Actual: <span class="font-medium">{{ effectiveRole ?? 'none' }}</span>
       </div>
