@@ -1,84 +1,101 @@
 <script setup lang="ts">
-import { UButton } from '#components';
-import { loadIncidents } from '~/stores/incidentStore';
-const incidentTypeStore = useIncidentTypeStore();
-const formData = ref<IncidentType>({
-  description: '',
-  name: '',
-  avg: false,
-  classification: '',
-  code: 0,
-  created_at: null,
-  deductible: null,
-  incentive: false,
-  pay_for: null,
-  sum: false,
-  time_classification: null,
-  updated_at: null
+import type { TableColumn } from '@nuxt/ui'
+
+type PayrollWorkerSummary = {
+  worker: WorkerDetailed
+  incidentDaysByType: Record<number, number>
+  totalIncidentDays: number
+  extraWorkHours: number
+}
+
+type PayrollDetailResponse = {
+  payroll: PayrollInfo
+  incidentTypes: IncidentType[]
+  workers: PayrollWorkerSummary[]
+}
+
+const route = useRoute()
+const payrollId = computed(() => Number(route.params.record))
+
+const { data, pending, error, refresh } = await useAsyncData<PayrollDetailResponse>(
+  () => `payroll-${payrollId.value}`,
+  () => $fetch(`/api/payroll/${payrollId.value}`)
+)
+
+const payrollLabel = computed(() => {
+  const payroll = data.value?.payroll
+  if (!payroll) return 'Prenómina'
+  const month = new Date(2000, payroll.month - 1, 1).toLocaleDateString('es-ES', { month: 'long' })
+  return `Prenómina ${month} ${payroll.year}`
 })
 
+const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
+  const incidentColumns = (data.value?.incidentTypes ?? []).map((type) => ({
+    id: `incident_${type.code}`,
+    header: type.description || type.name,
+    cell: ({ row }) => row.original.incidentDaysByType[type.code] ?? 0
+  }))
 
-
-
-onMounted(async () => {
-  await Promise.all([
-    loadIncidents(),
-    incidentTypeStore.loadIncidentTypes(),
-    loadPayroll()
-  ]);
-});
-
-const loading = ref(false)
+  return [
+    {
+      id: 'record_number',
+      header: 'No.Exp',
+      cell: ({ row }) => row.original.worker.record_number
+    },
+    {
+      id: 'name',
+      header: 'Nombre y Apellidos',
+      cell: ({ row }) => getDisplayName(row.original.worker)
+    },
+    {
+      id: 'position',
+      header: 'Cargo',
+      cell: ({ row }) => row.original.worker.position?.description ?? row.original.worker.position_code
+    },
+    ...incidentColumns,
+    {
+      id: 'total_incidents',
+      header: 'Total días',
+      cell: ({ row }) => row.original.totalIncidentDays
+    },
+    {
+      id: 'extra_hours',
+      header: 'Horas extra',
+      cell: ({ row }) => row.original.extraWorkHours.toFixed(2)
+    }
+  ]
+})
 </script>
 
 <template>
-<UCard class="p-6">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-    <!-- Incidencia -->
-    <UFormField label="Incidencia">
-      <USelect
-        class="w-full"
-        :items="incidentTypeStore.incidentTypes"
-        value-key="code"
-        label-key="description"
-        v-model="formData.code"
-      />
-    </UFormField>
-
-    <!-- Días -->
-    <UFormField label="Días">
-      <UInput type="number" class="w-full" />
-    </UFormField>
-
-    <!-- Trabajo Extraordinario -->
-    <UFormField label="Trabajo Extraordinario" class="md:col-span-2">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <UInput placeholder="Horas" />
-        <UInput placeholder="0.60" />
-        <UInput placeholder="1.15" />
+  <div class="flex flex-col w-full p-4">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-semibold text-lg">{{ payrollLabel }}</h3>
+      <div class="flex items-center gap-2">
+        <UButton icon="mdi:refresh" variant="ghost" @click="refresh" :loading="pending" />
+        <UButton to="/payroll" variant="ghost">Volver</UButton>
       </div>
-    </UFormField>
+    </div>
 
-    <!-- Observaciones -->
-    <UFormField label="Observaciones" class="md:col-span-2">
-      <UTextarea
-        class="w-full min-h-[120px]"
-        placeholder="Agrega observaciones adicionales…"
-             />
-    </UFormField>
+    <UAlert
+      v-if="error"
+      color="red"
+      variant="subtle"
+      title="No se pudo cargar la prenómina"
+      :description="String(error)"
+      class="mb-4"
+    />
 
-        </div>
-
-        <div class="mt-6 flex justify-end gap-3">
-        <UButton type="submit" color="primary" :loading="loading">
-         {{ loading ? 'Guardando...' : 'Registrar' }}
-        </UButton>
-
-         <UButton to="/payroll" color="neutral" variant="soft" >Cancelar
-         </UButton>
-        </div>
-
-</UCard>
-
+    <div class="border border-muted bg-muted/70 rounded-md">
+      <UTable
+        :data="data?.workers ?? []"
+        :columns="columns"
+        class="w-full h-full min-h-96"
+        :paginate="true"
+        :page-size="10"
+        sticky
+        :loading="pending"
+      />
+    </div>
+  </div>
 </template>
