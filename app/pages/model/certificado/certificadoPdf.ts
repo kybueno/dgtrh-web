@@ -13,7 +13,7 @@ export async function printCertificadoModel(worker?: WorkerDetailed | WorkerInfo
   const positionLabel =
     (worker as any)?.position?.description ||
     (worker as any)?.position?.name ||
-    ''
+    '____________________________'
 
   const docDefinition = {
     pageSize: 'A4',
@@ -30,7 +30,7 @@ export async function printCertificadoModel(worker?: WorkerDetailed | WorkerInfo
         text: [
           'Área: ',
           { text: worker ? `${areaName}\n\n` : '__________________________________________\n\n' },
-          'Nombre y Apellido: ',
+          'Nombre y Apellidos: ',
           { text: worker ? `${workerName}\n\n` : '____________________________________\n\n' },
           'No. Expediente: ',
           { text: worker ? `${recordNumber}\n\n` : '________________________________________\n\n' },
