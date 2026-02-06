@@ -4,6 +4,13 @@ import type { TableColumn } from '@nuxt/ui'
 import { UButton, UTextarea } from '#components'
 import { generatePrenomina } from '../payrollHelpers'
 
+definePageMeta({
+  title: 'Prenómina'
+})
+useHead({
+  title: 'Prenómina'
+})
+
 type PayrollWorkerSummary = {
   worker: WorkerDetailed
   incidentDaysByType: Record<number, number>
@@ -19,7 +26,7 @@ type PayrollDetailResponse = {
 }
 
 const route = useRoute()
-const payrollId = computed(() => Number(route.params.record))
+const payrollId = computed(() => Number(route.params.id))
 
 const { data, pending, error, refresh } = await useAsyncData<PayrollDetailResponse>(
   () => `payroll-${payrollId.value}`,
@@ -142,34 +149,24 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
 <template>
   <div class="flex flex-col w-full p-4">
     <div class="flex items-center justify-between mb-6">
-      <h3 class="font-semibold text-lg">{{ payrollLabel }}</h3>
+
+      <Flex>
+        <UButton to="/payroll" title="Ir a la lista de prenóminas" variant="ghost" icon="lucide:arrow-left"></UButton>
+        <h3 class="font-semibold text-lg">{{ payrollLabel }}</h3>
+      </Flex>
       <div class="flex items-center gap-2">
-        <UButton icon="lucide:refresh-cw" variant="ghost" @click="refresh" :loading="pending" />
+        <UButton icon="lucide:refresh-cw" variant="ghost" @click="() => { refresh() }" :loading="pending" />
         <UButton icon="lucide:printer" variant="ghost" color="primary" @click="handlePrint" :disabled="!data">
         </UButton>
-        <UButton to="/payroll" variant="ghost">Volver</UButton>
       </div>
     </div>
 
-    <UAlert
-      v-if="error"
-      color="red"
-      variant="subtle"
-      title="No se pudo cargar la prenómina"
-      :description="String(error)"
-      class="mb-4"
-    />
+    <UAlert v-if="error" color="error" variant="subtle" title="No se pudo cargar la prenómina"
+      :description="String(error)" class="mb-4" />
 
     <div class="border border-muted bg-muted/70 rounded-md">
-      <UTable
-        :data="data?.workers ?? []"
-        :columns="columns"
-        class="w-full h-full min-h-96"
-        :paginate="true"
-        :page-size="10"
-        sticky
-        :loading="pending"
-      />
+      <UTable :data="data?.workers ?? []" :columns="columns" class="w-full h-full min-h-96" :paginate="true"
+        :page-size="10" sticky :loading="pending" />
     </div>
   </div>
 </template>

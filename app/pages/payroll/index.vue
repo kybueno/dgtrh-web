@@ -1,9 +1,10 @@
 <script setup lang="ts">
+
 definePageMeta({
-  title: 'Prenómina'
+  title: 'Prenóminas'
 })
 useHead({
-  title: 'Prenómina'
+  title: 'Prenóminas'
 })
 
 import { h, onMounted, ref } from 'vue'
@@ -125,7 +126,7 @@ const table = useTemplateRef('table')
 <template>
   <div class="flex flex-col w-full p-4">
     <div class="flex items-center justify-between mb-6">
-      <h3 class="font-semibold text-lg">Prenómina</h3>
+      <h3 class="font-semibold text-lg">Prenóminas</h3>
       <div class="flex items-center gap-2">
         <DataViewToggle v-model="viewMode" />
         <UButton icon="mdi:refresh" variant="ghost" @click="handleReload" />

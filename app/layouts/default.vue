@@ -304,11 +304,14 @@ const groups = computed(() => [{
     <UDashboardSearch :groups="groups" />
     <UDashboardPanel>
       <template #header>
-        <UBreadcrumb :items="breadcrumbs" class="mb-2" />
         <UDashboardNavbar
-          :title="String(route.meta.title || protectedLinks.find(item => item.to === route.path)?.label || capitalizeFirstLetter(String(route.name)) || route.path)">
-          <template #leading>
-            <UDashboardSidebarCollapse />
+        :title="String(route.meta.title || protectedLinks.find(item => item.to === route.path)?.label || capitalizeFirstLetter(String(route.name)) || route.path)">
+        <template #title>
+          <UDashboardSidebarCollapse />
+          <UBreadcrumb :items="breadcrumbs" />
+          </template>
+          <template #trailing>
+            
           </template>
         </UDashboardNavbar>
       </template>
