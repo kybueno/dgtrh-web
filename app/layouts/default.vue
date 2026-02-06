@@ -216,18 +216,18 @@ onMounted(async () => {
   }
 
   toast.add({
-    title: 'We use first-party cookies to enhance your experience on our website.',
+    title: 'Usamos cookies para mejorar su experiencia en el sistema.',
     duration: 0,
     close: false,
     actions: [{
-      label: 'Accept',
+      label: 'Aceptar',
       color: 'neutral',
       variant: 'outline',
       onClick: () => {
         cookie.value = 'accepted'
       }
     }, {
-      label: 'Opt out',
+      label: 'Denegar',
       color: 'neutral',
       variant: 'ghost'
     }]
