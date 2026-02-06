@@ -10,6 +10,7 @@ import { onMounted, ref } from 'vue'
 import { UCheckbox } from '#components'
 import type { TableColumn } from '@nuxt/ui'
 import { generatePrenomina } from './payrollHelpers'
+import { page } from '#build/ui'
 
 // Import store functions and state
 import { loadWorkers, workers } from '~/stores/workerStoreC';
@@ -21,6 +22,7 @@ import { loadExtraWorks } from '~/stores/extraWorkStore'
 const email = ref('')
 const incidentTypeStore = useIncidentTypeStore()
 const viewMode = ref<'table' | 'grid'>('table')
+const sorting = ref([])
 
 // Load data
 async function handleReload() {
@@ -94,7 +96,6 @@ const table = useTemplateRef('table')
     <div class="flex items-center justify-between mb-6">
       <h3 class="font-semibold text-lg">Prenómina</h3>
       <div class="flex items-center gap-2">
-        <TableSearch v-if="viewMode === 'table'" :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
         <DataViewToggle v-model="viewMode" />
         <UButton icon="mdi:refresh" variant="ghost" @click="handleReload" />
         <UButton icon="i-lucide-plus" to="/payroll/new" variant="ghost">Añadir</UButton>
@@ -102,7 +103,26 @@ const table = useTemplateRef('table')
       </div>
     </div>
 
-    <UTable v-if="viewMode === 'table'" ref="table" :data="workers" :columns="columns" sticky class="min-h-96" />
-    <DataGrid v-else :data="workers" :columns="columns" />
+    <div class="border border-muted bg-muted/70 rounded-md">
+      <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
+        <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador" input-class="max-w-sm" />
+        <ColumnsControl :table="table" />
+      </Flex>
+      <UTable
+        v-if="viewMode === 'table'"
+        v-model:sorting="sorting"
+        ref="table"
+        :data="workers"
+        :columns="columns"
+        class="w-full h-full min-h-96"
+        :paginate="true"
+        :page-size="10"
+        sticky
+      />
+      <DataGrid v-else class="p-4" :data="workers" :columns="columns" />
+      <div v-if="viewMode === 'table'" class="flex justify-center py-4">
+        <UPagination v-model="page" :total="workers.length" :page-size="10" />
+      </div>
+    </div>
   </div>
 </template>
