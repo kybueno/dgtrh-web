@@ -121,6 +121,22 @@ async function main() {
     const { user } = await upsertWorkerUser(workerInfo, role)
     console.log(`✅ Seeded worker user: ${user.email}`)
   }
+
+  const superUserEmail = 'admin@dgtrh.local'
+  const superUser = await prisma.user.upsert({
+    where: { email: superUserEmail },
+    update: {
+      role: UserRole.system_admin,
+      workerId: null,
+    },
+    create: {
+      email: superUserEmail,
+      passwordHash,
+      role: UserRole.system_admin,
+      workerId: null,
+    },
+  })
+  console.log(`✅ Seeded system admin user: ${superUser.email}`)
 }
 
 main()

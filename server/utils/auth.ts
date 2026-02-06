@@ -1,13 +1,14 @@
 import jwt from 'jsonwebtoken'
 import { getCookie, setCookie, deleteCookie, createError } from 'h3'
 import { AUTH_COOKIE } from '#shared/constants/auth'
+import type { UserRole } from '../../prisma/generated/enums'
 
 const TOKEN_TTL_SECONDS = 60 * 60 * 24 * 7
 
 export type AuthPayload = {
   userId: string
   workerId: string | null
-  role: string
+  role: UserRole
 }
 
 function getJwtSecret() {

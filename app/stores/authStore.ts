@@ -1,8 +1,10 @@
+import type { UserRole } from '~~/prisma/generated/enums'
+
 export type LoggedUserProfile = {
   user: {
     id: string
     email: string
-    role: string
+    role: UserRole
     workerId: string | null
   } | null
   worker: WorkerInfo | null
