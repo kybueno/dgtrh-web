@@ -11,15 +11,14 @@
                     <UInput class="w-full" placeholder="Economía.." v-model="name" />
                 </UFormField>
                 <UFormField label="Jefe">
-                    <USelect class="w-full" :items="noLeaderWorkers"
+                    <SelectWorker
+                        v-model="leaderId"
+                        class="w-full"
+                        :items="noLeaderWorkers"
                         :placeholder="pending ? 'Cargando..' : noLeaderWorkers.length > 0 ? 'Seleccione el jefe del grupo' : 'No hay jefes libres'"
-                        value-key="id" label-key="first_name" v-model="leaderId"
-                        :loading="workerStore.workers.length < 1" :disabled="noLeaderWorkers.length == 0">
-                        <template #item-label="{ item }">
-                            <p>{{ getDisplayName(item) }}</p>
-                            <small v-if="item.email" class="text-muted">{{ item.email ?? item.tel }}</small>
-                        </template>
-                    </USelect>
+                        :loading="workerStore.workers.length < 1"
+                        :disabled="noLeaderWorkers.length == 0"
+                    />
                 </UFormField>
 
             </div>

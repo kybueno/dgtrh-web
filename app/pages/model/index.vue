@@ -1,3 +1,5 @@
+<template>
+</template>
 <script setup lang="ts">
 definePageMeta({
   title: 'Modelos'
@@ -5,12 +7,5 @@ definePageMeta({
 useHead({
   title: 'Modelos'
 })
+navigateTo('/model/holiday')
 </script>
-
-<template>
-        <div flex flex-col>
-    <UButton>Imprimir</UButton>
-</div>
-
-    <img src="/Picture.png" alt="Preview">
-    </template>

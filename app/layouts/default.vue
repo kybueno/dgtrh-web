@@ -153,7 +153,7 @@ const protectedLinks = [{
 
 }, {
   label: 'Modelos',
-  to: '/',
+  to: '/model/holiday',
   role: [UserRole.hr_manager, UserRole.system_admin],
   icon: 'lucide:book',
   color: 'teal',
@@ -161,7 +161,7 @@ const protectedLinks = [{
   type: 'trigger',
   children: [{
     label: 'Modelo de Vacaciones',
-    to: '/model',
+    to: '/model/holiday',
     icon:'lucide:file',
     role: [UserRole.hr_manager, UserRole.system_admin],
     exact: true,

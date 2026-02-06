@@ -1,37 +1,107 @@
 <script setup lang="ts">
+import { useWorkerStore } from '~/stores/workerStore'
+import { generateSignSheet } from './signSheetUtils'
+
+const pageTitle = 'Hojas de Firma'
 definePageMeta({
-  title: 'Hojas de Firma'
+  title: pageTitle
 })
 useHead({
-  title: 'Hojas de Firma'
+  title: pageTitle
 })
 
-import { useWorkerStore } from '~/stores/workerStore';
-import { onMounted } from 'vue';
-import { exportSignSheet, generateSignSheet } from './signSheetUtils';
-const workerStore = useWorkerStore();
+const workerStore = useWorkerStore()
+const loading = ref(false)
+const searchQuery = ref('')
+const selectedMonth = ref(new Date().toISOString().slice(0, 7))
 
-onMounted(async () => {
-  await workerStore.loadWorkers();
-});
+const filteredWorkers = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase()
+  if (!query) return workerStore.workers
+  return workerStore.workers.filter((worker) => {
+    const name = getDisplayName(worker).toLowerCase()
+    const record = String(worker.record_number ?? '').toLowerCase()
+    const email = String(worker.email ?? '').toLowerCase()
+    return name.includes(query) || record.includes(query) || email.includes(query)
+  })
+})
 
+function getSelectedMonthDate() {
+  if (!selectedMonth.value) return new Date()
+  const [year, month] = selectedMonth.value.split('-').map(Number)
+  if (!year || !month) return new Date()
+  return new Date(year, month - 1, 1)
+}
 
+function handlePrint(worker: WorkerInfo) {
+  generateSignSheet(worker, getSelectedMonthDate())
+}
 
+async function handleLoadWorkers() {
+  loading.value = true
+  await workerStore.loadWorkers()
+  loading.value = false
+}
+
+onMounted(handleLoadWorkers)
 </script>
 
 <template>
-
   <div class="p-4 space-y-4">
-    <div class="flex items-center gap-4">
-      <UButton icon="lucide:refresh-cw" @click="workerStore.loadWorkers()"></UButton>
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-lg font-semibold">{{ pageTitle }}</h3>
+        <p class="text-sm text-muted">Genera hojas de firma mensuales por trabajador.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <UButton
+          icon="lucide:refresh-cw"
+          variant="ghost"
+          @click="handleLoadWorkers"
+          :loading="loading"
+          :disabled="loading"
+        >
+          Actualizar
+        </UButton>
+      </div>
     </div>
 
-    <UCard @click="generateSignSheet(worker)" v-for="worker in workerStore.workers"
-      class="p-4 flex gap-4 cursor-pointer hover:scale-105 transition-all active:scale-100">{{
-        getDisplayName(worker) }}
+    <UCard class="bg-muted/60">
+      <div class="flex flex-wrap items-center gap-3">
+        <UInput
+          v-model="searchQuery"
+          placeholder="Buscar por nombre, expediente o correo"
+          icon="lucide:search"
+          class="min-w-72"
+        />
+        <UInput v-model="selectedMonth" type="month" class="min-w-44" />
+        <div class="text-sm text-muted">
+          {{ filteredWorkers.length }} trabajadores
+        </div>
+      </div>
     </UCard>
-    <div>
+
+    <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <USkeleton v-for="item in 6" :key="item" class="h-28" />
     </div>
 
+    <div v-else-if="filteredWorkers.length === 0">
+      <EmptyState message="No hay trabajadores para mostrar" @retry="handleLoadWorkers" />
+    </div>
+
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <UCard v-for="worker in filteredWorkers" :key="worker.id" class="hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <p class="font-semibold">{{ getDisplayName(worker) }}</p>
+            <p class="text-sm text-muted">No. Exp: {{ worker.record_number ?? '-' }}</p>
+            <p class="text-sm text-muted" v-if="worker.email">{{ worker.email }}</p>
+          </div>
+          <UButton size="sm" icon="lucide:printer" @click="handlePrint(worker)">
+            PDF
+          </UButton>
+        </div>
+      </UCard>
+    </div>
   </div>
 </template>
