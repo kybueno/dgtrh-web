@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { fetchWorkersBasic } from '~/stores/workerStoreC'
-
 type FilterFn = (worker: WorkerInfo) => boolean
 
 const props = withDefaults(defineProps<{
@@ -25,10 +23,12 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string | number | null): void
 }>()
 
-const { data, pending } = await useAsyncData('workers-basic', fetchWorkersBasic)
+const { data, pending } = await useAsyncData('workers-basic', () =>
+  $fetch<WorkerInfo[]>('/api/workers')
+)
 
 const resolvedItems = computed<WorkerInfo[]>(() => {
-  const source = props.items ?? data.value?.data ?? []
+  const source = props.items ?? data.value ?? []
   if (typeof props.filterFn === 'function') {
     return source.filter(props.filterFn)
   }
