@@ -40,11 +40,10 @@ function toDateKey(value?: string | Date | null) {
   return date.toISOString().split('T')[0]
 }
 
-const workerOptions = computed(() =>
+const workerItems = computed(() =>
   (data.value ?? [])
     .map((item) => item.worker)
     .filter((worker): worker is WorkerDetailed => !!worker)
-    .map((worker) => ({ value: worker.id, label: getDisplayName(worker) }))
 )
 
 const groupOptions = computed(() =>
@@ -142,7 +141,7 @@ const table = useTemplateRef('table')
     <div class="border border-muted bg-muted/70 rounded-md">
       <Flex v-if="viewMode === 'table'" class="pt-2 px-2 flex-wrap gap-2 justify-between">
         <Flex class="gap-2 flex-wrap">
-          <ClearableSelect v-model="selectedWorkerId" :items="workerOptions" placeholder="Filtrar trabajador" class="min-w-56" />
+          <SelectWorker v-model="selectedWorkerId" :items="workerItems" placeholder="Filtrar trabajador" class="min-w-56" />
           <ClearableSelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar área" class="min-w-44" />
           <ClearableSelect v-model="selectedType" :items="typeOptions" placeholder="Filtrar tipo" class="min-w-44" />
           <UInput v-model="dateFrom" type="date" placeholder="Desde" />
