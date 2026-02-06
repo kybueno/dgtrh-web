@@ -33,8 +33,10 @@ const { data, pending, error, refresh } = await useAsyncData<PayrollDetailRespon
   () => $fetch(`/api/payroll/${payrollId.value}`)
 )
 
+const toast = useToast()
 const observationDrafts = ref<Record<string, string>>({})
 const observationSaving = ref<Record<string, boolean>>({})
+const observationStatus = ref<Record<string, 'saved' | 'error' | null>>({})
 
 watch(
   () => data.value?.workers,
@@ -66,6 +68,18 @@ const saveObservation = async (workerId: string) => {
     if (workerEntry) {
       workerEntry.observation = notes.length ? notes : null
     }
+    observationStatus.value[workerId] = 'saved'
+    setTimeout(() => {
+      if (observationStatus.value[workerId] === 'saved') {
+        observationStatus.value[workerId] = null
+      }
+    }, 2000)
+  } catch (err) {
+    observationStatus.value[workerId] = 'error'
+    toast.add({
+      title: 'No se pudo guardar la observación',
+      color: 'red'
+    })
   } finally {
     observationSaving.value[workerId] = false
   }
@@ -138,7 +152,12 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
             color: 'primary',
             loading: observationSaving.value[workerId] ?? false,
             onClick: () => saveObservation(workerId)
-          })
+          }),
+          observationStatus.value[workerId] === 'saved'
+            ? h('span', { class: 'text-xs text-green-600' }, 'Guardado')
+            : observationStatus.value[workerId] === 'error'
+              ? h('span', { class: 'text-xs text-red-600' }, 'Error')
+              : null
         ])
       }
     }
