@@ -4,14 +4,11 @@ import { requireUser } from '../../utils/auth'
 export default defineEventHandler(async (event) => {
   requireUser(event)
 
+  const vacationCodes = [12, 36]
+
   return prisma.incident.findMany({
     where: {
-      incident_type: {
-        OR: [
-          { name: { contains: 'vacacion', mode: 'insensitive' } },
-          { description: { contains: 'vacacion', mode: 'insensitive' } }
-        ]
-      }
+      incident_code: { in: vacationCodes }
     },
     include: {
       worker: {
