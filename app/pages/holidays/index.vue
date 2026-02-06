@@ -9,6 +9,7 @@ useHead({
 import { useWorkerStore } from '~/stores/workerStore'
 import { UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
+import { page } from '#build/ui'
 
 
 onMounted(() =>loadHolidays())
@@ -16,6 +17,7 @@ onMounted(() =>loadHolidays())
 onMounted(() =>loadWorkers())
 
 const viewMode = ref<'table' | 'grid'>('table')
+const sorting = ref([])
 
 const columns: TableColumn<HolidaysInfo>[] = [
   {
@@ -85,13 +87,31 @@ const table = useTemplateRef('table')
 	  <div class="flex items-center justify-between mb-6">
         <h3 class="font-semibold text-lg">Registro de Vacaciones</h3>
         <div class="flex items-center gap-2">
-          <TableSearch v-if="viewMode === 'table'" :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
           <DataViewToggle v-model="viewMode" />
           <UButton icon="mdi:refresh" variant="ghost" @click="loadHolidays()" />
           <UButton icon="i-lucide-plus" to="holidays/new" variant="ghost">Añadir</UButton>
         </div>
       </div>
-      <UTable v-if="viewMode === 'table'" ref="table" :data="workers" class="flex-1" :columns="columns"/>
-      <DataGrid v-else :data="workers" :columns="columns" />
+      <div class="border border-muted bg-muted/70 rounded-md">
+        <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
+          <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador" input-class="max-w-sm" />
+          <ColumnsControl :table="table" />
+        </Flex>
+        <UTable
+          v-if="viewMode === 'table'"
+          v-model:sorting="sorting"
+          ref="table"
+          :data="workers"
+          class="flex-1 w-full h-full"
+          :columns="columns"
+          :paginate="true"
+          :page-size="10"
+          sticky
+        />
+        <DataGrid v-else class="p-4" :data="workers" :columns="columns" />
+        <div v-if="viewMode === 'table'" class="flex justify-center py-4">
+          <UPagination v-model="page" :total="workers.length" :page-size="10" />
+        </div>
+      </div>
     </div>
 </template>
