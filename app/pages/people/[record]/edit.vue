@@ -18,8 +18,10 @@
 const route = useRoute();
 const router = useRouter();
 
+import type { Prisma } from '~/prisma/generated/browser'
+
 const loading = ref(true);
-const worker = ref<Tables<'workers'> | null>(null);
+const worker = ref<WorkerDetailed | null>(null);
 
 definePageMeta({
   title: 'Actualizar datos del trabajador'
@@ -49,7 +51,7 @@ onMounted(async () => {
   }
 });
 
-async function handleUpdateWorker(newWorkerData: TablesUpdate<'workers'>) {
+async function handleUpdateWorker(newWorkerData: Prisma.WorkerUpdateInput) {
   if (!worker.value?.id) return;
   
   try {

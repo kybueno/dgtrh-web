@@ -1,3 +1,5 @@
+import type { Prisma } from '~/prisma/generated/browser'
+
 async function wrapFetch<T>(promise: Promise<T>) {
   try {
     const data = await promise
@@ -7,7 +9,7 @@ async function wrapFetch<T>(promise: Promise<T>) {
   }
 }
 
-export async function createExtraWork(newExtraWorkData: TablesInsert<'extra_work'>) {
+export async function createExtraWork(newExtraWorkData: Prisma.ExtraWorkCreateInput) {
   const response = await wrapFetch(
     $fetch('/api/extra-work', {
       method: 'POST',
@@ -35,7 +37,7 @@ export async function loadExtraWorksByWorkerId(workerId: string) {
   )
 }
 
-export async function updateExtraWork(updatedExtraWorkData: TablesUpdate<'extra_work'>) {
+export async function updateExtraWork(updatedExtraWorkData: Prisma.ExtraWorkUpdateInput & { id: string }) {
   const response = await wrapFetch(
     $fetch(`/api/extra-work/${updatedExtraWorkData.id}`, {
       method: 'PUT',

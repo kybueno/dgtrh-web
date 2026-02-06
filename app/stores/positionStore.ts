@@ -1,7 +1,9 @@
+import type { Position, Prisma } from '~/prisma/generated/browser'
+
 export const positions = ref<PositionInfo[]>([])
 
 export const positionsPending = ref(false)
-export interface PositionInfo extends Tables<'positions'> {}
+export type PositionInfo = Position
 
 async function wrapFetch<T>(promise: Promise<T>) {
   try {
@@ -23,7 +25,7 @@ export async function loadPositions() {
   return response
 }
 
-export async function addPosition(newPositionData: TablesInsert<'positions'>) {
+export async function addPosition(newPositionData: Prisma.PositionCreateInput) {
 
   
   const response = await wrapFetch(

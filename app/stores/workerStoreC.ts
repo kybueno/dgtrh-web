@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import type { Prisma } from '~/prisma/generated/browser'
 
 type WorkerStatus = 'active' | 'terminated' | 'inactive'
 
@@ -82,7 +83,7 @@ export async function fetchWorkersBasic() {
 export async function fetchWorkersDetailed() {
   return wrapFetch($fetch<WorkerDetailed[]>('/api/workers?detailed=true'))
 }
-export async function queryWorkerCreate(newWorkerData: TablesInsert<'workers'>) {
+export async function queryWorkerCreate(newWorkerData: Prisma.WorkerCreateInput) {
   return wrapFetch(
     $fetch<WorkerDetailed>('/api/workers', {
       method: 'POST',
@@ -91,7 +92,7 @@ export async function queryWorkerCreate(newWorkerData: TablesInsert<'workers'>) 
   )
 }
 
-export async function createWorker(newWorkerData: TablesInsert<'workers'>) {
+export async function createWorker(newWorkerData: Prisma.WorkerCreateInput) {
   const response = await queryWorkerCreate(newWorkerData)
 
   const { data, error } = response
@@ -126,7 +127,7 @@ export async function loadWorkers() {
 
 export async function updateWorker(
   id: string,
-  updatedWorkerData: TablesUpdate<'workers'>
+  updatedWorkerData: Prisma.WorkerUpdateInput
 ) {
   const response = await wrapFetch(
     $fetch<WorkerDetailed>(`/api/workers/${id}`, {

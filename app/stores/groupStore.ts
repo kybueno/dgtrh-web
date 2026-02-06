@@ -1,5 +1,7 @@
+import type { Group, Prisma } from '~/prisma/generated/browser'
+
 // tipo que define la info del grupo, su ljefe y miembros en un mismo objeto
-export interface WorkGroupInfo extends Tables<'groups'> {
+export interface WorkGroupInfo extends Group {
   leader: WorkerInfo
   workers: WorkerInfo[]
 }
@@ -16,7 +18,7 @@ async function wrapFetch<T>(promise: Promise<T>) {
   }
 }
 
-export async function addGroup(newWorkGroupData: TablesInsert<'groups'>) {
+export async function addGroup(newWorkGroupData: Prisma.GroupCreateInput) {
   const response = await wrapFetch(
     $fetch<WorkGroupInfo>('/api/groups', {
       method: 'POST',
