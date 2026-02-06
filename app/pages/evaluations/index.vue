@@ -224,19 +224,20 @@
     </div>
 
     <!-- Valoración cualitativa -->
-    <strong>6. Valoración cualitativa del proceso</strong>
-    <label
-      >6.1. Principales problemas o irregularidades presentadas.
+    <strong>6. Valoración cualitativa del proceso</strong><br>
+
+    <label>6.1. Principales problemas o irregularidades presentadas.
       <UTextarea />
-    </label>
+    </label><br>
 
     <label>
       6.2. Aspectos positivos y negativos del proceso.
       <UTextarea v-model="form.valoracion" />
     </label>
 
-    <p>Por:<UInput /> Director de Gestión Tecnológica</p>
-
+    <div class="p-4 mt-8"> 
+    <p>Por: {{ getDirectorName() }} Director de Gestión Tecnológica</p>
+    </div>
     <!-- Generar PDF -->
     <div class="mt-8 flex justify-end">
       <UButton color="primary" @click="handlePrint">Imprimir</UButton>
@@ -258,6 +259,21 @@ import {
 } from "./perfomanceEvaluations";
 
 const workerStore = useWorkerStore();
+const director = ref<WorkerInfo | null>(null);
+
+// Fetch director when component is mounted
+onMounted(async () => {
+  await workerStore.loadWorkers();
+  // Find the director by role
+  director.value = workerStore.workers.find(
+    (worker) => worker.position_code == 12
+  ) || null;
+});
+
+const getDirectorName = () => {
+  if (!director.value) return '';
+  return `${director.value.first_name} ${director.value.last_name} ${director.value.second_last_name || ''}`.trim();
+};
 
 const form = ref<PerformanceEvaluationReportOpts>({
   acciones: "",

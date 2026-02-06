@@ -66,14 +66,6 @@ const protectedLinks = [{
         open.value = false
       }
     }, {
-      label: 'Anexo 14',
-      icon: 'lucide:file',
-      to: '/positions',
-      role: [UserRole.hr_manager, UserRole.system_admin],
-      onSelect: () => {
-        open.value = false
-      }
-    }, {
       label: 'Anexo 14-B',
       icon: 'lucide:file',
       to: '/people/14-B',
@@ -93,6 +85,7 @@ const protectedLinks = [{
   type: 'trigger',
   children: [{
     label: 'Trabajadores',
+    icon:"lucide:file-user",
     to: '/people',
     role: [UserRole.hr_manager, UserRole.system_admin, UserRole.director],
     exact: true,
@@ -101,14 +94,24 @@ const protectedLinks = [{
     }
   }, {
     label: 'Grupos de trabajo',
+    icon: 'lucide:users',
     to: '/groups',
     role: [UserRole.hr_manager, UserRole.system_admin],
     onSelect: () => {
       open.value = false
     }
   }, {
+      label: 'Cargos',
+      icon: 'lucide:user-round',
+      to: '/positions',
+      role: [UserRole.hr_manager, UserRole.system_admin],
+      onSelect: () => {
+        open.value = false
+      }
+    }, {
     label: 'Evaluación de desempeño',
     to: '/evaluations',
+    icon:"lucide:file",
     role: [UserRole.director, UserRole.system_admin, UserRole.hr_manager],
     onSelect: () => {
       open.value = false
@@ -116,6 +119,7 @@ const protectedLinks = [{
   }, {
     label: 'Organizaciones',
     to: '/organizations',
+    icon:'lucide:file',
     role: [UserRole.hr_manager, UserRole.system_admin],
     onSelect: () => {
       open.value = false
@@ -125,13 +129,14 @@ const protectedLinks = [{
   label: 'Reportes',
   to: '/',
   role: [UserRole.hr_manager, UserRole.system_admin],
-  icon: 'lucide:file',
+  icon: 'lucide:book',
   color: "amber",
   defaultOpen: true,
   type: 'trigger',
   children: [{
     label: 'Hojas de Firma',
     to: '/signsheets',
+    icon:'lucide:file',
     role: [UserRole.hr_manager, UserRole.system_admin],
     onSelect: () => {
       open.value = false
@@ -139,6 +144,7 @@ const protectedLinks = [{
   }, {
     label: 'Vacaciones',
     to: '/holidays',
+    icon:'lucide:calendar-clock',
     role: [UserRole.hr_manager, UserRole.system_admin],
     onSelect: () => {
       open.value = false
@@ -149,13 +155,14 @@ const protectedLinks = [{
   label: 'Modelos',
   to: '/',
   role: [UserRole.hr_manager, UserRole.system_admin],
-  icon: 'lucide:users',
+  icon: 'lucide:book',
   color: 'teal',
   defaultOpen: true,
   type: 'trigger',
   children: [{
     label: 'Modelo de Vacaciones',
     to: '/model',
+    icon:'lucide:file',
     role: [UserRole.hr_manager, UserRole.system_admin],
     exact: true,
     onSelect: () => {
@@ -164,6 +171,7 @@ const protectedLinks = [{
   }, {
     label: 'Modelo de certificado',
     to: '/model/certificado',
+    icon:'lucide:file',
     role: [UserRole.hr_manager, UserRole.system_admin],
     exact: true,
     onSelect: () => {
