@@ -67,14 +67,18 @@ export const exportSignSheet = (
   };
   usePDFMake().createPdf(signSheetDocumentDefinition).open();
 };
-export function generateSignSheet(worker: WorkerInfo, date: Date = new Date()) {
+export function generateSignSheet(worker: WorkerDetailed, date: Date = new Date()) {
   usePDFMake().createPdf(getSignSheetDefinition(worker, date)).open();
 }
-const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
+const getSignSheetDefinition = (worker: WorkerDetailed, date = new Date()) => {
   const monthName = date
     .toLocaleDateString("es-ES", { month: "long" })
     .toUpperCase();
   const year = date.getFullYear();
+  const areaLabel =
+    worker.group?.name ||
+    worker.leaderAtGroup?.name ||
+    ""
 
   // Column widths matching the original HTML structure
   const columnWidths = [
@@ -206,7 +210,7 @@ const getSignSheetDefinition = (worker: WorkerInfo, date = new Date()) => {
             ],
             [
               {
-                text: `Área: ${worker.group_id} `,
+                text: `Área: ${areaLabel}`,
                 style: "orgInfo",
                 border: [true, false, true, true],
               },

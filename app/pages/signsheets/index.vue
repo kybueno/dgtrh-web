@@ -13,7 +13,7 @@ useHead({
 const workerStore = useWorkerStore()
 const loading = ref(false)
 const searchQuery = ref('')
-const selectedMonth = ref(new Date().toISOString().slice(0, 7))
+const selectedDate = ref(new Date().toISOString().slice(0, 10))
 
 const filteredWorkers = computed(() => {
   const query = searchQuery.value.trim().toLowerCase()
@@ -27,13 +27,13 @@ const filteredWorkers = computed(() => {
 })
 
 function getSelectedMonthDate() {
-  if (!selectedMonth.value) return new Date()
-  const [year, month] = selectedMonth.value.split('-').map(Number)
-  if (!year || !month) return new Date()
-  return new Date(year, month - 1, 1)
+  if (!selectedDate.value) return new Date()
+  const parsed = new Date(selectedDate.value)
+  if (Number.isNaN(parsed.getTime())) return new Date()
+  return new Date(parsed.getFullYear(), parsed.getMonth(), 1)
 }
 
-function handlePrint(worker: WorkerInfo) {
+function handlePrint(worker: WorkerDetailed) {
   generateSignSheet(worker, getSelectedMonthDate())
 }
 
@@ -74,7 +74,9 @@ onMounted(handleLoadWorkers)
           icon="lucide:search"
           class="min-w-72"
         />
-        <UInput v-model="selectedMonth" type="month" class="min-w-44" />
+        <UFormField label="Mes" class="min-w-44">
+          <UInput v-model="selectedDate" type="date" />
+        </UFormField>
         <div class="text-sm text-muted">
           {{ filteredWorkers.length }} trabajadores
         </div>
