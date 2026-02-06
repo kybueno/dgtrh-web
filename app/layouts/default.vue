@@ -219,6 +219,14 @@ onMounted(async () => {
 })
 
 const loggedUser = computed(() => authStore.loggedUserProfile.value?.user)
+const { roleOverride, isDev } = useRoleOverride()
+
+const effectiveRole = computed(() => {
+  if (isDev && roleOverride.value) {
+    return roleOverride.value
+  }
+  return loggedUser.value?.role
+})
 const filterNavItemsByRole = (items: NavigationMenuItem[], role?: UserRole) => {
   return items.reduce<NavigationMenuItem[]>((acc, item) => {
     const children = item.children
@@ -242,7 +250,7 @@ const filterNavItemsByRole = (items: NavigationMenuItem[], role?: UserRole) => {
 }
 
 const filteredProtectedLinks = computed(() => {
-  return filterNavItemsByRole(protectedLinks, loggedUser.value?.role)
+  return filterNavItemsByRole(protectedLinks, effectiveRole.value)
 })
 
 const groups = computed(() => [{
@@ -289,6 +297,7 @@ const groups = computed(() => [{
       </template>
 
       <template #footer="{ collapsed }">
+        <DevRoleSwitcher v-if="isDev" :collapsed="collapsed" />
         <UserMenu :collapsed="collapsed" />
       </template>
     </UDashboardSidebar>
