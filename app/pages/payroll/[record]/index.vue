@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { h, watch } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
+import { UButton, UTextarea } from '#components'
 import { generatePrenomina } from '../payrollHelpers'
 
 type PayrollWorkerSummary = {
@@ -23,6 +25,44 @@ const { data, pending, error, refresh } = await useAsyncData<PayrollDetailRespon
   () => `payroll-${payrollId.value}`,
   () => $fetch(`/api/payroll/${payrollId.value}`)
 )
+
+const observationDrafts = ref<Record<string, string>>({})
+const observationSaving = ref<Record<string, boolean>>({})
+
+watch(
+  () => data.value?.workers,
+  (workers) => {
+    if (!workers) return
+    const nextDrafts: Record<string, string> = { ...observationDrafts.value }
+    for (const entry of workers) {
+      if (nextDrafts[entry.worker.id] === undefined) {
+        nextDrafts[entry.worker.id] = entry.observation ?? ''
+      }
+    }
+    observationDrafts.value = nextDrafts
+  },
+  { immediate: true }
+)
+
+const saveObservation = async (workerId: string) => {
+  if (observationSaving.value[workerId]) return
+  observationSaving.value[workerId] = true
+
+  const notes = (observationDrafts.value[workerId] ?? '').trim()
+  try {
+    await $fetch(`/api/payroll/${payrollId.value}/observations`, {
+      method: 'PUT',
+      body: { workerId, notes }
+    })
+
+    const workerEntry = data.value?.workers.find((entry) => entry.worker.id === workerId)
+    if (workerEntry) {
+      workerEntry.observation = notes.length ? notes : null
+    }
+  } finally {
+    observationSaving.value[workerId] = false
+  }
+}
 
 const handlePrint = () => {
   if (!data.value) return
@@ -69,6 +109,31 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
       id: 'extra_hours',
       header: 'Horas extra',
       cell: ({ row }) => row.original.extraWorkHours.toFixed(2)
+    },
+    {
+      id: 'observation',
+      header: 'Observaciones',
+      cell: ({ row }) => {
+        const workerId = row.original.worker.id
+        return h('div', { class: 'flex flex-col gap-2' }, [
+          h(UTextarea, {
+            modelValue: observationDrafts.value[workerId] ?? '',
+            rows: 2,
+            class: 'min-w-[220px]',
+            'onUpdate:modelValue': (value: string) => {
+              observationDrafts.value[workerId] = value
+            }
+          }),
+          h(UButton, {
+            label: 'Guardar',
+            size: 'xs',
+            variant: 'soft',
+            color: 'primary',
+            loading: observationSaving.value[workerId] ?? false,
+            onClick: () => saveObservation(workerId)
+          })
+        ])
+      }
     }
   ]
 })
@@ -79,9 +144,8 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
     <div class="flex items-center justify-between mb-6">
       <h3 class="font-semibold text-lg">{{ payrollLabel }}</h3>
       <div class="flex items-center gap-2">
-        <UButton icon="mdi:refresh" variant="ghost" @click="refresh" :loading="pending" />
-        <UButton icon="lucide:printer" variant="subtle" color="neutral" @click="handlePrint" :disabled="!data">
-          Imprimir
+        <UButton icon="lucide:refresh-cw" variant="ghost" @click="refresh" :loading="pending" />
+        <UButton icon="lucide:printer" variant="ghost" color="primary" @click="handlePrint" :disabled="!data">
         </UButton>
         <UButton to="/payroll" variant="ghost">Volver</UButton>
       </div>
