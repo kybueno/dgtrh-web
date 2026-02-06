@@ -42,6 +42,10 @@ function sanitizeRecordNumber(value: string) {
     return value.toUpperCase().replace(/[^A-Z0-9-]/g, '')
 }
 
+function sanitizeCi(value: string) {
+    return value.replace(/\D/g, '').slice(0, 11)
+}
+
 function handleSubmit() {
     const ciError = getCiError(formData.value.ci)
     const emailError = getEmailError(formData.value.email)
@@ -96,8 +100,14 @@ onMounted(() => {
 
                 <!-- CI -->
                 <UFormField label="Carnet de Identidad *" class="col-span-1">
-                    <UInput v-model="formData.ci" required maxlength="11" minlength="11" pattern="\\d{11}"
-                        inputmode="numeric" autocomplete="off" />
+                    <UInput
+                        :model-value="formData.ci"
+                        @update:model-value="(value) => (formData.ci = sanitizeCi(value || ''))"
+                        required
+                        maxlength="11"
+                        inputmode="numeric"
+                        autocomplete="off"
+                    />
                 </UFormField>
 
                 <!-- Número expediente -->
