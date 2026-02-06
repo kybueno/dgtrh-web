@@ -301,7 +301,7 @@ const groups = computed(() => [{
       :ui="{ footer: 'lg:border-t lg:border-default' }">
       <template #header="{ collapsed }">
         <div class="flex items-center gap-6">
-          <UAvatar class="bg-primary-50 text-primary-900">
+          <UAvatar class="bg-primary-100 text-primary-900">
             <UIcon name="game-icons:abstract-042" />
           </UAvatar>
           <h1 v-if="!collapsed" class="tracking-wider font-black">DGTRH</h1>
@@ -320,8 +320,10 @@ const groups = computed(() => [{
       </template>
 
       <template #footer="{ collapsed }">
-        <DevRoleSwitcher v-if="isDev" :collapsed="collapsed" />
-        <UserMenu :collapsed="collapsed" />
+        <div class="w-full">
+          <DevRoleSwitcher v-if="isDev" :collapsed="collapsed" />
+          <UserMenu :collapsed="collapsed" />
+        </div>
       </template>
     </UDashboardSidebar>
 

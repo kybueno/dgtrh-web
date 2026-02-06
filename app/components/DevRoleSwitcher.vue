@@ -42,32 +42,28 @@ const resetToActual = () => {
 </script>
 
 <template>
-  <div v-if="isDev" class="mt-4 border-t border-default pt-4">
-    <div class="text-xs font-semibold uppercase text-muted mb-2" v-if="!collapsed">
-      Dev Role
+  <div v-if="isDev" >
+    <div class="text-xs text-muted mb-2" v-if="!collapsed">
+      Dev only role control
     </div>
-    <div class="flex flex-col gap-2">
+    <Flex>
+      <UButton
+        v-if="!collapsed"
+        size="xs"
+        color="neutral"
+        variant="ghost"
+        icon="lucide:rotate-ccw"
+        @click="resetToActual"
+      />
       <select
         v-model="uiSelectedRole"
-        class="w-full rounded-md border border-default bg-transparent px-3 py-2 text-sm"
+        class="flex-1 rounded-md border border-default bg-transparent ps-2 text-xs"
       >
         <option value="">Use actual role</option>
         <option v-for="option in roleOptions" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
-      <div class="text-xs text-muted" v-if="!collapsed">
-        Actual: <span class="font-medium">{{ effectiveRole ?? 'none' }}</span>
-      </div>
-      <UButton
-        v-if="!collapsed"
-        size="xs"
-        color="neutral"
-        variant="ghost"
-        @click="resetToActual"
-      >
-        Reset to actual
-      </UButton>
-    </div>
+    </Flex>
   </div>
 </template>
