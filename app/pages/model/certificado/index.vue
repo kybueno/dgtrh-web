@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { printCertificadoModel } from './certificadoPdf'
+import { useWorkerStore } from '~/stores/workerStore'
 
 const pageTitle = 'Modelo de Certificado'
 definePageMeta({
@@ -8,20 +9,66 @@ definePageMeta({
 useHead({
   title: pageTitle
 })
+
+const workerStore = useWorkerStore()
+const selectedWorkerId = ref<string | null>(null)
+const loadingWorkers = ref(false)
+
+const selectedWorker = computed(() =>
+  workerStore.workers.find((worker) => worker.id === selectedWorkerId.value) || null
+)
+
+async function loadWorkers() {
+  loadingWorkers.value = true
+  await workerStore.loadWorkers()
+  loadingWorkers.value = false
+}
+
+function handlePrintBlank() {
+  printCertificadoModel()
+}
+
+function handlePrintFilled() {
+  if (!selectedWorker.value) return
+  printCertificadoModel(selectedWorker.value)
+}
+
+onMounted(loadWorkers)
 </script>
 
 <template>
   <Stack class="flex-col gap-4 p-4">
-    <stack-h class="justify-between">
-      <h3 class="text-lg font-semibold">{{ pageTitle }}</h3>
-      <UButton variant="subtle" icon="lucide:printer" @click="printCertificadoModel">Imprimir</UButton>
-    </stack-h>
+    <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+      <div />
+      <h3 class="text-base font-semibold text-center tracking-wide">{{ pageTitle.toUpperCase() }}</h3>
+      <div class="flex justify-end gap-2">
+        <UButton variant="subtle" icon="lucide:printer" @click="handlePrintBlank">Imprimir en blanco</UButton>
+        <UButton
+          variant="solid"
+          icon="lucide:file-check"
+          :disabled="!selectedWorker"
+          @click="handlePrintFilled"
+        >
+          Imprimir con datos
+        </UButton>
+      </div>
+    </div>
 
     <separator leading="Modelo de certificado" />
 
     <div class="m-auto w-full max-w-3xl rounded-lg border border-muted bg-muted/40 p-6">
-      <div class="flex justify-center">
-        <img src="/uci-logo-row.png" alt="UCI" class="h-10" />
+      <div class="flex justify-start">
+        <img src="/uci-logo-row.png" alt="UCI" class="h-8" />
+      </div>
+      <div class="mt-6">
+        <UFormField label="Trabajador" class="max-w-md">
+          <SelectWorker
+            v-model="selectedWorkerId"
+            :items="workerStore.workers"
+            :loading="loadingWorkers"
+            placeholder="Seleccione un trabajador"
+          />
+        </UFormField>
       </div>
       <div class="mt-6 space-y-4 text-sm">
         <p><strong>Área</strong> ________________________________________________</p>

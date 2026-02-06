@@ -1,28 +1,42 @@
 import { getImageDataUrl } from '~/lib/documents-generation/pdfmake'
 
-export async function printCertificadoModel() {
+const DEFAULT_AREA = 'Dirección de Gestión Tecnológica'
+
+export async function printCertificadoModel(worker?: WorkerDetailed | WorkerInfo | null) {
   const logoData = await getImageDataUrl('/uci-logo-row.png')
+  const areaName =
+    worker?.group?.name ||
+    worker?.leaderAtGroup?.name ||
+    DEFAULT_AREA
+  const workerName = worker ? getDisplayName(worker as any) : ''
+  const recordNumber = worker?.record_number ?? ''
+  const positionLabel =
+    (worker as any)?.position?.description ||
+    (worker as any)?.position?.name ||
+    (worker as any)?.position_code ||
+    ''
+
   const docDefinition = {
     pageSize: 'A4',
     pageMargins: [32, 32, 32, 32],
     content: [
       {
         image: logoData,
-        width: 240,
-        alignment: 'center',
-        margin: [0, 0, 0, 16]
+        width: 160,
+        alignment: 'left',
+        margin: [0, 0, 0, 12]
       },
       { text: 'MODELO DE CERTIFICADO', style: 'title', alignment: 'center' },
       {
         text: [
           'Área: ',
-          { text: '__________________________________________\n\n' },
+          { text: worker ? `${areaName}\n\n` : '__________________________________________\n\n' },
           'Nombre y Apellido: ',
-          { text: '____________________________________\n\n' },
+          { text: worker ? `${workerName}\n\n` : '____________________________________\n\n' },
           'No. Expediente: ',
-          { text: '________________________________________\n\n' },
+          { text: worker ? `${recordNumber}\n\n` : '________________________________________\n\n' },
           'Cargo: ',
-          { text: '_______________________________________________\n\n' },
+          { text: worker ? `${positionLabel}\n\n` : '_______________________________________________\n\n' },
           'Fecha de Solicitud: ',
           { text: '___________________________________\n\n' },
           'Desde: ',
@@ -40,7 +54,7 @@ export async function printCertificadoModel() {
       }
     ],
     styles: {
-      title: { fontSize: 14, bold: true, margin: [0, 0, 0, 18] },
+      title: { fontSize: 12, bold: true, margin: [0, 0, 0, 14] },
       body: { fontSize: 11, lineHeight: 1.35 }
     }
   }

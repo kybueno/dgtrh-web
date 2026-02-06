@@ -16,7 +16,7 @@
                         class="w-full"
                         :items="noLeaderWorkers"
                         :placeholder="pending ? 'Cargando..' : noLeaderWorkers.length > 0 ? 'Seleccione el jefe del grupo' : 'No hay jefes libres'"
-                        :loading="workerStore.workers.length < 1"
+                        :loading="loadingWorkers"
                         :disabled="noLeaderWorkers.length == 0"
                     />
                 </UFormField>
@@ -52,6 +52,7 @@ import { useWorkerStore } from '~/stores/workerStore'
 const toast = useToast()
 
 const workerStore = useWorkerStore()
+const loadingWorkers = ref(false)
 
 const noLeaderWorkers = computed<WorkerInfo[]>(() => {
     const leadersIds = workGroups.value.map((group) => group.leader.id)
@@ -94,8 +95,14 @@ async function handleAddGroup() {
 }
 
 
-onMounted(workerStore.loadWorkers)
-onMounted(loadGroups)
+async function loadInitialData() {
+    loadingWorkers.value = true
+    await workerStore.loadWorkers()
+    loadingWorkers.value = false
+    loadGroups()
+}
+
+onMounted(loadInitialData)
 
 
 
