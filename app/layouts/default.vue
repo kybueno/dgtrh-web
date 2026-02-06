@@ -230,23 +230,47 @@ const filteredProtectedLinks = computed(() => {
   return filterNavItemsByRole(protectedLinks, effectiveRole.value)
 })
 
+const flattenNavItems = (items: NavigationMenuItem[]) => {
+  return items.reduce<NavigationMenuItem[]>((acc, item) => {
+    acc.push(item)
+    if (item.children?.length) {
+      acc.push(...flattenNavItems(item.children))
+    }
+    return acc
+  }, [])
+}
+
 const breadcrumbs = computed(() => {
+  const hiddenSegments = new Set(['auth'])
   const segments = route.path.split('/').filter(Boolean)
   if (segments.length === 0) {
     return [{ label: 'Inicio', to: '/dashboard' }]
   }
 
+  const navItems = flattenNavItems(protectedLinks)
+  const navLabels = new Map<string, string>()
+  navItems.forEach((item) => {
+    if (typeof item.to === 'string') {
+      navLabels.set(item.to, item.label)
+    }
+  })
+
   const items = [{ label: 'Inicio', to: '/dashboard' }]
   let currentPath = ''
   segments.forEach((segment, index) => {
     currentPath += `/${segment}`
-    const label = segment.replace(/-/g, ' ')
-    items.push({
-      label: index === segments.length - 1 && route.meta.title
-        ? String(route.meta.title)
-        : label,
-      to: currentPath
-    })
+    if (hiddenSegments.has(segment)) {
+      return
+    }
+
+    const isLast = index === segments.length - 1
+    const labelFromNav = navLabels.get(currentPath)
+    const fallbackLabel = /^[0-9]+$/.test(segment) ? `#${segment}` : segment.replace(/-/g, ' ')
+    const label = isLast && route.meta.title
+      ? String(route.meta.title)
+      : (labelFromNav ?? fallbackLabel)
+
+    items.push({ label, to: currentPath })
   })
 
   return items
