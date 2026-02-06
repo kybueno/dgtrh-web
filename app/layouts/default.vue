@@ -290,7 +290,6 @@ const groups = computed(() => [{
         </UDashboardNavbar>
       </template>
       <template #body>
-        {{ authStore.loggedUserProfile }}
         <NuxtPage />
       </template>
     </UDashboardPanel>
