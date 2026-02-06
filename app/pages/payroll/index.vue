@@ -206,11 +206,11 @@ const table = useTemplateRef('table')
     <div class="border border-muted bg-muted/70 rounded-md">
       <Flex v-if="viewMode === 'table'" class="pt-2 px-2 flex-wrap gap-2 justify-between">
         <Flex class="gap-2 flex-wrap">
-          <USelect v-model="selectedMonth" :items="monthOptions" placeholder="Mes" class="min-w-36" clearable />
-          <USelect v-model="selectedYear" :items="yearOptions" placeholder="Año" class="min-w-28" clearable />
-          <USelect v-model="selectedStatus" :items="statusOptions" placeholder="Estado" class="min-w-40" clearable />
-          <USelect v-model="selectedCreator" :items="creatorOptions" placeholder="Confeccionada por" class="min-w-56" clearable />
-          <USelect v-model="selectedReviewer" :items="reviewerOptions" placeholder="Revisada por" class="min-w-56" clearable />
+          <ClearableSelect v-model="selectedMonth" :items="monthOptions" placeholder="Mes" class="min-w-36" />
+          <ClearableSelect v-model="selectedYear" :items="yearOptions" placeholder="Año" class="min-w-28" />
+          <ClearableSelect v-model="selectedStatus" :items="statusOptions" placeholder="Estado" class="min-w-40" />
+          <ClearableSelect v-model="selectedCreator" :items="creatorOptions" placeholder="Confeccionada por" class="min-w-56" />
+          <ClearableSelect v-model="selectedReviewer" :items="reviewerOptions" placeholder="Revisada por" class="min-w-56" />
           <UButton
             variant="ghost"
             color="neutral"

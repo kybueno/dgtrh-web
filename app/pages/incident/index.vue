@@ -124,20 +124,19 @@ const columns = [
     <div class="border border-muted bg-muted/70 rounded-md">
       <Flex v-if="viewMode === 'table'" class="pt-2 px-2 flex-wrap gap-2 justify-between">
         <Flex class="gap-2 flex-wrap">
-          <USelect
+          <ClearableSelect
             v-model="selectedWorkerId"
             :items="workerOptions"
             placeholder="Filtrar trabajador"
             class="min-w-56"
-            clearable
           />
-          <USelect
+          <ClearableSelect
             v-model="selectedIncidentCode"
             :items="incidentTypeOptions"
             placeholder="Filtrar tipo"
             class="min-w-56"
-            clearable
           />
+          <!-- TODO: allow multiple codes filtering -->
           <UInput v-model="startDateFrom" type="date" placeholder="Desde" />
           <UInput v-model="startDateTo" type="date" placeholder="Hasta" />
           <UButton
@@ -148,7 +147,7 @@ const columns = [
             Limpiar
           </UButton>
         </Flex>
-        <TableSearch :table="table" column-id="description" placeholder="Buscar incidencias" input-class="max-w-lg" />
+        <!-- <TableSearch :table="table" column-id="description" placeholder="Buscar incidencias" input-class="max-w-lg" /> -->
         <ColumnsControl :table="table" />
       </Flex>
       <UTable

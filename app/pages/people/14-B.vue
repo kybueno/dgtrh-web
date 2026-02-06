@@ -153,9 +153,9 @@ const filteredWorkers = computed(() => {
     </div>
 
     <div v-if="viewMode === 'table'" class="flex flex-wrap gap-2 pb-3">
-      <USelect v-model="selectedGender" :items="GENDER_OPTIONS" placeholder="Sexo" class="min-w-40" clearable />
-      <USelect v-model="selectedGroup" :items="groupOptions" placeholder="Área" class="min-w-44" clearable />
-      <USelect v-model="selectedPosition" :items="positionOptions" placeholder="Cargo" class="min-w-56" clearable />
+      <ClearableSelect v-model="selectedGender" :items="GENDER_OPTIONS" placeholder="Sexo" class="min-w-40" />
+      <ClearableSelect v-model="selectedGroup" :items="groupOptions" placeholder="Área" class="min-w-44" />
+      <ClearableSelect v-model="selectedPosition" :items="positionOptions" placeholder="Cargo" class="min-w-56" />
       <UButton variant="ghost" color="neutral" @click="() => { selectedGender = null; selectedGroup = null; selectedPosition = null; }">Limpiar</UButton>
     </div>
 

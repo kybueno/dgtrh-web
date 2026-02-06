@@ -4,6 +4,7 @@ import type { TableColumn } from '@nuxt/ui'
 import { UBadge, UButton, UTextarea } from '#components'
 import { generatePrenomina } from '../payrollHelpers'
 import StackH from '~/components/StackH.vue'
+import { UserRole } from '~~/prisma/generated/enums'
 
 definePageMeta({
   title: 'Prenómina'
@@ -94,6 +95,59 @@ const saveObservation = async (workerId: string) => {
 const handlePrint = () => {
   if (!data.value) return
   generatePrenomina(data.value)
+}
+
+const statusLabel = computed(() => {
+  const status = data.value?.payroll.status
+  if (!status) return '-'
+  switch (status) {
+    case 'pending':
+      return 'Pendiente'
+    case 'approved':
+      return 'Aprobada'
+    case 'denied':
+      return 'Denegada'
+    default:
+      return status
+  }
+})
+
+const statusColor = computed(() => {
+  const status = data.value?.payroll.status
+  switch (status) {
+    case 'approved':
+      return 'success'
+    case 'denied':
+      return 'error'
+    case 'pending':
+    default:
+      return 'warning'
+  }
+})
+
+const statusUpdating = ref(false)
+
+const updateStatus = async (nextStatus: 'approved' | 'denied') => {
+  if (!data.value || statusUpdating.value) return
+  statusUpdating.value = true
+  try {
+    const updated = await $fetch<PayrollInfo>(`/api/payroll/${payrollId.value}/status`, {
+      method: 'PUT',
+      body: { status: nextStatus }
+    })
+    data.value.payroll = updated
+    toast.add({
+      title: `Prenómina ${nextStatus === 'approved' ? 'aprobada' : 'denegada'}`,
+      color: nextStatus === 'approved' ? 'success' : 'error'
+    })
+  } catch (err) {
+    toast.add({
+      title: 'No se pudo actualizar el estado',
+      color: 'error'
+    })
+  } finally {
+    statusUpdating.value = false
+  }
 }
 
 const payrollLabel = computed(() => {
@@ -204,14 +258,37 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
   <div class="flex flex-col w-full p-4">
     <div class="flex items-center justify-between mb-6">
 
-      <Flex>
+      <Flex class="items-center gap-2">
         <UButton to="/payroll" title="Ir a la lista de prenóminas" variant="ghost" icon="lucide:arrow-left"></UButton>
         <h3 class="font-semibold text-lg">{{ payrollLabel }}</h3>
+        <UBadge :color="statusColor" variant="subtle">{{ statusLabel }}</UBadge>
       </Flex>
       <div class="flex items-center gap-2">
         <UButton icon="lucide:refresh-cw" variant="ghost" @click="() => { refresh() }" :loading="pending" />
         <UButton icon="lucide:printer" variant="ghost" color="primary" @click="handlePrint" :disabled="!data">
         </UButton>
+        <show-if-user :roles="[UserRole.director]">
+          <UButton
+            color="success"
+            variant="soft"
+            size="sm"
+            :loading="statusUpdating"
+            :disabled="data?.payroll.status === 'approved'"
+            @click="updateStatus('approved')"
+          >
+            Aprobar
+          </UButton>
+          <UButton
+            color="error"
+            variant="soft"
+            size="sm"
+            :loading="statusUpdating"
+            :disabled="data?.payroll.status === 'denied'"
+            @click="updateStatus('denied')"
+          >
+            Denegar
+          </UButton>
+        </show-if-user>
       </div>
     </div>
 
@@ -220,8 +297,8 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
 
     <div class="border border-muted bg-muted/70 rounded-md">
       <div class="flex flex-wrap gap-2 p-2">
-        <USelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar área" class="min-w-44" clearable />
-        <USelect v-model="selectedPosition" :items="positionOptions" placeholder="Filtrar cargo" class="min-w-56" clearable />
+        <ClearableSelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar área" class="min-w-44" />
+        <ClearableSelect v-model="selectedPosition" :items="positionOptions" placeholder="Filtrar cargo" class="min-w-56" />
         <UInput v-model="minIncidentDays" type="number" min="0" placeholder="Mín. días" class="max-w-32" />
         <UInput v-model="minExtraHours" type="number" min="0" placeholder="Mín. horas extra" class="max-w-40" />
         <UButton

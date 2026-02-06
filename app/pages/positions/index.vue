@@ -132,9 +132,9 @@ const table = useTemplateRef('table')
             </div>
         </div>
         <div v-if="viewMode === 'table'" class="flex flex-wrap gap-2 px-2 pb-2">
-            <USelect v-model="selectedCategory" :items="categoryOptions" placeholder="Filtrar categoría" class="min-w-44" clearable />
-            <USelect v-model="selectedLevel" :items="levelOptions" placeholder="Filtrar nivel" class="min-w-44" clearable />
-            <USelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar grupo" class="min-w-44" clearable />
+            <ClearableSelect v-model="selectedCategory" :items="categoryOptions" placeholder="Filtrar categoría" class="min-w-44" />
+            <ClearableSelect v-model="selectedLevel" :items="levelOptions" placeholder="Filtrar nivel" class="min-w-44" />
+            <ClearableSelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar grupo" class="min-w-44" />
             <UButton variant="ghost" color="neutral" @click="() => { selectedCategory = null; selectedLevel = null; selectedGroup = null; }">Limpiar</UButton>
         </div>
         <UTable v-if="viewMode === 'table'" ref="table" :data="filteredPositions" :columns="columns" class="w-full h-full" />

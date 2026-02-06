@@ -156,8 +156,8 @@ const columns: TableColumn<IncidentType>[] = [
     <div class="border border-muted bg-muted/70 rounded-md">
       <Flex v-if="viewMode === 'table'" class="pt-2 px-2 flex-wrap gap-2 justify-between">
         <Flex class="gap-2 flex-wrap">
-          <USelect v-model="selectedClassification" :items="classificationOptions" placeholder="Clasificación" class="min-w-44" clearable />
-          <USelect v-model="selectedPayFor" :items="payForOptions" placeholder="A pagar por" class="min-w-44" clearable />
+          <ClearableSelect v-model="selectedClassification" :items="classificationOptions" placeholder="Clasificación" class="min-w-44" />
+          <ClearableSelect v-model="selectedPayFor" :items="payForOptions" placeholder="A pagar por" class="min-w-44" />
           <USelect
             v-model="deductibleFilter"
             :items="[{ value: 'all', label: 'Deducible: todos' }, { value: 'yes', label: 'Deducible: sí' }, { value: 'no', label: 'Deducible: no' }]"

@@ -12,7 +12,7 @@
     </div>
 
     <div v-if="viewMode === 'table'" class="flex flex-wrap gap-2 pb-2">
-      <USelect v-model="selectedWorkerId" :items="workerOptions" placeholder="Filtrar trabajador" class="min-w-56" clearable />
+      <ClearableSelect v-model="selectedWorkerId" :items="workerOptions" placeholder="Filtrar trabajador" class="min-w-56" />
       <UInput v-model="dateFrom" type="date" placeholder="Desde" />
       <UInput v-model="dateTo" type="date" placeholder="Hasta" />
       <UButton variant="ghost" color="neutral" @click="() => { selectedWorkerId = null; dateFrom = ''; dateTo = ''; }">Limpiar</UButton>

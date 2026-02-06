@@ -142,9 +142,9 @@ const table = useTemplateRef('table')
     <div class="border border-muted bg-muted/70 rounded-md">
       <Flex v-if="viewMode === 'table'" class="pt-2 px-2 flex-wrap gap-2 justify-between">
         <Flex class="gap-2 flex-wrap">
-          <USelect v-model="selectedWorkerId" :items="workerOptions" placeholder="Filtrar trabajador" class="min-w-56" clearable />
-          <USelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar área" class="min-w-44" clearable />
-          <USelect v-model="selectedType" :items="typeOptions" placeholder="Filtrar tipo" class="min-w-44" clearable />
+          <ClearableSelect v-model="selectedWorkerId" :items="workerOptions" placeholder="Filtrar trabajador" class="min-w-56" />
+          <ClearableSelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar área" class="min-w-44" />
+          <ClearableSelect v-model="selectedType" :items="typeOptions" placeholder="Filtrar tipo" class="min-w-44" />
           <UInput v-model="dateFrom" type="date" placeholder="Desde" />
           <UInput v-model="dateTo" type="date" placeholder="Hasta" />
           <UButton

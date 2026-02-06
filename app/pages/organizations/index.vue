@@ -13,8 +13,8 @@
         <div class="border border-muted bg-muted/70 rounded-md">
             <Flex v-if="viewMode === 'table'" class="pt-2 px-2 flex-wrap gap-2 justify-between">
                 <Flex class="gap-2 flex-wrap">
-                    <USelect v-model="selectedCode" :items="codeOptions" placeholder="Filtrar código" class="min-w-40" clearable />
-                    <USelect v-model="selectedAcronym" :items="acronymOptions" placeholder="Filtrar siglas" class="min-w-40" clearable />
+                    <ClearableSelect v-model="selectedCode" :items="codeOptions" placeholder="Filtrar código" class="min-w-40" />
+                    <ClearableSelect v-model="selectedAcronym" :items="acronymOptions" placeholder="Filtrar siglas" class="min-w-40" />
                     <USelect
                         v-model="imageFilter"
                         :items="[
