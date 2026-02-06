@@ -22,13 +22,13 @@ function getCiError(ci: string | null | undefined) {
 
 function getEmailError(email: string | null | undefined) {
     if (!email) return null
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return 'El correo no es válido.'
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return `El correo "${email}" no es válido.`
     return null
 }
 
 function getTelError(tel: string | null | undefined) {
     if (!tel) return null
-    if (!/^\\d+$/.test(tel)) return 'El teléfono solo puede tener números.'
+    if (!/^[0-9+()\\s-]+$/.test(tel)) return 'El teléfono solo puede contener números, espacios, +, - o paréntesis.'
     return null
 }
 
