@@ -3,7 +3,6 @@
         <div class="flex items-center justify-between mb-6">
             <h3 class="font-semibold text-lg">Lista de organizaciones</h3>
             <div class="flex items-center gap-2">
-                <TableSearch v-if="viewMode === 'table'" :table="table" column-id="name" placeholder="Buscar organización..." input-class="max-w-sm" />
                 <DataViewToggle v-model="viewMode" />
                 <UButton icon="mdi:refresh" variant="ghost" @click="loadOrganizations()"
                     :disabled="organizationsPending">
@@ -11,8 +10,27 @@
                 <UButton icon="i-lucide-plus" to="/organizations/new" variant="ghost">Nueva organización</UButton>
             </div>
         </div>
-        <UTable v-if="viewMode === 'table'" ref="table" :data="organizations" :columns="columns" class="w-full h-full" />
-        <DataGrid v-else :data="organizations" :columns="columns" />
+        <div class="border border-muted bg-muted/70 rounded-md">
+            <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
+                <TableSearch :table="table" column-id="name" placeholder="Buscar organización" input-class="max-w-sm" />
+                <ColumnsControl :table="table" />
+            </Flex>
+            <UTable
+                v-if="viewMode === 'table'"
+                v-model:sorting="sorting"
+                ref="table"
+                :data="organizations"
+                :columns="columns"
+                class="w-full h-full"
+                :paginate="true"
+                :page-size="10"
+                sticky
+            />
+            <DataGrid v-else class="p-4" :data="organizations" :columns="columns" />
+            <div v-if="viewMode === 'table'" class="flex justify-center py-4">
+                <UPagination v-model="page" :total="organizations.length" :page-size="10" />
+            </div>
+        </div>
     </div>
 </template>
 
@@ -26,6 +44,7 @@ useHead({
 
 import { UButton, UCheckbox } from '#components';
 import type { TableColumn } from '@nuxt/ui';
+import { page } from '#build/ui'
 
 onMounted(loadOrganizations);
 
@@ -42,6 +61,7 @@ const { data } = defineProps<Props>()
 
 const viewMode = ref<'table' | 'grid'>('table')
 const table = useTemplateRef('table')
+const sorting = ref([])
 
 const columns: TableColumn<OrganizationInfo>[] = [
     {
