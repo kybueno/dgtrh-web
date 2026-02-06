@@ -15,16 +15,19 @@ export default defineEventHandler(async (event) => {
 
   if (!email || !password) {
     Errors.badRequest('Correo y contraseña requeridos', ErrorCodes.AUTH.MISSING_FIELDS)
+    return
   }
 
   const existingUser = await prisma.user.findUnique({ where: { email } })
   if (existingUser) {
     Errors.badRequest('Este usuario ya existe', ErrorCodes.AUTH.USER_EXISTS)
+    return
   }
 
   const worker = await prisma.worker.findFirst({ where: { email } })
   if (!worker) {
     Errors.badRequest('Trabajador no encontrado con este correo', ErrorCodes.AUTH.WORKER_NOT_FOUND)
+    return
   }
 
   const passwordHash = await bcrypt.hash(password, 10)
