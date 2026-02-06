@@ -191,22 +191,6 @@ const publicLinks = [{
 
 const authStore = useAuthStore()
 
-const groups = computed(() => [{
-  id: 'links',
-  label: 'Go to',
-  items: protectedLinks
-}, {
-  id: 'code',
-  label: 'Code',
-  items: [{
-    id: 'source',
-    label: 'View page source',
-    icon: 'i-simple-icons-github',
-    to: `https://github.com/nuxt-ui-pro/dashboard/blob/main/app/pages${route.path === '/' ? '/index' : route.path}.vue`,
-    target: '_blank'
-  }]
-}])
-
 onMounted(async () => {
   authStore.fetchLoggedUserProfile()
 
@@ -235,14 +219,47 @@ onMounted(async () => {
 })
 
 const loggedUser = computed(() => authStore.loggedUserProfile.value?.user)
-const filteredProtectedLinks = computed(() => {
-  return protectedLinks.filter((link) => {
-    if (link.role) {
-      return link.role.includes(loggedUser.value?.role)
+const filterNavItemsByRole = (items: NavigationMenuItem[], role?: UserRole) => {
+  return items.reduce<NavigationMenuItem[]>((acc, item) => {
+    const children = item.children
+      ? filterNavItemsByRole(item.children, role)
+      : undefined
+
+    const hasRoleAccess = item.role ? item.role.includes(role as UserRole) : true
+    const hasChildAccess = Boolean(children && children.length > 0)
+
+    if (!hasRoleAccess && !hasChildAccess) {
+      return acc
     }
-    return true
-  })
+
+    acc.push({
+      ...item,
+      children
+    })
+
+    return acc
+  }, [])
+}
+
+const filteredProtectedLinks = computed(() => {
+  return filterNavItemsByRole(protectedLinks, loggedUser.value?.role)
 })
+
+const groups = computed(() => [{
+  id: 'links',
+  label: 'Go to',
+  items: filteredProtectedLinks.value
+}, {
+  id: 'code',
+  label: 'Code',
+  items: [{
+    id: 'source',
+    label: 'View page source',
+    icon: 'i-simple-icons-github',
+    to: `https://github.com/nuxt-ui-pro/dashboard/blob/main/app/pages${route.path === '/' ? '/index' : route.path}.vue`,
+    target: '_blank'
+  }]
+}])
 
 
 </script>
@@ -287,6 +304,7 @@ const filteredProtectedLinks = computed(() => {
         </UDashboardNavbar>
       </template>
       <template #body>
+        {{ authStore.loggedUserProfile }}
         <NuxtPage />
       </template>
     </UDashboardPanel>
