@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { UserRole } from '~~/prisma/generated/enums'
+import { getEffectiveRole } from '~/utils/role'
 
 defineProps<{
   collapsed?: boolean
@@ -21,7 +22,11 @@ const selectedRole = computed({
 })
 
 const effectiveRole = computed(() => {
-  return roleOverride.value ?? authStore.loggedUserProfile.value?.user?.role ?? null
+  return getEffectiveRole(
+    authStore.loggedUserProfile.value?.user?.role,
+    roleOverride.value,
+    isDev
+  ) ?? null
 })
 
 const resetToActual = () => {

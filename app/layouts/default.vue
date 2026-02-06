@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 import { UserRole } from '~~/prisma/generated/enums'
+import { filterNavItemsByRole, getEffectiveRole } from '~/utils/role'
 
 const route = useRoute()
 const toast = useToast()
@@ -222,32 +223,8 @@ const loggedUser = computed(() => authStore.loggedUserProfile.value?.user)
 const { roleOverride, isDev } = useRoleOverride()
 
 const effectiveRole = computed(() => {
-  if (isDev && roleOverride.value) {
-    return roleOverride.value
-  }
-  return loggedUser.value?.role
+  return getEffectiveRole(loggedUser.value?.role, roleOverride.value, isDev)
 })
-const filterNavItemsByRole = (items: NavigationMenuItem[], role?: UserRole) => {
-  return items.reduce<NavigationMenuItem[]>((acc, item) => {
-    const children = item.children
-      ? filterNavItemsByRole(item.children, role)
-      : undefined
-
-    const hasRoleAccess = item.role ? item.role.includes(role as UserRole) : true
-    const hasChildAccess = Boolean(children && children.length > 0)
-
-    if (!hasRoleAccess && !hasChildAccess) {
-      return acc
-    }
-
-    acc.push({
-      ...item,
-      children
-    })
-
-    return acc
-  }, [])
-}
 
 const filteredProtectedLinks = computed(() => {
   return filterNavItemsByRole(protectedLinks, effectiveRole.value)
