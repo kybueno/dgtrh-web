@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useWorkerStore = defineStore('workerStore', {
   state: () => ({
-    workers: [] as WorkerInfo[],
+    workers: [] as WorkerDetailed[],
   }),
   actions: {
     async loadWorkers() {
@@ -10,7 +10,7 @@ export const useWorkerStore = defineStore('workerStore', {
       this.workers = data
     },
     async createWorker(newWorkerData: WorkerInsert) {
-      const worker = await $fetch<WorkerInfo>('/api/workers', {
+      const worker = await $fetch<WorkerDetailed>('/api/workers', {
         method: 'POST',
         body: newWorkerData,
       })

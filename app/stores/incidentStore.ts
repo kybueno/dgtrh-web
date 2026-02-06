@@ -1,5 +1,4 @@
 import { ref } from 'vue'
-import type { TablesInsert, TablesUpdate } from '~/shared/types/database.types'
 
 export const incidents = ref<Incident[]>([])
 export const incidentsPending = ref<boolean>(false)
