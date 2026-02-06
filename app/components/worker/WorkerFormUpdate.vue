@@ -28,7 +28,7 @@ function getEmailError(email: string | null | undefined) {
 
 function getTelError(tel: string | null | undefined) {
     if (!tel) return null
-    if (!/^[0-9+()\\s-]+$/.test(tel)) return 'El teléfono solo puede contener números, espacios, +, - o paréntesis.'
+    if (!/^[0-9+()\s-]+$/.test(tel)) return `El teléfono "${tel}" solo puede contener números, espacios, +, - o paréntesis.`
     return null
 }
 
