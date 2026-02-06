@@ -230,6 +230,28 @@ const filteredProtectedLinks = computed(() => {
   return filterNavItemsByRole(protectedLinks, effectiveRole.value)
 })
 
+const breadcrumbs = computed(() => {
+  const segments = route.path.split('/').filter(Boolean)
+  if (segments.length === 0) {
+    return [{ label: 'Inicio', to: '/dashboard' }]
+  }
+
+  const items = [{ label: 'Inicio', to: '/dashboard' }]
+  let currentPath = ''
+  segments.forEach((segment, index) => {
+    currentPath += `/${segment}`
+    const label = segment.replace(/-/g, ' ')
+    items.push({
+      label: index === segments.length - 1 && route.meta.title
+        ? String(route.meta.title)
+        : label,
+      to: currentPath
+    })
+  })
+
+  return items
+})
+
 const groups = computed(() => [{
   id: 'links',
   label: 'Go to',
@@ -282,6 +304,7 @@ const groups = computed(() => [{
     <UDashboardSearch :groups="groups" />
     <UDashboardPanel>
       <template #header>
+        <UBreadcrumb :items="breadcrumbs" class="mb-2" />
         <UDashboardNavbar
           :title="String(route.meta.title || protectedLinks.find(item => item.to === route.path)?.label || capitalizeFirstLetter(String(route.name)) || route.path)">
           <template #leading>
