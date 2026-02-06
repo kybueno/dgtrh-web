@@ -53,6 +53,10 @@ function sanitizeCi(value: string) {
     return value.replace(/\D/g, '').slice(0, 11)
 }
 
+function sanitizeTel(value: string) {
+    return value.replace(/[^0-9+()\\s-]/g, '').slice(0, 25)
+}
+
 async function handleAddWorker() {
     const ciError = getCiError(formData.value.ci)
     const emailError = getEmailError(formData.value.email)
@@ -171,7 +175,12 @@ onMounted(() => {
 
                 <!-- Teléfono -->
                 <UFormField label="Teléfono" class="col-span-1">
-                    <UInput v-model="formData.tel" inputmode="numeric" pattern="\\d+" autocomplete="tel" />
+                    <UInput
+                        :model-value="formData.tel"
+                        @update:model-value="(value) => (formData.tel = sanitizeTel(value || ''))"
+                        inputmode="tel"
+                        autocomplete="tel"
+                    />
                 </UFormField>
 
                 <!-- Género -->

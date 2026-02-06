@@ -17,6 +17,11 @@ const loadingWorkers = ref(false)
 const selectedWorker = computed(() =>
   workerStore.workers.find((worker) => worker.id === selectedWorkerId.value) || null
 )
+const selectedArea = computed(() =>
+  selectedWorker.value?.group?.name ||
+  selectedWorker.value?.leaderAtGroup?.name ||
+  'Dirección de Gestión Tecnológica'
+)
 
 async function loadWorkers() {
   loadingWorkers.value = true
@@ -71,10 +76,10 @@ onMounted(loadWorkers)
         </UFormField>
       </div>
       <div class="mt-6 space-y-4 text-sm">
-        <p><strong>Área</strong> ________________________________________________</p>
-        <p><strong>Nombre y Apellido</strong> ____________________________________</p>
-        <p><strong>No. Expediente</strong> _____________________________________</p>
-        <p><strong>Cargo</strong> _____________________________________________</p>
+        <p><strong>Área</strong> {{ selectedWorker ? selectedArea : '________________________________________' }}</p>
+        <p><strong>Nombre y Apellido</strong> {{ selectedWorker ? getDisplayName(selectedWorker) : '____________________________________' }}</p>
+        <p><strong>No. Expediente</strong> {{ selectedWorker ? (selectedWorker.record_number ?? '-') : '___________________________________' }}</p>
+        <p><strong>Cargo</strong> {{ selectedWorker ? (selectedWorker.position?.description || selectedWorker.position_code || '-') : '___________________________________________' }}</p>
         <p><strong>Fecha de Solicitud</strong> _________________________________</p>
         <p><strong>Desde</strong> ____________ <strong>hasta</strong> ____________ <strong>a descontar</strong> ________</p>
         <p><strong>Entregado por</strong> ________________ <strong>recibido por</strong> ________________</p>
