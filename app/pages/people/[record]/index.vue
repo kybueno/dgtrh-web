@@ -77,11 +77,11 @@
           errorMessage }}</UAlert>
       </Box>
       <template #footer>
-            <HStack class="flex gap-2 justify-end">
+            <StackH class="flex gap-2 justify-end">
               <UButton icon="lucide:trash" size="sm" @click="handleDelete()" color="neutral" variant="ghost">Eliminar</UButton>
               <UButton icon="lucide:edit" size="sm" :to="`/people/${worker?.record_number}/edit`" color="neutral" variant="ghost">Modificar
               </UButton>
-            </HStack>
+            </StackH>
       </template>
     </UCard>
 

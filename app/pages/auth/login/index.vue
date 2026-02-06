@@ -124,14 +124,14 @@ onMounted(async() => {
         </div>
         <template #footer>
           <div class="py-5 space-y-6 text-muted">
-            <HStack class="justify-center items-center">
+            <StackH class="justify-center items-center">
               <p>
                 {{ mode === 'signup' ? '¿Ya tiene una cuenta?' : '¿Primera vez?' }}
               </p>
                 <UButton variant="soft" @click="toggleMode">
                   {{ mode === 'signup' ? 'Entre con su contraseña' : 'Defina una contraseña' }}
                 </UButton>
-            </HStack>
+            </StackH>
           </div>
         </template>
       </UCard>

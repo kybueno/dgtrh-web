@@ -3,7 +3,7 @@ import { h, watch } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import { UBadge, UButton, UTextarea } from '#components'
 import { generatePrenomina } from '../payrollHelpers'
-import HStack from '~/components/HStack.vue'
+import StackH from '~/components/StackH.vue'
 
 definePageMeta({
   title: 'Prenómina'
@@ -146,7 +146,7 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
               observationDrafts.value[workerId] = value
             }
           }),
-          h(HStack,{class:'items-center'},[h(UButton, {
+          h(StackH,{class:'items-center'},[h(UButton, {
             label: 'Guardar',
             size: 'xs',
             variant: 'ghost',

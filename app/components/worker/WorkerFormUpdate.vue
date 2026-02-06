@@ -20,10 +20,38 @@ function getCiError(ci: string | null | undefined) {
     return null
 }
 
+function getEmailError(email: string | null | undefined) {
+    if (!email) return null
+    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return 'El correo no es válido.'
+    return null
+}
+
+function getTelError(tel: string | null | undefined) {
+    if (!tel) return null
+    if (!/^\\d+$/.test(tel)) return 'El teléfono solo puede tener números.'
+    return null
+}
+
+function getRecordNumberError(value: string | null | undefined) {
+    if (!value) return null
+    if (!/^[A-Z0-9-]+$/.test(value)) return 'El expediente solo puede tener letras mayúsculas, números o guiones.'
+    return null
+}
+
+function sanitizeRecordNumber(value: string) {
+    return value.toUpperCase().replace(/[^A-Z0-9-]/g, '')
+}
+
 function handleSubmit() {
     const ciError = getCiError(formData.value.ci)
-    if (ciError) {
-        notifyWarning({ title: 'CI inválido', description: ciError })
+    const emailError = getEmailError(formData.value.email)
+    const telError = getTelError(formData.value.tel)
+    const recordNumberError = getRecordNumberError(formData.value.record_number)
+    const secondLastNameError = !formData.value.second_last_name ? 'El segundo apellido es obligatorio.' : null
+
+    const firstError = ciError || emailError || telError || recordNumberError || secondLastNameError
+    if (firstError) {
+        notifyWarning({ title: 'Validación', description: firstError })
         return
     }
     const payload = {
@@ -74,7 +102,9 @@ onMounted(() => {
 
                 <!-- Número expediente -->
                 <UFormField label="Número de expediente" class="col-span-1">
-                    <UInput v-model="formData.record_number" required />
+                    <UInput :model-value="formData.record_number"
+                        @update:model-value="(value) => (formData.record_number = sanitizeRecordNumber(value || ''))"
+                        pattern="[A-Z0-9-]+" autocomplete="off" />
                 </UFormField>
                 <!-- Nivel -->
                 <UFormField class="col-span-2" label="Nivel educativo">
@@ -89,12 +119,12 @@ onMounted(() => {
 
                 <!-- Email -->
                 <UFormField label="Correo Electrónico" class="col-span-1">
-                    <UInput v-model="formData.email" type="email" />
+                    <UInput v-model="formData.email" type="email" autocomplete="email" />
                 </UFormField>
 
                 <!-- Teléfono -->
                 <UFormField label="Teléfono" class="col-span-1">
-                    <UInput v-model="formData.tel" />
+                    <UInput v-model="formData.tel" inputmode="numeric" pattern="\\d+" autocomplete="tel" />
                 </UFormField>
 
                 <!-- Género -->

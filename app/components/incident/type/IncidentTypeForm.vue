@@ -16,12 +16,12 @@
         </div>
 
         <template #footer>
-            <UButton @click="$emit('submit', incident)"> Añadir Nueva Incidencia</UButton>
+            <UButton @click="handleSubmit"> Añadir Nueva Incidencia</UButton>
         </template>
     </UCard>
 </template>
 <script setup lang="ts">
-defineEmits<
+const emit = defineEmits<
     {
         (e: 'submit', payload: IncidentTypeInsert): void
     }>()
@@ -39,5 +39,16 @@ const incident = ref<IncidentTypeInsert>({
     time_classification: ''
 })
 
+function handleSubmit() {
+    if (incident.value.code === null || incident.value.code === undefined || Number.isNaN(incident.value.code)) {
+        notifyWarning({ title: 'Validación', description: 'El código es obligatorio.' })
+        return
+    }
+    if (!incident.value.name) {
+        notifyWarning({ title: 'Validación', description: 'El nombre es obligatorio.' })
+        return
+    }
+    emit('submit', incident.value)
+}
 
 </script>
