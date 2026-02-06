@@ -8,6 +8,7 @@ useHead({
 
 import { UCheckbox } from '#components'
 import type { TableColumn } from '@nuxt/ui'
+import { page } from '#build/ui'
 
 const incidentTypeStore = useIncidentTypeStore()
 
@@ -15,6 +16,7 @@ onMounted(() => incidentTypeStore.loadIncidentTypes())
 
 const table = useTemplateRef('table')
 const viewMode = ref<'table' | 'grid'>('table')
+const sorting = ref([])
 
 function formatBoolean(value: boolean | null | undefined): string {
   if (value === null || value === undefined) return '-'
@@ -108,15 +110,33 @@ const columns: TableColumn<IncidentType>[] = [
     <div class="flex items-center justify-between mb-6">
       <h3 class="font-semibold text-lg">Catálogo de Claves de Ausencias</h3>
       <div class="flex items-center gap-2">
-        <TableSearch v-if="viewMode === 'table'" :table="table" column-id="description" placeholder="Buscar descripción..." input-class="max-w-sm" />
         <DataViewToggle v-model="viewMode" />
         <UButton icon="mdi:refresh" variant="ghost" @click="incidentTypeStore.loadIncidentTypes()" />
         <UButton icon="i-lucide-plus" to="/incident/type/new" variant="ghost">Añadir</UButton>
       </div>
     </div>
 
-    <UTable v-if="viewMode === 'table'" ref="table" :columns="columns" :data="incidentTypeStore.incidentTypes" />
-    <DataGrid v-else :data="incidentTypeStore.incidentTypes" :columns="columns" />
+    <div class="border border-muted bg-muted/70 rounded-md">
+      <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
+        <TableSearch :table="table" column-id="description" placeholder="Buscar por descripción" input-class="max-w-sm" />
+        <ColumnsControl :table="table" />
+      </Flex>
+      <UTable
+        v-if="viewMode === 'table'"
+        v-model:sorting="sorting"
+        ref="table"
+        :columns="columns"
+        :data="incidentTypeStore.incidentTypes"
+        class="w-full h-full"
+        :paginate="true"
+        :page-size="10"
+        sticky
+      />
+      <DataGrid v-else class="p-4" :data="incidentTypeStore.incidentTypes" :columns="columns" />
+      <div v-if="viewMode === 'table'" class="flex justify-center py-4">
+        <UPagination v-model="page" :total="incidentTypeStore.incidentTypes.length" :page-size="10" />
+      </div>
+    </div>
     <!-- <IncidentTypeForm @submit="handleCreateIncidentType" /> -->
    
   </div>
