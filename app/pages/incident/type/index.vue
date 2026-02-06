@@ -84,18 +84,7 @@ const columns: TableColumn<IncidentType>[] = [
     <UTable v-if="viewMode === 'table'" ref="table" :columns="columns" :data="incidentTypeStore.incidentTypes" />
     <DataGrid v-else :data="incidentTypeStore.incidentTypes" :columns="columns" />
     <!-- <IncidentTypeForm @submit="handleCreateIncidentType" /> -->
-    <div @mouseenter="incidentTypeStore.loadIncidentTypes()">
-      <Select>
-        <SelectTrigger class="w-[180px]">
-          <SelectValue placeholder="Tipo (clave)" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem v-for="type in incidentTypeStore.incidentTypes" :key="type['code']" value="apple">
-            {{ type.name }}
-          </SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+   
   </div>
 
 </template>

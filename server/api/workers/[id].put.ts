@@ -19,7 +19,7 @@ function pickWorkerUpdate(body: any) {
     gender: body.gender ?? undefined,
     tel: body.tel ?? undefined,
     position_code: body.position_code ?? undefined,
-    group_id: body.group_id ?? undefined,
+    group_id: Object.prototype.hasOwnProperty.call(body, 'group_id') ? body.group_id : undefined,
     parent1_name: body.parent1_name ?? undefined,
     parent2_name: body.parent2_name ?? undefined,
     status: body.status ?? undefined,

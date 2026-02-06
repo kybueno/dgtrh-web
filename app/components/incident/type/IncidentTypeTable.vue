@@ -68,10 +68,10 @@ const table = useTemplateRef('table')
 <template>
     <UCard class="border border-muted rounded-md overflow-auto max-w-full">
         <template #header>
-            <div class="flex justify-between gap-2">
-                <TableSearch :table="table" column-id="description" placeholder="Buscar descripción..." input-class="max-w-sm" />
+            <Flex class="justify-between gap-2 px-2 pt-2">
+                <TableSearch :table="table" column-id="description" placeholder="Buscar por descripción..." input-class="max-w-sm" />
                 <UButton to="/incident-types/new">Añadir</UButton>
-            </div>
+            </Flex>
         </template>
         <UTable ref="table" :columns="columns" :data="data" />
     </UCard>

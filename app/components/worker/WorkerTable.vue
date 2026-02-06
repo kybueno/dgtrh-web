@@ -64,7 +64,7 @@ const columns: TableColumn<typeof data[0]>[] = [
     }, {
         id:'group',
         accessorKey: 'group',
-        header: "Grupo de Trabajo",
+        header: "Grupo",
         cell: ({ row }) => row.original.group?.name || row.original.leaderAtGroup?.name || row.original.group_id
     }, {
         id:'position',
@@ -119,6 +119,7 @@ const initialTableState = {
         gender:false,
         organizations:false,
         level:false,
+        address:false,
     }
 }
 
@@ -127,8 +128,8 @@ const sorting = ref([])
 </script>
 <template>
     <div class="border border-muted bg-muted/70 rounded-md">
-        <Flex v-if="viewMode === 'table'" class="pt-1 px-1 justify-end">
-            <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador..." input-class="max-w-sm" />
+        <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
+            <TableSearch :table="table" column-id="name" placeholder="Buscar por nombre" input-class="max-w-sm" />
             <ColumnsControl :table="table" />
         </Flex>
         <UTable
@@ -142,6 +143,7 @@ const sorting = ref([])
             class="w-full h-full"
             :paginate="true"
             :page-size="10"
+            sticky
         />
         <DataGrid v-else class="p-4" :data="data" :columns="columns" />
         <div v-if="viewMode === 'table'" class="flex justify-center py-4">

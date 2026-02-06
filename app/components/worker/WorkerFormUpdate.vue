@@ -15,7 +15,11 @@ const formData = ref<TablesUpdate<'workers'>>({
 });
 
 function handleSubmit() {
-    emit('save', formData.value);
+    const payload = {
+        ...formData.value,
+        group_id: formData.value.group_id ?? null,
+    }
+    emit('save', payload);
 }
 
 onMounted(() => {
@@ -119,7 +123,7 @@ onMounted(() => {
 
                 <!--Grupo de Trabajo-->
                 <UFormField label="Grupo de trabajo" class="col-span-2">
-                    <USelect required v-model="formData.group_id" :items="workGroups" class="w-full" value-key="id"
+                    <USelect v-model="formData.group_id" :items="workGroups" class="w-full" value-key="id"
                         label-key="name">
                     </USelect>
                 </UFormField>

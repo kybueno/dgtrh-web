@@ -24,7 +24,11 @@ const loading = ref(false)
 async function handleAddWorker() {
     loading.value = true
     try {
-        await workerStore.createWorker(formData.value);
+        const payload = {
+            ...formData.value,
+            group_id: formData.value.group_id ?? null,
+        }
+        await workerStore.createWorker(payload);
 
         formData.value = {
             email: '',
@@ -152,7 +156,7 @@ onMounted(() => {
 
                 <!--Grupo de Trabajo-->
                 <UFormField label="Grupo de Trabajo" class="col-span-2">
-                    <USelect required v-model="formData.group_id" :items="workGroups" class="w-full"
+                    <USelect v-model="formData.group_id" :items="workGroups" class="w-full"
                         value-key="id" label-key="name">
                     </USelect>
                 </UFormField>
