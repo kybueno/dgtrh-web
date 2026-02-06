@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import { UserRole } from '~~/prisma/generated/enums'
 
 const route = useRoute()
 const toast = useToast()
 
 const open = ref(false)
-const roles = ['director', 'system_admin', 'hr_manager', 'worker']
 
 const protectedLinks = [{
   label: 'Panel principal',
@@ -36,7 +36,7 @@ const protectedLinks = [{
   icon: 'mdi:attach-money',
   color: 'green',
   to: '/payroll',
-  role: ['director', 'system_admin', 'hr_manager'],
+  role: [UserRole.director, UserRole.system_admin, UserRole.hr_manager],
   defaultOpen: true,
   type: 'trigger',
   children: [
@@ -44,7 +44,7 @@ const protectedLinks = [{
       label: 'Prenómina',
       icon: 'lucide:file-spreadsheet',
       to: '/payroll',
-      role: ['director', 'system_admin', 'hr_manager'],
+      role: [UserRole.director, UserRole.system_admin, UserRole.hr_manager],
       onSelect: () => {
         open.value = false
       }
@@ -52,7 +52,7 @@ const protectedLinks = [{
       label: 'Incidencias',
       icon: 'lucide:file',
       to: '/incident',
-      role: ['hr_manager'],
+      role: [UserRole.hr_manager],
       onSelect: () => {
         open.value = false
       }
@@ -60,7 +60,7 @@ const protectedLinks = [{
       label: 'Catálogo de claves',
       icon: 'lucide:file',
       to: '/incident/type',
-      role: ['hr_manager'],
+      role: [UserRole.hr_manager],
       onSelect: () => {
         open.value = false
       }
@@ -68,7 +68,7 @@ const protectedLinks = [{
       label: 'Anexo 14',
       icon: 'lucide:file',
       to: '/positions',
-      role: ['hr_manager', 'system_admin'],
+      role: [UserRole.hr_manager, UserRole.system_admin],
       onSelect: () => {
         open.value = false
       }
@@ -76,7 +76,7 @@ const protectedLinks = [{
       label: 'Anexo 14-B',
       icon: 'lucide:file',
       to: '/people/14-B',
-      role: ['hr_manager'],
+      role: [UserRole.hr_manager],
       onSelect: () => {
         open.value = false
       }
@@ -85,7 +85,7 @@ const protectedLinks = [{
 }, {
   label: 'Personal',
   to: '/people',
-  role: ['hr_manager', 'system_admin'],
+  role: [UserRole.hr_manager, UserRole.system_admin],
   icon: 'lucide:users',
   color: 'blue',
   defaultOpen: true,
@@ -93,7 +93,7 @@ const protectedLinks = [{
   children: [{
     label: 'Trabajadores',
     to: '/people',
-    role: ['hr_manager', 'system_admin'],
+    role: [UserRole.hr_manager, UserRole.system_admin],
     exact: true,
     onSelect: () => {
       open.value = false
@@ -101,21 +101,21 @@ const protectedLinks = [{
   }, {
     label: 'Grupos de trabajo',
     to: '/groups',
-    role: ['hr_manager', 'system_admin'],
+    role: [UserRole.hr_manager, UserRole.system_admin],
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Evaluación de desempeño',
     to: '/evaluations',
-    role: ['director', 'system_admin', 'hr_manager'],
+    role: [UserRole.director, UserRole.system_admin, UserRole.hr_manager],
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Organizaciones',
     to: '/organizations',
-    role: ['hr_manager', 'system_admin'],
+    role: [UserRole.hr_manager, UserRole.system_admin],
     onSelect: () => {
       open.value = false
     }
@@ -123,7 +123,7 @@ const protectedLinks = [{
 }, {
   label: 'Reportes',
   to: '/',
-  role: ['hr_manager', 'system_admin'],
+  role: [UserRole.hr_manager, UserRole.system_admin],
   icon: 'lucide:file',
   color: "amber",
   defaultOpen: true,
@@ -131,14 +131,14 @@ const protectedLinks = [{
   children: [{
     label: 'Hojas de Firma',
     to: '/signsheets',
-    role: ['hr_manager', 'system_admin'],
+    role: [UserRole.hr_manager, UserRole.system_admin],
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Vacaciones',
     to: '/holidays',
-    role: ['hr_manager', 'system_admin'],
+    role: [UserRole.hr_manager, UserRole.system_admin],
     onSelect: () => {
       open.value = false
     }
@@ -147,7 +147,7 @@ const protectedLinks = [{
 }, {
   label: 'Modelos',
   to: '/',
-  role: ['hr_manager', 'system_admin'],
+  role: [UserRole.hr_manager, UserRole.system_admin],
   icon: 'lucide:users',
   color: 'teal',
   defaultOpen: true,
@@ -155,7 +155,7 @@ const protectedLinks = [{
   children: [{
     label: 'Modelo de Vacaciones',
     to: '/model',
-    role: ['hr_manager', 'system_admin'],
+    role: [UserRole.hr_manager, UserRole.system_admin],
     exact: true,
     onSelect: () => {
       open.value = false
@@ -163,7 +163,7 @@ const protectedLinks = [{
   }, {
     label: 'Modelo de certificado',
     to: '/model/certificado',
-    role: ['hr_manager', 'system_admin'],
+    role: [UserRole.hr_manager, UserRole.system_admin],
     exact: true,
     onSelect: () => {
       open.value = false

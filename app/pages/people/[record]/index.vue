@@ -124,7 +124,7 @@ const loadWorkerData = async () => {
 }
 
 async function handleDelete() {
-  if (!worker.value?.id || !confirm("Seguro de que desea eliminar permanentemente el registro #" + recordNumber + "?")) return
+  if (!worker.value?.id || !confirm(`¿Seguro de que desea eliminar permanentemente el registro del trabajador ${getDisplayName(worker.value)??recordNumber.value}? Si causó Baja, se le recomienda, en cambio, modificar su estado a "Baja".`)) return
 
   const response = await deleteWorker(worker.value.id)
   errorMessage.value = response.error?.message || ''

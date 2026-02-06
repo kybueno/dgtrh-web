@@ -16,6 +16,7 @@ enum WorkerStatus {
 }
 
 enum UserRole {
+  system_admin
   hr_manager
   director
   employee
