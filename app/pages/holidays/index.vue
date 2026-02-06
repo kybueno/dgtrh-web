@@ -17,6 +17,12 @@ type HolidayIncident = Incident & {
 const viewMode = ref<'table' | 'grid'>('table')
 const sorting = ref([])
 
+const selectedWorkerId = ref<string | null>(null)
+const selectedGroup = ref<string | null>(null)
+const selectedType = ref<string | null>(null)
+const dateFrom = ref<string>('')
+const dateTo = ref<string>('')
+
 const { data, pending, error, refresh } = await useAsyncData<HolidayIncident[]>(
   'holiday-incidents',
   () => $fetch('/api/incidents/holidays')
@@ -27,6 +33,47 @@ const formatDate = (value?: string | Date | null) => {
   const date = value instanceof Date ? value : new Date(value)
   return date.toLocaleDateString('es-ES')
 }
+
+function toDateKey(value?: string | Date | null) {
+  if (!value) return ''
+  const date = value instanceof Date ? value : new Date(value)
+  return date.toISOString().split('T')[0]
+}
+
+const workerOptions = computed(() =>
+  (data.value ?? [])
+    .map((item) => item.worker)
+    .filter((worker): worker is WorkerDetailed => !!worker)
+    .map((worker) => ({ value: worker.id, label: getDisplayName(worker) }))
+)
+
+const groupOptions = computed(() =>
+  (data.value ?? [])
+    .map((item) => item.worker?.group?.name || item.worker?.leaderAtGroup?.name)
+    .filter((group): group is string => !!group)
+    .map((group) => ({ value: group, label: group }))
+)
+
+const typeOptions = computed(() =>
+  (data.value ?? [])
+    .map((item) => item.incident_type?.description || item.incident_type?.name)
+    .filter((value): value is string => !!value)
+    .map((value) => ({ value, label: value }))
+)
+
+const filteredHolidays = computed(() => {
+  return (data.value ?? []).filter((item) => {
+    if (selectedWorkerId.value && item.worker?.id !== selectedWorkerId.value) return false
+    const groupName = item.worker?.group?.name || item.worker?.leaderAtGroup?.name
+    if (selectedGroup.value && groupName !== selectedGroup.value) return false
+    const typeName = item.incident_type?.description || item.incident_type?.name
+    if (selectedType.value && typeName !== selectedType.value) return false
+    const startKey = toDateKey(item.start_date)
+    if (dateFrom.value && startKey < dateFrom.value) return false
+    if (dateTo.value && startKey > dateTo.value) return false
+    return true
+  })
+})
 
 const columns: TableColumn<HolidayIncident>[] = [
   {
@@ -93,7 +140,21 @@ const table = useTemplateRef('table')
     />
 
     <div class="border border-muted bg-muted/70 rounded-md">
-      <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
+      <Flex v-if="viewMode === 'table'" class="pt-2 px-2 flex-wrap gap-2 justify-between">
+        <Flex class="gap-2 flex-wrap">
+          <USelect v-model="selectedWorkerId" :items="workerOptions" placeholder="Filtrar trabajador" class="min-w-56" clearable />
+          <USelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar área" class="min-w-44" clearable />
+          <USelect v-model="selectedType" :items="typeOptions" placeholder="Filtrar tipo" class="min-w-44" clearable />
+          <UInput v-model="dateFrom" type="date" placeholder="Desde" />
+          <UInput v-model="dateTo" type="date" placeholder="Hasta" />
+          <UButton
+            variant="ghost"
+            color="neutral"
+            @click="() => { selectedWorkerId = null; selectedGroup = null; selectedType = null; dateFrom = ''; dateTo = ''; }"
+          >
+            Limpiar
+          </UButton>
+        </Flex>
         <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador" input-class="max-w-sm" />
         <ColumnsControl :table="table" />
       </Flex>
@@ -101,7 +162,7 @@ const table = useTemplateRef('table')
         v-if="viewMode === 'table'"
         v-model:sorting="sorting"
         ref="table"
-        :data="data ?? []"
+        :data="filteredHolidays"
         class="flex-1 w-full h-full"
         :columns="columns"
         :paginate="true"
@@ -109,9 +170,9 @@ const table = useTemplateRef('table')
         sticky
         :loading="pending"
       />
-      <DataGrid v-else class="p-4" :data="data ?? []" :columns="columns" />
+      <DataGrid v-else class="p-4" :data="filteredHolidays" :columns="columns" />
       <div v-if="viewMode === 'table'" class="flex justify-center py-4">
-        <UPagination v-model="page" :total="(data ?? []).length" :page-size="10" />
+        <UPagination v-model="page" :total="filteredHolidays.length" :page-size="10" />
       </div>
     </div>
   </div>
