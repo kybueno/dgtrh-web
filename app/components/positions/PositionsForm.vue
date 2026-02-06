@@ -68,9 +68,9 @@ function getPositionError() {
 }
 
 async function handleAddPosition() {
-  const error = getPositionError()
-  if (error) {
-    notifyWarning({ title: 'Validación', description: error })
+  const validationError = getPositionError()
+  if (validationError) {
+    notifyWarning({ title: 'Validación', description: validationError })
     return
   }
   pending.value = true
