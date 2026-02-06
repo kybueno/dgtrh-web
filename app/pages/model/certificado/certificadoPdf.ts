@@ -2,7 +2,23 @@ import { getImageDataUrl } from '~/lib/documents-generation/pdfmake'
 
 const DEFAULT_AREA = 'Dirección de Gestión Tecnológica'
 
-export async function printCertificadoModel(worker?: WorkerDetailed | WorkerInfo | null) {
+type CertificadoDates = {
+  requestDate?: string
+  fromDate?: string
+  toDate?: string
+}
+
+function formatDate(value?: string) {
+  if (!value) return ''
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return value
+  return parsed.toLocaleDateString('es-ES')
+}
+
+export async function printCertificadoModel(
+  worker?: WorkerDetailed | WorkerInfo | null,
+  dates?: CertificadoDates
+) {
   const logoData = await getImageDataUrl('/uci-logo-row.png')
   const areaName =
     worker?.group?.name ||
@@ -13,7 +29,10 @@ export async function printCertificadoModel(worker?: WorkerDetailed | WorkerInfo
   const positionLabel =
     (worker as any)?.position?.description ||
     (worker as any)?.position?.name ||
-    '____________________________'
+    ''
+  const requestDate = formatDate(dates?.requestDate)
+  const fromDate = formatDate(dates?.fromDate)
+  const toDate = formatDate(dates?.toDate)
 
   const docDefinition = {
     pageSize: 'A4',
@@ -21,9 +40,9 @@ export async function printCertificadoModel(worker?: WorkerDetailed | WorkerInfo
     content: [
       {
         image: logoData,
-        width: 160,
+        width: 80,
         alignment: 'left',
-        margin: [0, 0, 0, 12]
+        margin: [0, 0, 0, 10]
       },
       { text: 'MODELO DE CERTIFICADO', style: 'title', alignment: 'center' },
       {
@@ -37,17 +56,17 @@ export async function printCertificadoModel(worker?: WorkerDetailed | WorkerInfo
           'Cargo: ',
           { text: worker ? `${positionLabel}\n\n` : '_______________________________________________\n\n' },
           'Fecha de Solicitud: ',
-          { text: '___________________________________\n\n' },
+          { text: requestDate ? `${requestDate}\n\n` : '___________________________________\n\n' },
           'Desde: ',
-          { text: '____________  ' },
+          { text: fromDate ? `${fromDate}  ` : '____________  ' },
           'hasta: ',
-          { text: '____________  ' },
+          { text: toDate ? `${toDate}  ` : '____________  ' },
           'a descontar: ',
           { text: '__________\n\n' },
           'Entregado por: ',
-          { text: '___________________  ' },
-          'recibido por: ',
-          { text: '___________________' }
+          { text: '______________________________\n\n' },
+          'Recibido por: ',
+          { text: '______________________________' }
         ],
         style: 'body'
       }

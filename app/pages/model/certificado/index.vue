@@ -22,6 +22,16 @@ const selectedArea = computed(() =>
   selectedWorker.value?.leaderAtGroup?.name ||
   'Dirección de Gestión Tecnológica'
 )
+const requestDate = ref<string>('')
+const fromDate = ref<string>('')
+const toDate = ref<string>('')
+
+const formatDate = (value: string) => {
+  if (!value) return ''
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return value
+  return parsed.toLocaleDateString('es-ES')
+}
 
 async function loadWorkers() {
   loadingWorkers.value = true
@@ -35,7 +45,11 @@ function handlePrintBlank() {
 
 function handlePrintFilled() {
   if (!selectedWorker.value) return
-  printCertificadoModel(selectedWorker.value)
+  printCertificadoModel(selectedWorker.value, {
+    requestDate: requestDate.value,
+    fromDate: fromDate.value,
+    toDate: toDate.value
+  })
 }
 
 onMounted(loadWorkers)
@@ -52,20 +66,36 @@ onMounted(loadWorkers)
     </div>
 
     <separator />
-<stack class="m-auto w-full max-w-3xl">
-  
-      <stack-h class="mt-6 items-end">
-        <UFormField label="Trabajador" class="max-w-md">
-          <SelectWorker class="min-w-52" v-model="selectedWorkerId" :items="workerStore.workers" :loading="loadingWorkers"
-            placeholder="Seleccione un trabajador" />
+    <stack class="m-auto w-full max-w-3xl">
+      <div class="mt-6 grid grid-cols-1 items-end gap-4 md:grid-cols-2">
+        <UFormField label="Trabajador" class="md:col-span-2">
+          <SelectWorker
+            class="w-full"
+            v-model="selectedWorkerId"
+            :items="workerStore.workers"
+            :loading="loadingWorkers"
+            placeholder="Seleccione un trabajador"
+          />
         </UFormField>
-        <spacer/>
-        <UButton variant="subtle" color="neutral" icon="lucide:printer" @click="handlePrintBlank">Imprimir en blanco</UButton>
-        <UButton variant="subtle" icon="lucide:printer" :disabled="!selectedWorker" @click="handlePrintFilled">
-          Con datos
-        </UButton>
-      </stack-h>
-      <u-card class="p-8">
+        <UFormField label="Fecha de solicitud">
+          <UInput v-model="requestDate" type="date" />
+        </UFormField>
+        <UFormField label="Desde">
+          <UInput v-model="fromDate" type="date" />
+        </UFormField>
+        <UFormField label="Hasta">
+          <UInput v-model="toDate" type="date" />
+        </UFormField>
+        <div class="flex flex-wrap justify-end gap-2 md:col-span-2">
+          <UButton variant="subtle" color="neutral" icon="lucide:printer" @click="handlePrintBlank">
+            Imprimir en blanco
+          </UButton>
+          <UButton variant="subtle" icon="lucide:printer" :disabled="!selectedWorker" @click="handlePrintFilled">
+            Con datos
+          </UButton>
+        </div>
+      </div>
+      <u-card class="p-8 mt-6">
         <div class="flex justify-start">
           <img src="/uci-logo-row.png" alt="UCI" class="h-8" />
         </div>
@@ -77,12 +107,18 @@ onMounted(loadWorkers)
             '___________________________________' }}</p>
           <p><strong>Cargo</strong> {{ selectedWorker ? (selectedWorker.position?.description ?? '') :
             '___________________________________________' }}</p>
-          <p><strong>Fecha de Solicitud</strong> _________________________________</p>
-          <p><strong>Desde</strong> ____________ <strong>hasta</strong> ____________ <strong>a descontar</strong> ________
+          <p><strong>Fecha de Solicitud</strong> {{ requestDate ? formatDate(requestDate) : '_______________________________' }}</p>
+          <p>
+            <strong>Desde</strong> {{ fromDate ? formatDate(fromDate) : '____________' }}
+            <strong>hasta</strong> {{ toDate ? formatDate(toDate) : '____________' }}
+            <strong>a descontar</strong> ________
           </p>
-          <p><strong>Entregado por</strong> ________________ <strong>recibido por</strong> ________________</p>
+          <div class="space-y-2">
+            <p><strong>Entregado por</strong> ________________________________</p>
+            <p><strong>Recibido por</strong> ________________________________</p>
+          </div>
         </div>
       </u-card>
-</stack>
+    </stack>
   </stack>
 </template>
