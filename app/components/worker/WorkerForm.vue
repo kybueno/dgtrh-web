@@ -91,7 +91,7 @@ onMounted(() => {
 
                 <!-- CI -->
                 <UFormField label="Carnet de Identidad *" class="col-span-1">
-                    <UInput v-model="formData.ci" required />
+                    <UInput v-model="formData.ci" required maxlength="11" minlength="11" pattern="[0-9]{11}" />
                 </UFormField>
 
                 <!-- Número expediente -->
@@ -101,7 +101,8 @@ onMounted(() => {
 
                 <!-- Nivel -->
                 <UFormField class="col-span-2" label="Nivel educativo">
-                    <USelect class="w-full" :items="(EDUCATION_LEVELS as unknown as EducationLevel[]).map(e => ({ value: e.code, label: e.label, description: e.description }))"
+                    <USelect class="w-full"
+                        :items="(EDUCATION_LEVELS as unknown as EducationLevel[]).map(e => ({ value: e.code, label: e.label, description: e.description }))"
                         v-model="(formData.level as EducationLevelCode)">
                     </USelect>
                 </UFormField>
@@ -129,7 +130,8 @@ onMounted(() => {
 
                 <!-- Organizaciones -->
                 <UFormField class="col-span-2" label="Organizaciones">
-                    <USelect multiple class="w-full" :items="organizations.map(o => ({img:o.img,  value: o.code, label: o.acronym || o.code?.toUpperCase(), description: o.name || '' }))" 
+                    <USelect multiple class="w-full"
+                        :items="organizations.map(o => ({ img: o.img, value: o.code, label: o.acronym || o.code?.toUpperCase(), description: o.name || '' }))"
                         v-model="formData.organizations_codes" :loading="organizationsPending"
                         :disabled="organizations.length == 0">
                         <span v-for="o in formData.organizations_codes">{{ o.toUpperCase() }}</span>
@@ -145,8 +147,8 @@ onMounted(() => {
 
                 <!-- Cargo -->
                 <UFormField label="Cargo que ocupa" class="col-span-2">
-                    <USelect required v-model="(formData.position_code as number | undefined)" :items="positions.map(p => ({ value: p.code, label: p.description }))"
-                        class="w-full">
+                    <USelect required v-model="(formData.position_code as number | undefined)"
+                        :items="positions.map(p => ({ value: p.code, label: p.description }))" class="w-full">
                         <template #content-top>
                             <UButton to="/positions/new" color="neutral" variant="ghost" icon="mdi:plus">Nuevo cargo
                             </UButton>
@@ -156,8 +158,8 @@ onMounted(() => {
 
                 <!--Grupo de Trabajo-->
                 <UFormField label="Grupo de Trabajo" class="col-span-2">
-                    <USelect v-model="formData.group_id" :items="workGroups" class="w-full"
-                        value-key="id" label-key="name">
+                    <USelect v-model="formData.group_id" :items="workGroups" class="w-full" value-key="id"
+                        label-key="name">
                     </USelect>
                 </UFormField>
 

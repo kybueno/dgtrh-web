@@ -139,13 +139,12 @@ const table = useTemplateRef('table')
         >
           Generar prenómina de {{ currentPayrollLabel }}
         </UButton>
-        <UButton icon="i-lucide-plus" to="/payroll/new" variant="ghost">Añadir</UButton>
       </div>
     </div>
 
     <div class="border border-muted bg-muted/70 rounded-md">
       <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
-        <TableSearch :table="table" column-id="name" placeholder="Buscar trabajador" input-class="max-w-sm" />
+        <TableSearch :table="table" column-id="created_at" placeholder="Buscar por fecha" input-class="max-w-sm" />
         <ColumnsControl :table="table" />
       </Flex>
       <UTable
