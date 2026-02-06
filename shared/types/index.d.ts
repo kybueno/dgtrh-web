@@ -22,8 +22,6 @@ type PositionInsert = TablesInsert <"positions">
 type OrganizationInsert = TablesInsert<"organizations"> 
 type OrganizationInfo = Tables<"organizations"> 
 type PositionInfo = Tables<"positions">
-type HolidaysInfo = Tables<"holidays">
-type HolidaysInsert = TablesInsert<"holidays">
 
 
 interface StandardErrorResponse {

@@ -62,7 +62,6 @@ model Worker {
   led_groups          Group[]       @relation("GroupLeader")
   extra_work           ExtraWork[]
   incidents           Incident[]
-  holidays            Holiday[]
   payroll_created     Payroll[]     @relation("payroll_created")
   payroll_revised     Payroll[]     @relation("payroll_revised")
 
@@ -148,20 +147,6 @@ model Incident {
   updated_at    DateTime?    @updatedAt
 
   @@map("incidents")
-}
-
-model Holiday {
-  id            String   @id @default(uuid()) @db.Uuid
-  worker_id     String?  @db.Uuid
-  worker        Worker?  @relation(fields: [worker_id], references: [id])
-  desde         DateTime?
-  hasta         DateTime?
-  incorporacion DateTime?
-  motivo        String?
-  tiempo        Json?
-  created_at    DateTime? @default(now())
-
-  @@map("holidays")
 }
 
 model Payroll {
