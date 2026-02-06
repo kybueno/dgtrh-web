@@ -36,7 +36,7 @@ const protectedLinks = [{
   icon: 'mdi:attach-money',
   color: 'green',
   to: '/payroll',
-  role: [UserRole.director, UserRole.system_admin, UserRole.hr_manager],
+  role: [UserRole.system_admin, UserRole.hr_manager],
   defaultOpen: true,
   type: 'trigger',
   children: [
@@ -93,7 +93,7 @@ const protectedLinks = [{
   children: [{
     label: 'Trabajadores',
     to: '/people',
-    role: [UserRole.hr_manager, UserRole.system_admin],
+    role: [UserRole.hr_manager, UserRole.system_admin, UserRole.director],
     exact: true,
     onSelect: () => {
       open.value = false
