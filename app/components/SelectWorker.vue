@@ -44,6 +44,10 @@ function clearSelection(e?: Event) {
   e?.stopPropagation()
   emit('update:modelValue', null)
 }
+
+const selectedWorker = computed(() => {
+  return resolvedItems.value.find((worker) => worker.id === props.modelValue)
+})
 </script>
 
 <template>
@@ -85,5 +89,6 @@ function clearSelection(e?: Event) {
         @click.prevent.stop="clearSelection"
       />
     </template>
+    <span>{{ getDisplayName(selectedWorker) }}</span>
   </USelectMenu>
 </template>
