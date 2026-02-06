@@ -1,6 +1,7 @@
 import { prisma } from '../../utils/db'
 import { requireUser } from '../../utils/auth'
 import { getExtraWorkHoursInMonth, getIncidentDaysInMonth, getMonthBoundsUtc } from '../../utils/payroll'
+import { WorkerStatus } from '../../../prisma/generated/enums'
 
 export default defineEventHandler(async (event) => {
   requireUser(event)
@@ -34,6 +35,9 @@ export default defineEventHandler(async (event) => {
 
   const [workers, incidentTypes, incidents, extraWork] = await Promise.all([
     prisma.worker.findMany({
+      where: {
+        status: WorkerStatus.active
+      },
       include: {
         position: true
       }
