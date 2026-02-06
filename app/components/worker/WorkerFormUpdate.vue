@@ -14,7 +14,18 @@ const formData = ref<TablesUpdate<'workers'>>({
     ...props.data
 });
 
+function getCiError(ci: string | null | undefined) {
+    if (!ci) return 'El CI es obligatorio.'
+    if (!/^\d{11}$/.test(ci)) return 'El CI debe tener exactamente 11 dígitos.'
+    return null
+}
+
 function handleSubmit() {
+    const ciError = getCiError(formData.value.ci)
+    if (ciError) {
+        notifyWarning({ title: 'CI inválido', description: ciError })
+        return
+    }
     const payload = {
         ...formData.value,
         group_id: formData.value.group_id ?? null,
@@ -57,7 +68,8 @@ onMounted(() => {
 
                 <!-- CI -->
                 <UFormField label="Carnet de Identidad *" class="col-span-1">
-                    <UInput v-model="formData.ci" required />
+                    <UInput v-model="formData.ci" required maxlength="11" minlength="11" pattern="\\d{11}"
+                        inputmode="numeric" autocomplete="off" />
                 </UFormField>
 
                 <!-- Número expediente -->

@@ -10,8 +10,8 @@ import OrganizationsForm from '~/components/organizations/OrganizationsForm.vue'
 </script>
 
 <template>
-  <div>
-    <OrganizationsForm></OrganizationsForm>
-  </div>
+  <Flex class="p-4 flex-col h-full items-center justify-center">
+    <OrganizationsForm/>
+  </Flex>
 </template>
 

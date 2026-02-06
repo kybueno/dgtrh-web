@@ -1,44 +1,44 @@
 <template>
-  <div>
-    <h2 class="font-bold flex items-center">{{ isEdit ? 'Editar Organización' : 'Nueva Organización' }}</h2>
+  <UForm class="grid grid-cols-2 gap-4">
+    <UCard class="max-w-3xl mx-auto">
+      <template #header>
+        <h2 class="font-bold flex items-center">{{ isEdit ? 'Editar Organización' : 'Nueva Organización' }}</h2>
+      </template>
 
-    <UForm class="grid grid-cols-2 gap-4">
-      <UFormField label="Nombre:">
-        <UInput placeholder="Introduzca el nombre de la organización" v-model="formData.name"
-          error="Please enter a valid name." />
-      </UFormField>
-
-      <UFormField label="Descripción:">
-        <UInput placeholder="Introduzca la descripción" v-model="formData.description"
-          error="Please enter a valid description." />
-      </UFormField>
-
-      <UFormField label="Código:">
-        <UInput placeholder="Ejemplo de código: ctc" v-model="formData.code" error="Please enter a valid code." />
-      </UFormField>
-
-      <UFormField label="Abreviatura:">
-        <UInput placeholder="Introduzca el acrónimo de la organización" v-model="formData.acronym"
-          error="Please enter a valid acronym." />
-      </UFormField>
-
-      <UFormField label="URL de la imagen:">
-        <div class="flex items-center gap-3">
-          <UAvatar
-            size="lg"
-            :src="formData.img || undefined"
-            :alt="formData.acronym || formData.name || undefined"
-          />
-          <UInput class="flex-1" placeholder="https://..." v-model="formData.img" />
-        </div>
-      </UFormField>
-
-      <div class="col-span-2 flex items-center gap-2">
-        <UButton @click="handleSubmit" color="primary">{{ isEdit ? 'Guardar cambios' : 'Guardar organización' }}</UButton>
-        <UButton variant="ghost" color="neutral" @click="useRouter().back()">Cancelar</UButton>
+      <div class="p-4">
+        <UFormField label="Nombre:">
+          <UInput placeholder="Introduzca el nombre de la organización" v-model="formData.name"
+            error="Por favor ingrese un nombre válido." />
+        </UFormField>
+        <UFormField label="Descripción:">
+          <UTextarea placeholder="Introduzca la descripción" v-model="formData.description" />
+        </UFormField>
+        <UFormField label="Código:" :error="codeError || undefined">
+          <UInput placeholder="Ejemplo de código: ctc" :model-value="formData.code"
+            @update:model-value="(value) => (formData.code = sanitizeOrgCode(value || ''))"
+            pattern="[a-z]+" autocomplete="off" />
+        </UFormField>
+        <UFormField label="Abreviatura:">
+          <UInput placeholder="Introduzca el acrónimo de la organización" v-model="formData.acronym"
+            error="Por favor ingrese un acrónimo válido." />
+        </UFormField>
+        <UFormField label="URL de la imagen:">
+          <div class="flex items-center gap-3">
+            <UAvatar size="lg" :src="formData.img || undefined" :alt="formData.acronym || formData.name || undefined" />
+            <UInput class="flex-1" placeholder="https://..." v-model="formData.img" />
+          </div>
+        </UFormField>
       </div>
-    </UForm>
-  </div>
+
+      <template #footer>
+        <h-stack class="justify-end">
+          <UButton variant="ghost" color="neutral" @click="useRouter().back()">Cancelar</UButton>
+          <UButton @click="handleSubmit" variant="subtle" color="primary">{{ isEdit ? 'Guardar cambios' : 'Guardar organización' }}
+          </UButton>
+        </h-stack>
+      </template>
+    </UCard>
+  </UForm>
 </template>
 
 <script lang="ts" setup>
@@ -74,8 +74,30 @@ const errorMessage = ref<string | null>(null)
 
 const toast = useToast()
 
+function sanitizeOrgCode(value: string) {
+  return value.toLowerCase().replace(/[^a-z]/g, "")
+}
+
+const codeError = computed(() => {
+  if (!formData.value.code) return "Please enter a valid code."
+  if (!/^[a-z]+$/.test(formData.value.code)) return "El código solo puede tener letras minúsculas a-z."
+  return null
+})
+
 async function handleSubmit() {
   if (pending.value) return
+
+  const currentCodeError = codeError.value
+  if (currentCodeError) {
+    toast.add({
+      title: 'Código inválido',
+      description: currentCodeError,
+      color: 'warning',
+      icon: 'mdi:warning',
+    })
+    return
+  }
+
   pending.value = true
 
   const response = isEdit.value

@@ -21,7 +21,18 @@ const formData = ref<WorkerInsert>({
 
 const loading = ref(false)
 
+function getCiError(ci: string | null | undefined) {
+    if (!ci) return 'El CI es obligatorio.'
+    if (!/^\d{11}$/.test(ci)) return 'El CI debe tener exactamente 11 dígitos.'
+    return null
+}
+
 async function handleAddWorker() {
+    const ciError = getCiError(formData.value.ci)
+    if (ciError) {
+        notifyWarning({ title: 'CI inválido', description: ciError })
+        return
+    }
     loading.value = true
     try {
         const payload = {
@@ -91,7 +102,8 @@ onMounted(() => {
 
                 <!-- CI -->
                 <UFormField label="Carnet de Identidad *" class="col-span-1">
-                    <UInput v-model="formData.ci" required maxlength="11" minlength="11" pattern="[0-9]{11}" />
+                    <UInput v-model="formData.ci" required maxlength="11" minlength="11" pattern="\\d{11}"
+                        inputmode="numeric" autocomplete="off" />
                 </UFormField>
 
                 <!-- Número expediente -->
