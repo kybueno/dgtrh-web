@@ -18,6 +18,43 @@ const table = useTemplateRef('table')
 const viewMode = ref<'table' | 'grid'>('table')
 const sorting = ref([])
 
+const selectedClassification = ref<string | null>(null)
+const selectedPayFor = ref<string | null>(null)
+const deductibleFilter = ref<'all' | 'yes' | 'no'>('all')
+const incentiveFilter = ref<'all' | 'yes' | 'no'>('all')
+const sumFilter = ref<'all' | 'yes' | 'no'>('all')
+const avgFilter = ref<'all' | 'yes' | 'no'>('all')
+
+const classificationOptions = computed(() =>
+  incidentTypeStore.incidentTypes
+    .map((type) => type.classification)
+    .filter((value): value is string => !!value)
+    .map((value) => ({ value, label: value }))
+)
+
+const payForOptions = computed(() =>
+  incidentTypeStore.incidentTypes
+    .map((type) => type.pay_for)
+    .filter((value): value is string => !!value)
+    .map((value) => ({ value, label: value }))
+)
+
+const filteredIncidentTypes = computed(() => {
+  return incidentTypeStore.incidentTypes.filter((type) => {
+    if (selectedClassification.value && type.classification !== selectedClassification.value) return false
+    if (selectedPayFor.value && type.pay_for !== selectedPayFor.value) return false
+    if (deductibleFilter.value === 'yes' && !type.deductible) return false
+    if (deductibleFilter.value === 'no' && type.deductible) return false
+    if (incentiveFilter.value === 'yes' && !type.incentive) return false
+    if (incentiveFilter.value === 'no' && type.incentive) return false
+    if (sumFilter.value === 'yes' && !type.sum) return false
+    if (sumFilter.value === 'no' && type.sum) return false
+    if (avgFilter.value === 'yes' && !type.avg) return false
+    if (avgFilter.value === 'no' && type.avg) return false
+    return true
+  })
+})
+
 function formatBoolean(value: boolean | null | undefined): string {
   if (value === null || value === undefined) return '-'
   return value ? 'Sí' : 'No'
@@ -117,7 +154,38 @@ const columns: TableColumn<IncidentType>[] = [
     </div>
 
     <div class="border border-muted bg-muted/70 rounded-md">
-      <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
+      <Flex v-if="viewMode === 'table'" class="pt-2 px-2 flex-wrap gap-2 justify-between">
+        <Flex class="gap-2 flex-wrap">
+          <USelect v-model="selectedClassification" :items="classificationOptions" placeholder="Clasificación" class="min-w-44" clearable />
+          <USelect v-model="selectedPayFor" :items="payForOptions" placeholder="A pagar por" class="min-w-44" clearable />
+          <USelect
+            v-model="deductibleFilter"
+            :items="[{ value: 'all', label: 'Deducible: todos' }, { value: 'yes', label: 'Deducible: sí' }, { value: 'no', label: 'Deducible: no' }]"
+            class="min-w-44"
+          />
+          <USelect
+            v-model="incentiveFilter"
+            :items="[{ value: 'all', label: 'Estímulo: todos' }, { value: 'yes', label: 'Estímulo: sí' }, { value: 'no', label: 'Estímulo: no' }]"
+            class="min-w-44"
+          />
+          <USelect
+            v-model="sumFilter"
+            :items="[{ value: 'all', label: 'Suma: todos' }, { value: 'yes', label: 'Suma: sí' }, { value: 'no', label: 'Suma: no' }]"
+            class="min-w-44"
+          />
+          <USelect
+            v-model="avgFilter"
+            :items="[{ value: 'all', label: 'Prom.: todos' }, { value: 'yes', label: 'Prom.: sí' }, { value: 'no', label: 'Prom.: no' }]"
+            class="min-w-44"
+          />
+          <UButton
+            variant="ghost"
+            color="neutral"
+            @click="() => { selectedClassification = null; selectedPayFor = null; deductibleFilter = 'all'; incentiveFilter = 'all'; sumFilter = 'all'; avgFilter = 'all'; }"
+          >
+            Limpiar
+          </UButton>
+        </Flex>
         <TableSearch :table="table" column-id="description" placeholder="Buscar por descripción" input-class="max-w-sm" />
         <ColumnsControl :table="table" />
       </Flex>
@@ -126,15 +194,15 @@ const columns: TableColumn<IncidentType>[] = [
         v-model:sorting="sorting"
         ref="table"
         :columns="columns"
-        :data="incidentTypeStore.incidentTypes"
+        :data="filteredIncidentTypes"
         class="w-full h-full"
         :paginate="true"
         :page-size="10"
         sticky
       />
-      <DataGrid v-else class="p-4" :data="incidentTypeStore.incidentTypes" :columns="columns" />
+      <DataGrid v-else class="p-4" :data="filteredIncidentTypes" :columns="columns" />
       <div v-if="viewMode === 'table'" class="flex justify-center py-4">
-        <UPagination v-model="page" :total="incidentTypeStore.incidentTypes.length" :page-size="10" />
+        <UPagination v-model="page" :total="filteredIncidentTypes.length" :page-size="10" />
       </div>
     </div>
     <!-- <IncidentTypeForm @submit="handleCreateIncidentType" /> -->
