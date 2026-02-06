@@ -25,3 +25,6 @@ logs
 
 #Prisma
 *prisma/generated
+
+#Local files
+*local.*
