@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { incidents, loadIncidents, incidentsPending } from '~/stores/incidentStore'
+import { page } from '#build/ui'
 
 definePageMeta({
   title: 'Incidencias'
@@ -16,6 +17,7 @@ function handleReload() {
 
 const table = useTemplateRef('table')
 const viewMode = ref<'table' | 'grid'>('table')
+const sorting = ref([])
 
 const columns = [
   { id: 'incident_code', accessorKey: 'incident_code', header: 'Código', cell: ({ row }: any) => row.original.incident_code },
@@ -31,14 +33,33 @@ const columns = [
     <div class="flex items-center justify-between mb-6">
       <h3 class="font-semibold text-lg">Incidencias</h3>
       <div class="flex items-center gap-2">
-        <TableSearch v-if="viewMode === 'table'" :table="table" column-id="description" placeholder="Buscar incidencias..." input-class="max-w-lg" />
         <DataViewToggle v-model="viewMode" />
         <UButton @click="handleReload" variant="ghost" icon="mdi:refresh" title="Refrescar lista" :disabled="incidentsPending" :loading="incidentsPending" />
         <UButton icon="i-lucide-plus" to="/incident/new" variant="ghost">Añadir</UButton>
       </div>
     </div>
 
-    <UTable v-if="viewMode === 'table'" ref="table" :columns="columns" :data="incidents" :loading="incidentsPending" />
-    <DataGrid v-else :data="incidents" :columns="columns" />
+    <div class="border border-muted bg-muted/70 rounded-md">
+      <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
+        <TableSearch :table="table" column-id="description" placeholder="Buscar incidencias" input-class="max-w-lg" />
+        <ColumnsControl :table="table" />
+      </Flex>
+      <UTable
+        v-if="viewMode === 'table'"
+        v-model:sorting="sorting"
+        ref="table"
+        :columns="columns"
+        :data="incidents"
+        :loading="incidentsPending"
+        class="w-full h-full"
+        :paginate="true"
+        :page-size="10"
+        sticky
+      />
+      <DataGrid v-else class="p-4" :data="incidents" :columns="columns" />
+      <div v-if="viewMode === 'table'" class="flex justify-center py-4">
+        <UPagination v-model="page" :total="incidents.length" :page-size="10" />
+      </div>
+    </div>
   </div>
 </template>
