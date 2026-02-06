@@ -2,7 +2,10 @@
 CREATE TYPE "worker_status" AS ENUM ('active', 'inactive', 'terminated');
 
 -- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('hr_manager', 'director', 'employee');
+CREATE TYPE "UserRole" AS ENUM ('system_admin', 'hr_manager', 'director', 'employee');
+
+-- CreateEnum
+CREATE TYPE "payroll_status" AS ENUM ('pending', 'approved', 'denied');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -124,30 +127,31 @@ CREATE TABLE "incidents" (
 );
 
 -- CreateTable
-CREATE TABLE "holidays" (
-    "id" UUID NOT NULL,
-    "worker_id" UUID,
-    "desde" TIMESTAMP(3),
-    "hasta" TIMESTAMP(3),
-    "incorporacion" TIMESTAMP(3),
-    "motivo" TEXT,
-    "tiempo" JSONB,
-    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "holidays_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "payroll" (
     "id" SERIAL NOT NULL,
     "month" INTEGER NOT NULL,
     "year" INTEGER NOT NULL,
-    "status" TEXT NOT NULL,
+    "status" "payroll_status" NOT NULL DEFAULT 'pending',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "created_by" UUID,
     "revised_by" UUID,
+    "approved_by" UUID,
+    "approved_at" TIMESTAMP(3),
+    "denied_by" UUID,
+    "denied_at" TIMESTAMP(3),
 
     CONSTRAINT "payroll_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "payroll_worker_observations" (
+    "payroll_id" INTEGER NOT NULL,
+    "worker_id" UUID NOT NULL,
+    "notes" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "payroll_worker_observations_pkey" PRIMARY KEY ("payroll_id","worker_id")
 );
 
 -- CreateIndex
@@ -164,6 +168,9 @@ CREATE UNIQUE INDEX "positions_code_key" ON "positions"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "organizations_code_key" ON "organizations"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "payroll_month_year_key" ON "payroll"("month", "year");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_worker_id_fkey" FOREIGN KEY ("worker_id") REFERENCES "workers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -187,10 +194,19 @@ ALTER TABLE "incidents" ADD CONSTRAINT "incidents_worker_id_fkey" FOREIGN KEY ("
 ALTER TABLE "incidents" ADD CONSTRAINT "incidents_incident_code_fkey" FOREIGN KEY ("incident_code") REFERENCES "incident_types"("code") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "holidays" ADD CONSTRAINT "holidays_worker_id_fkey" FOREIGN KEY ("worker_id") REFERENCES "workers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "payroll" ADD CONSTRAINT "payroll_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "workers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "payroll" ADD CONSTRAINT "payroll_revised_by_fkey" FOREIGN KEY ("revised_by") REFERENCES "workers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payroll" ADD CONSTRAINT "payroll_approved_by_fkey" FOREIGN KEY ("approved_by") REFERENCES "workers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payroll" ADD CONSTRAINT "payroll_denied_by_fkey" FOREIGN KEY ("denied_by") REFERENCES "workers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payroll_worker_observations" ADD CONSTRAINT "payroll_worker_observations_payroll_id_fkey" FOREIGN KEY ("payroll_id") REFERENCES "payroll"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payroll_worker_observations" ADD CONSTRAINT "payroll_worker_observations_worker_id_fkey" FOREIGN KEY ("worker_id") REFERENCES "workers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

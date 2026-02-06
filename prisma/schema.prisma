@@ -26,6 +26,8 @@ enum PayrollStatus {
   pending
   approved
   denied
+
+  @@map("payroll_status")
 }
 
 model User {
