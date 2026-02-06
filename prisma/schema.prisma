@@ -22,6 +22,12 @@ enum UserRole {
   employee
 }
 
+enum PayrollStatus {
+  pending
+  approved
+  denied
+}
+
 model User {
   id           String   @id @default(uuid()) @db.Uuid
   email        String   @unique
@@ -64,6 +70,9 @@ model Worker {
   incidents           Incident[]
   payroll_created     Payroll[]     @relation("payroll_created")
   payroll_revised     Payroll[]     @relation("payroll_revised")
+  payroll_approved    Payroll[]     @relation("payroll_approved")
+  payroll_denied      Payroll[]     @relation("payroll_denied")
+  payroll_observations PayrollWorkerObservation[]
 
   @@map("workers")
 }
@@ -153,12 +162,32 @@ model Payroll {
   id          Int      @id @default(autoincrement())
   month       Int
   year        Int
-  status      String
+  status      PayrollStatus @default(pending)
   created_at  DateTime @default(now())
   created_by  String?  @db.Uuid
   revised_by  String?  @db.Uuid
   creator     Worker?  @relation("payroll_created", fields: [created_by], references: [id])
   reviewer    Worker?  @relation("payroll_revised", fields: [revised_by], references: [id])
+  approved_by String?  @db.Uuid
+  approved_at DateTime?
+  denied_by   String?  @db.Uuid
+  denied_at   DateTime?
+  approver    Worker?  @relation("payroll_approved", fields: [approved_by], references: [id])
+  denier      Worker?  @relation("payroll_denied", fields: [denied_by], references: [id])
+  observations PayrollWorkerObservation[]
 
   @@map("payroll")
+}
+
+model PayrollWorkerObservation {
+  payroll_id Int
+  worker_id  String   @db.Uuid
+  notes      String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  payroll    Payroll  @relation(fields: [payroll_id], references: [id])
+  worker     Worker   @relation(fields: [worker_id], references: [id])
+
+  @@id([payroll_id, worker_id])
+  @@map("payroll_worker_observations")
 }

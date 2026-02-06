@@ -33,6 +33,19 @@ const formatDate = (value?: string | Date | null) => {
   return date.toLocaleDateString('es-ES')
 }
 
+const formatStatus = (status?: string | null) => {
+  switch (status) {
+    case 'pending':
+      return 'Pendiente'
+    case 'approved':
+      return 'Aprobada'
+    case 'denied':
+      return 'Denegada'
+    default:
+      return status ?? '-'
+  }
+}
+
 const columns: TableColumn<PayrollInfo>[] = [
   {
     id: 'month',
@@ -50,7 +63,7 @@ const columns: TableColumn<PayrollInfo>[] = [
     id: 'status',
     accessorKey: 'status',
     header: 'Estado',
-    cell: ({ row }) => row.original.status ?? '-'
+    cell: ({ row }) => formatStatus(row.original.status)
   },
   {
     id: 'created_at',
