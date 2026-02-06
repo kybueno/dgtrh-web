@@ -6,7 +6,7 @@ export const useWorkerStore = defineStore('workerStore', {
   }),
   actions: {
     async loadWorkers() {
-      const data = await $fetch<WorkerInfo[]>('/api/workers')
+      const data = await $fetch<WorkerDetailed[]>('/api/workers?detailed=true')
       this.workers = data
     },
     async createWorker(newWorkerData: WorkerInsert) {
