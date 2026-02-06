@@ -1,4 +1,9 @@
-export const payroll = ref<PayrollInfo[]>([])
+export type PayrollWithWorkers = PayrollInfo & {
+  creator?: WorkerInfo | null
+  reviewer?: WorkerInfo | null
+}
+
+export const payroll = ref<PayrollWithWorkers[]>([])
 
 export const payrollPending = ref(false)
 export interface PayrollInfo extends Tables<'payroll'> {}
@@ -14,7 +19,7 @@ async function wrapFetch<T>(promise: Promise<T>) {
 
 export async function loadPayroll() {
   payrollPending.value = true
-  const response = await wrapFetch($fetch<PayrollInfo[]>('/api/payroll'))
+  const response = await wrapFetch($fetch<PayrollWithWorkers[]>('/api/payroll'))
   const { data, error } = response
   payrollPending.value = false
   if (data) payroll.value = data
