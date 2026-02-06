@@ -13,7 +13,6 @@ export async function printCertificadoModel(worker?: WorkerDetailed | WorkerInfo
   const positionLabel =
     (worker as any)?.position?.description ||
     (worker as any)?.position?.name ||
-    (worker as any)?.position_code ||
     ''
 
   const docDefinition = {

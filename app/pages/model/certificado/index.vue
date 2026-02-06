@@ -73,11 +73,10 @@ onMounted(loadWorkers)
           <p><strong>Área</strong> {{ selectedWorker ? selectedArea : '________________________________________' }}</p>
           <p><strong>Nombre y Apellido</strong> {{ selectedWorker ? getDisplayName(selectedWorker) :
             '____________________________________' }}</p>
-          <p><strong>No. Expediente</strong> {{ selectedWorker ? (selectedWorker.record_number ?? '-') :
+          <p><strong>No. Expediente</strong> {{ selectedWorker ? (selectedWorker.record_number ?? '') :
             '___________________________________' }}</p>
-          <p><strong>Cargo</strong> {{ selectedWorker ? (selectedWorker.position?.description ||
-            selectedWorker.position_code
-            || '-') : '___________________________________________' }}</p>
+          <p><strong>Cargo</strong> {{ selectedWorker ? (selectedWorker.position?.description ?? '') :
+            '___________________________________________' }}</p>
           <p><strong>Fecha de Solicitud</strong> _________________________________</p>
           <p><strong>Desde</strong> ____________ <strong>hasta</strong> ____________ <strong>a descontar</strong> ________
           </p>
