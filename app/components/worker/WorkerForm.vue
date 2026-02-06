@@ -21,7 +21,46 @@ const formData = ref<WorkerInsert>({
 
 const loading = ref(false)
 
+function getCiError(ci: string | null | undefined) {
+    if (!ci) return 'El CI es obligatorio.'
+    if (!/^\d{11}$/.test(ci)) return 'El CI debe tener exactamente 11 dígitos.'
+    return null
+}
+
+function getEmailError(email: string | null | undefined) {
+    if (!email) return null
+    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return 'El correo no es válido.'
+    return null
+}
+
+function getTelError(tel: string | null | undefined) {
+    if (!tel) return null
+    if (!/^\\d+$/.test(tel)) return 'El teléfono solo puede tener números.'
+    return null
+}
+
+function getRecordNumberError(value: string | null | undefined) {
+    if (!value) return null
+    if (!/^[A-Z0-9-]+$/.test(value)) return 'El expediente solo puede tener letras mayúsculas, números o guiones.'
+    return null
+}
+
+function sanitizeRecordNumber(value: string) {
+    return value.toUpperCase().replace(/[^A-Z0-9-]/g, '')
+}
+
 async function handleAddWorker() {
+    const ciError = getCiError(formData.value.ci)
+    const emailError = getEmailError(formData.value.email)
+    const telError = getTelError(formData.value.tel)
+    const recordNumberError = getRecordNumberError(formData.value.record_number)
+    const secondLastNameError = !formData.value.second_last_name ? 'El segundo apellido es obligatorio.' : null
+
+    const firstError = ciError || emailError || telError || recordNumberError || secondLastNameError
+    if (firstError) {
+        notifyWarning({ title: 'Validación', description: firstError })
+        return
+    }
     loading.value = true
     try {
         const payload = {
@@ -86,17 +125,20 @@ onMounted(() => {
 
                 <!-- Segundo Apellido -->
                 <UFormField label="Segundo Apellido" class="col-span-1">
-                    <UInput v-model="formData.second_last_name" />
+                    <UInput v-model="formData.second_last_name" required />
                 </UFormField>
 
                 <!-- CI -->
                 <UFormField label="Carnet de Identidad *" class="col-span-1">
-                    <UInput v-model="formData.ci" required maxlength="11" minlength="11" pattern="[0-9]{11}" />
+                    <UInput v-model="formData.ci" required maxlength="11" minlength="11" pattern="\\d{11}"
+                        inputmode="numeric" autocomplete="off" />
                 </UFormField>
 
                 <!-- Número expediente -->
                 <UFormField label="Número de expediente" class="col-span-1">
-                    <UInput v-model="formData.record_number" />
+                    <UInput :model-value="formData.record_number"
+                        @update:model-value="(value) => (formData.record_number = sanitizeRecordNumber(value || ''))"
+                        pattern="[A-Z0-9-]+" autocomplete="off" />
                 </UFormField>
 
                 <!-- Nivel -->
@@ -114,12 +156,12 @@ onMounted(() => {
 
                 <!-- Email -->
                 <UFormField label="Correo Electrónico" class="col-span-1">
-                    <UInput v-model="formData.email" type="email" />
+                    <UInput v-model="formData.email" type="email" autocomplete="email" />
                 </UFormField>
 
                 <!-- Teléfono -->
                 <UFormField label="Teléfono" class="col-span-1">
-                    <UInput v-model="formData.tel" />
+                    <UInput v-model="formData.tel" inputmode="numeric" pattern="\\d+" autocomplete="tel" />
                 </UFormField>
 
                 <!-- Género -->

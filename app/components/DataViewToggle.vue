@@ -14,9 +14,9 @@ function setMode(mode: 'table' | 'grid') {
 </script>
 
 <template>
-  <UFieldGroup size="sm" >
+  <UFieldGroup  >
     <UButton
-      :variant="modelValue === 'table' ? 'subtle' : 'outline'"
+      :variant="modelValue === 'table' ? 'soft' : 'outline'"
       color="primary"
       icon="i-lucide-table"
       @click="setMode('table')"
@@ -24,7 +24,7 @@ function setMode(mode: 'table' | 'grid') {
       Tabla
     </UButton>
     <UButton
-      :variant="modelValue === 'grid' ? 'subtle' : 'outline'"
+      :variant="modelValue === 'grid' ? 'soft' : 'outline'"
       color="primary"
       icon="i-lucide-layout-grid"
       @click="setMode('grid')"

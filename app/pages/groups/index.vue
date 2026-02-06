@@ -21,15 +21,15 @@ function handleDeleteGroup(group:WorkGroupInfo){
             <div class="flex items-center justify-between mb-8">
                 <h2 class="text-lg font-semibold">Grupos de trabajo</h2>
                 <div class="space-x-2">
+                    <UButton icon="mdi:add" to="/groups/new" variant="subtle"
+                        >Nuevo grupo</UButton
+                    >
                     <UButton
                         icon="mdi:refresh"
                         variant="ghost"
                         @click="loadGroups()"
                         :disabled="groupsPending"
                     ></UButton>
-                    <UButton icon="mdi:add" to="/groups/new" variant="subtle"
-                        >Crear nuevo grupo</UButton
-                    >
                 </div>
             </div>
 

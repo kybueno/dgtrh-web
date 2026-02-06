@@ -12,6 +12,9 @@ import type { TableColumn } from '@nuxt/ui';
 onMounted(() => loadWorkers())
 
 const viewMode = ref<'table' | 'grid'>('table')
+const selectedGender = ref<string | null>(null)
+const selectedGroup = ref<string | null>(null)
+const selectedPosition = ref<string | number | null>(null)
 
 interface Props {
   data: WorkerDetailed[]
@@ -110,6 +113,31 @@ const columns: TableColumn<WorkerDetailed>[] = [
 ]
 const table = useTemplateRef('table')
 
+const groupOptions = computed(() =>
+  workers.value
+    .map((worker) => worker.group?.name || worker.leaderAtGroup?.name)
+    .filter((value): value is string => !!value)
+    .map((value) => ({ value, label: value }))
+)
+
+const positionOptions = computed(() =>
+  workers.value.map((worker) => ({
+    value: worker.position?.description ?? worker.position_code,
+    label: worker.position?.description ?? String(worker.position_code)
+  }))
+)
+
+const filteredWorkers = computed(() => {
+  return workers.value.filter((worker) => {
+    if (selectedGender.value && worker.gender !== selectedGender.value) return false
+    const groupName = worker.group?.name || worker.leaderAtGroup?.name
+    if (selectedGroup.value && groupName !== selectedGroup.value) return false
+    const positionLabel = worker.position?.description ?? worker.position_code
+    if (selectedPosition.value && positionLabel !== selectedPosition.value) return false
+    return true
+  })
+})
+
 </script>
 
 <template>
@@ -124,9 +152,16 @@ const table = useTemplateRef('table')
       </div>
     </div>
 
+    <div v-if="viewMode === 'table'" class="flex flex-wrap gap-2 pb-3">
+      <ClearableSelect v-model="selectedGender" :items="GENDER_OPTIONS" placeholder="Sexo" class="min-w-40" />
+      <ClearableSelect v-model="selectedGroup" :items="groupOptions" placeholder="Área" class="min-w-44" />
+      <ClearableSelect v-model="selectedPosition" :items="positionOptions" placeholder="Cargo" class="min-w-56" />
+      <UButton variant="ghost" color="neutral" @click="() => { selectedGender = null; selectedGroup = null; selectedPosition = null; }">Limpiar</UButton>
+    </div>
+
     <strong class="flex justify-center">Anexo No.14-B</strong>
     <div class="flex justify-center mb-4">De la Plantilla de cargos y registro de trabajadores</div>
-    <UTable v-if="viewMode === 'table'" ref="table" :data="workers" :columns="columns" sticky class="h-96" />
-    <DataGrid v-else :data="workers" :columns="columns" />
+    <UTable v-if="viewMode === 'table'" ref="table" :data="filteredWorkers" :columns="columns" sticky class="h-96" />
+    <DataGrid v-else :data="filteredWorkers" :columns="columns" />
   </div>
 </template>

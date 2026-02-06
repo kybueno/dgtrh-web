@@ -11,9 +11,16 @@
       </div>
     </div>
 
-    <UTable v-if="viewMode === 'table'" ref="table" :columns="columns" :data="extraWorks || []" :loading="pending"
+    <div v-if="viewMode === 'table'" class="flex flex-wrap gap-2 pb-2">
+      <ClearableSelect v-model="selectedWorkerId" :items="workerOptions" placeholder="Filtrar trabajador" class="min-w-56" />
+      <UInput v-model="dateFrom" type="date" placeholder="Desde" />
+      <UInput v-model="dateTo" type="date" placeholder="Hasta" />
+      <UButton variant="ghost" color="neutral" @click="() => { selectedWorkerId = null; dateFrom = ''; dateTo = ''; }">Limpiar</UButton>
+    </div>
+
+    <UTable v-if="viewMode === 'table'" ref="table" :columns="columns" :data="filteredExtraWorks" :loading="pending"
       class="w-full" />
-    <DataGrid v-else :data="extraWorks || []" :columns="columns" />
+    <DataGrid v-else :data="filteredExtraWorks" :columns="columns" />
   </div>
 </template>
 
@@ -21,9 +28,14 @@
 import { UButton } from '#components'
 import type { TableColumn } from '@nuxt/ui'
 import { loadExtraWorks } from '~/stores/extraWorkStore'
+import { fetchWorkersBasic } from '~/stores/workerStoreC'
 
 const table = useTemplateRef('table')
 const viewMode = ref<'table' | 'grid'>('table')
+
+const selectedWorkerId = ref<string | null>(null)
+const dateFrom = ref<string>('')
+const dateTo = ref<string>('')
 
 // Data fetching
 const { data: extraWorks, pending, refresh } = await useAsyncData('extra-works', async () => {
@@ -32,13 +44,39 @@ const { data: extraWorks, pending, refresh } = await useAsyncData('extra-works',
   return response.data ?? []
 })
 
+const { data: workersResponse } = await useAsyncData('workers-basic', fetchWorkersBasic)
+const workers = computed(() => workersResponse.value?.data || [])
+
 function handleReload() {
   refresh()
 }
 
+const workerOptions = computed(() =>
+  workers.value.map((worker) => ({ value: worker.id, label: getDisplayName(worker) }))
+)
+
+function toDateKey(value?: string | null) {
+  if (!value) return ''
+  return value.split('T')[0]
+}
+
+const filteredExtraWorks = computed(() => {
+  const data = extraWorks.value ?? []
+  return data.filter((item) => {
+    if (selectedWorkerId.value && item.worker_id !== selectedWorkerId.value) return false
+    const dateKey = toDateKey(item.date)
+    if (dateFrom.value && dateKey < dateFrom.value) return false
+    if (dateTo.value && dateKey > dateTo.value) return false
+    return true
+  })
+})
+
 // Table columns
 const columns: TableColumn<any>[] = [
-  { id: 'worker_id', accessorKey: 'worker_id', header: 'Trabajador', cell: ({ row }) => row.original.worker_id },
+  { id: 'worker_id', accessorKey: 'worker_id', header: 'Trabajador', cell: ({ row }) => {
+    const worker = workers.value.find((item) => item.id === row.original.worker_id)
+    return worker ? getDisplayName(worker) : row.original.worker_id
+  } },
   { id: 'description', accessorKey: 'description', header: 'Descripción', cell: ({ row }) => row.original.description },
   { id: 'hours', accessorKey: 'hours', header: 'Horas', cell: ({ row }) => row.original.hours },
   { id: 'date', accessorKey: 'date', header: 'Fecha', cell: ({ row }) => row.original.date },

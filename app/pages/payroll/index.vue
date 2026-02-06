@@ -19,6 +19,12 @@ const sorting = ref([])
 const creatingPayroll = ref(false)
 const loadingPayroll = ref(false)
 
+const selectedMonth = ref<number | null>(null)
+const selectedYear = ref<number | null>(null)
+const selectedStatus = ref<string | null>(null)
+const selectedCreator = ref<string | null>(null)
+const selectedReviewer = ref<string | null>(null)
+
 const now = new Date()
 const currentMonth = now.getMonth() + 1
 const currentYear = now.getFullYear()
@@ -70,6 +76,54 @@ const formatStatus = (status?: string | null) => {
       return status ?? '-'
   }
 }
+
+const monthOptions = computed(() =>
+  payroll.value
+    .map((item) => item.month)
+    .filter((value): value is number => !!value)
+    .map((value) => ({ value, label: formatMonth(value) }))
+)
+
+const yearOptions = computed(() =>
+  payroll.value
+    .map((item) => item.year)
+    .filter((value): value is number => !!value)
+    .map((value) => ({ value, label: String(value) }))
+)
+
+const statusOptions = computed(() =>
+  Array.from(new Set(payroll.value.map((item) => item.status).filter(Boolean))).map((value) => ({
+    value: value as string,
+    label: formatStatus(value as string)
+  }))
+)
+
+const creatorOptions = computed(() =>
+  payroll.value
+    .map((item) => (item as any).creator)
+    .filter((value): value is WorkerDetailed => !!value)
+    .map((worker) => ({ value: worker.id, label: getDisplayName(worker) }))
+)
+
+const reviewerOptions = computed(() =>
+  payroll.value
+    .map((item) => (item as any).reviewer)
+    .filter((value): value is WorkerDetailed => !!value)
+    .map((worker) => ({ value: worker.id, label: getDisplayName(worker) }))
+)
+
+const filteredPayroll = computed(() => {
+  return payroll.value.filter((item) => {
+    if (selectedMonth.value && item.month !== selectedMonth.value) return false
+    if (selectedYear.value && item.year !== selectedYear.value) return false
+    if (selectedStatus.value && item.status !== selectedStatus.value) return false
+    const creator = (item as any).creator
+    if (selectedCreator.value && creator?.id !== selectedCreator.value) return false
+    const reviewer = (item as any).reviewer
+    if (selectedReviewer.value && reviewer?.id !== selectedReviewer.value) return false
+    return true
+  })
+})
 
 const columns: TableColumn<PayrollInfo>[] = [
   {
@@ -150,7 +204,21 @@ const table = useTemplateRef('table')
     </div>
 
     <div class="border border-muted bg-muted/70 rounded-md">
-      <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
+      <Flex v-if="viewMode === 'table'" class="pt-2 px-2 flex-wrap gap-2 justify-between">
+        <Flex class="gap-2 flex-wrap">
+          <ClearableSelect v-model="selectedMonth" :items="monthOptions" placeholder="Mes" class="min-w-36" />
+          <ClearableSelect v-model="selectedYear" :items="yearOptions" placeholder="Año" class="min-w-28" />
+          <ClearableSelect v-model="selectedStatus" :items="statusOptions" placeholder="Estado" class="min-w-40" />
+          <ClearableSelect v-model="selectedCreator" :items="creatorOptions" placeholder="Confeccionada por" class="min-w-56" />
+          <ClearableSelect v-model="selectedReviewer" :items="reviewerOptions" placeholder="Revisada por" class="min-w-56" />
+          <UButton
+            variant="ghost"
+            color="neutral"
+            @click="() => { selectedMonth = null; selectedYear = null; selectedStatus = null; selectedCreator = null; selectedReviewer = null; }"
+          >
+            Limpiar
+          </UButton>
+        </Flex>
         <TableSearch :table="table" column-id="created_at" placeholder="Buscar por fecha" input-class="max-w-sm" />
         <ColumnsControl :table="table" />
       </Flex>
@@ -158,16 +226,16 @@ const table = useTemplateRef('table')
         v-if="viewMode === 'table'"
         v-model:sorting="sorting"
         ref="table"
-        :data="payroll"
+        :data="filteredPayroll"
         :columns="columns"
         class="w-full h-full min-h-96"
         :paginate="true"
         :page-size="10"
         sticky
       />
-      <DataGrid v-else class="p-4" :data="payroll" :columns="columns" />
+      <DataGrid v-else class="p-4" :data="filteredPayroll" :columns="columns" />
       <div v-if="viewMode === 'table'" class="flex justify-center py-4">
-        <UPagination v-model="page" :total="payroll.length" :page-size="10" />
+        <UPagination v-model="page" :total="filteredPayroll.length" :page-size="10" />
       </div>
     </div>
   </div>

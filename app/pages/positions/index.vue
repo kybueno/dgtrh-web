@@ -26,6 +26,39 @@ interface Props {
 const { data } = defineProps<Props>()
 
 const viewMode = ref<'table' | 'grid'>('table')
+const selectedCategory = ref<string | null>(null)
+const selectedLevel = ref<string | null>(null)
+const selectedGroup = ref<string | null>(null)
+
+const categoryOptions = computed(() =>
+    positions.value
+        .map((position) => position.category)
+        .filter((value): value is string => !!value)
+        .map((value) => ({ value, label: value }))
+)
+
+const levelOptions = computed(() =>
+    positions.value
+        .map((position) => position.level)
+        .filter((value): value is string => !!value)
+        .map((value) => ({ value, label: value }))
+)
+
+const groupOptions = computed(() =>
+    positions.value
+        .map((position) => position.group_escale)
+        .filter((value): value is string => !!value)
+        .map((value) => ({ value, label: value }))
+)
+
+const filteredPositions = computed(() => {
+    return positions.value.filter((position) => {
+        if (selectedCategory.value && position.category !== selectedCategory.value) return false
+        if (selectedLevel.value && position.level !== selectedLevel.value) return false
+        if (selectedGroup.value && position.group_escale !== selectedGroup.value) return false
+        return true
+    })
+})
 const columns: TableColumn<PositionInfo>[] = [
     {
         id: 'select',
@@ -98,8 +131,14 @@ const table = useTemplateRef('table')
                 <UButton icon="i-lucide-plus" to="/positions/new" variant="ghost">Añadir</UButton>
             </div>
         </div>
-        <UTable v-if="viewMode === 'table'" ref="table" :data="positions" :columns="columns" class="w-full h-full" />
-        <DataGrid v-else :data="positions" :columns="columns" />
+        <div v-if="viewMode === 'table'" class="flex flex-wrap gap-2 px-2 pb-2">
+            <ClearableSelect v-model="selectedCategory" :items="categoryOptions" placeholder="Filtrar categoría" class="min-w-44" />
+            <ClearableSelect v-model="selectedLevel" :items="levelOptions" placeholder="Filtrar nivel" class="min-w-44" />
+            <ClearableSelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar grupo" class="min-w-44" />
+            <UButton variant="ghost" color="neutral" @click="() => { selectedCategory = null; selectedLevel = null; selectedGroup = null; }">Limpiar</UButton>
+        </div>
+        <UTable v-if="viewMode === 'table'" ref="table" :data="filteredPositions" :columns="columns" class="w-full h-full" />
+        <DataGrid v-else :data="filteredPositions" :columns="columns" />
 
     </div>
 </template>
