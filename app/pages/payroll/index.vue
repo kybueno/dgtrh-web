@@ -6,7 +6,8 @@ useHead({
   title: 'Prenómina'
 })
 
-import { onMounted, ref } from 'vue'
+import { h, onMounted, ref } from 'vue'
+import { UButton } from '#components'
 import type { TableColumn } from '@nuxt/ui'
 import { page } from '#build/ui'
 import { loadPayroll, payroll } from '~/stores/payrollStore'
@@ -74,6 +75,16 @@ const columns: TableColumn<PayrollInfo>[] = [
       if (!reviewer) return '-'
       return getDisplayName(reviewer)
     }
+  },
+  {
+    id: 'actions',
+    header: '',
+    cell: ({ row }) => h(UButton, {
+      label: 'Ver',
+      size: 'xs',
+      variant: 'ghost',
+      onClick: () => navigateTo(`/payroll/${row.original.id}`)
+    })
   }
 ]
 const table = useTemplateRef('table')
