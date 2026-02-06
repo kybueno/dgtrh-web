@@ -13,7 +13,9 @@ useHead({
 const workerStore = useWorkerStore()
 const loading = ref(false)
 const searchQuery = ref('')
-const selectedDate = ref(new Date().toISOString().slice(0, 10))
+const now = new Date()
+const selectedMonth = ref(String(now.getMonth() + 1))
+const selectedYear = ref(String(now.getFullYear()))
 
 const filteredWorkers = computed(() => {
   const query = searchQuery.value.trim().toLowerCase()
@@ -26,11 +28,26 @@ const filteredWorkers = computed(() => {
   })
 })
 
+const monthOptions = [
+  { value: '1', label: 'Enero' },
+  { value: '2', label: 'Febrero' },
+  { value: '3', label: 'Marzo' },
+  { value: '4', label: 'Abril' },
+  { value: '5', label: 'Mayo' },
+  { value: '6', label: 'Junio' },
+  { value: '7', label: 'Julio' },
+  { value: '8', label: 'Agosto' },
+  { value: '9', label: 'Septiembre' },
+  { value: '10', label: 'Octubre' },
+  { value: '11', label: 'Noviembre' },
+  { value: '12', label: 'Diciembre' },
+]
+
 function getSelectedMonthDate() {
-  if (!selectedDate.value) return new Date()
-  const parsed = new Date(selectedDate.value)
-  if (Number.isNaN(parsed.getTime())) return new Date()
-  return new Date(parsed.getFullYear(), parsed.getMonth(), 1)
+  const monthNumber = Number(selectedMonth.value)
+  const yearNumber = Number(selectedYear.value)
+  if (!monthNumber || !yearNumber) return new Date()
+  return new Date(yearNumber, monthNumber - 1, 1)
 }
 
 function handlePrint(worker: WorkerDetailed) {
@@ -75,7 +92,10 @@ onMounted(handleLoadWorkers)
           class="min-w-72"
         />
         <UFormField label="Mes" class="min-w-44">
-          <UInput v-model="selectedDate" type="date" />
+          <USelect v-model="selectedMonth" :items="monthOptions" />
+        </UFormField>
+        <UFormField label="Año" class="min-w-28">
+          <UInput v-model="selectedYear" inputmode="numeric" placeholder="YYYY" />
         </UFormField>
         <div class="text-sm text-muted">
           {{ filteredWorkers.length }} trabajadores
