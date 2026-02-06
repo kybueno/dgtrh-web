@@ -39,6 +39,11 @@ const observationDrafts = ref<Record<string, string>>({})
 const observationSaving = ref<Record<string, boolean>>({})
 const observationStatus = ref<Record<string, 'saved' | 'error' | null>>({})
 
+const selectedGroup = ref<string | null>(null)
+const selectedPosition = ref<string | number | null>(null)
+const minIncidentDays = ref<string>('')
+const minExtraHours = ref<string>('')
+
 watch(
   () => data.value?.workers,
   (workers) => {
@@ -96,6 +101,34 @@ const payrollLabel = computed(() => {
   if (!payroll) return 'Prenómina'
   const month = new Date(2000, payroll.month - 1, 1).toLocaleDateString('es-ES', { month: 'long' })
   return `Prenómina ${month} ${payroll.year}`
+})
+
+const groupOptions = computed(() =>
+  (data.value?.workers ?? [])
+    .map((entry) => entry.worker.group?.name || entry.worker.leaderAtGroup?.name)
+    .filter((value): value is string => !!value)
+    .map((value) => ({ value, label: value }))
+)
+
+const positionOptions = computed(() =>
+  (data.value?.workers ?? [])
+    .map((entry) => ({
+      value: entry.worker.position?.description ?? entry.worker.position_code,
+      label: entry.worker.position?.description ?? String(entry.worker.position_code)
+    }))
+)
+
+const filteredWorkers = computed(() => {
+  const items = data.value?.workers ?? []
+  return items.filter((entry) => {
+    const groupName = entry.worker.group?.name || entry.worker.leaderAtGroup?.name
+    if (selectedGroup.value && groupName !== selectedGroup.value) return false
+    const positionLabel = entry.worker.position?.description ?? entry.worker.position_code
+    if (selectedPosition.value && positionLabel !== selectedPosition.value) return false
+    if (minIncidentDays.value && entry.totalIncidentDays < Number(minIncidentDays.value)) return false
+    if (minExtraHours.value && entry.extraWorkHours < Number(minExtraHours.value)) return false
+    return true
+  })
 })
 
 const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
@@ -186,7 +219,20 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
       :description="String(error)" class="mb-4" />
 
     <div class="border border-muted bg-muted/70 rounded-md">
-      <UTable :data="data?.workers ?? []" :columns="columns" class="w-full h-full min-h-96" :paginate="true"
+      <div class="flex flex-wrap gap-2 p-2">
+        <USelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar área" class="min-w-44" clearable />
+        <USelect v-model="selectedPosition" :items="positionOptions" placeholder="Filtrar cargo" class="min-w-56" clearable />
+        <UInput v-model="minIncidentDays" type="number" min="0" placeholder="Mín. días" class="max-w-32" />
+        <UInput v-model="minExtraHours" type="number" min="0" placeholder="Mín. horas extra" class="max-w-40" />
+        <UButton
+          variant="ghost"
+          color="neutral"
+          @click="() => { selectedGroup = null; selectedPosition = null; minIncidentDays = ''; minExtraHours = ''; }"
+        >
+          Limpiar
+        </UButton>
+      </div>
+      <UTable :data="filteredWorkers" :columns="columns" class="w-full h-full min-h-96" :paginate="true"
         :page-size="10" sticky :loading="pending" />
     </div>
   </div>
