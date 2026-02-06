@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { incidents, loadIncidents, incidentsPending } from '~/stores/incidentStore'
+import { incidents, loadIncidents, incidentsPending, deleteIncident } from '~/stores/incidentStore'
+import { fetchWorkersBasic } from '~/stores/workerStoreC'
+import { storeToRefs } from 'pinia'
+import { UButton } from '#components'
 import { page } from '#build/ui'
 
 definePageMeta({
@@ -9,10 +12,36 @@ useHead({
   title: 'Incidencias'
 })
 
-onMounted(() => { if (!incidentsPending.value && !incidents.value.length) loadIncidents() })
+const incidentTypeStore = useIncidentTypeStore()
+const { incidentTypes } = storeToRefs(incidentTypeStore)
+
+const { data: workersResponse } = await useAsyncData('workers-basic', fetchWorkersBasic)
+
+onMounted(() => {
+  if (!incidentsPending.value && !incidents.value.length) loadIncidents()
+  if (!incidentTypes.value.length) incidentTypeStore.loadIncidentTypes()
+})
+
+const workers = computed(() => workersResponse.value?.data || [])
+
+function getWorkerLabel(workerId: string) {
+  const worker = workers.value.find((item) => item.id === workerId)
+  return worker ? getDisplayName(worker) : workerId
+}
+
+function getIncidentTypeLabel(code: number) {
+  const type = incidentTypes.value.find((item) => item.code === code)
+  return type ? `${type.code} - ${type.name}` : String(code)
+}
 
 function handleReload() {
   if (!incidentsPending.value) loadIncidents()
+}
+
+async function handleDelete(incident: Incident) {
+  if (!confirm('¿Está seguro de que desea eliminar esta incidencia?')) return
+  const response = await deleteIncident(incident.id)
+  if (!response.error) notifySuccess({ title: 'Incidencia eliminada' })
 }
 
 const table = useTemplateRef('table')
@@ -20,11 +49,35 @@ const viewMode = ref<'table' | 'grid'>('table')
 const sorting = ref([])
 
 const columns = [
-  { id: 'incident_code', accessorKey: 'incident_code', header: 'Código', cell: ({ row }: any) => row.original.incident_code },
-  { id: 'worker_id', accessorKey: 'worker_id', header: 'Trabajador', cell: ({ row }: any) => row.original.worker_id },
+  { id: 'incident_code', accessorKey: 'incident_code', header: 'Código', cell: ({ row }: any) => getIncidentTypeLabel(row.original.incident_code) },
+  { id: 'worker_id', accessorKey: 'worker_id', header: 'Trabajador', cell: ({ row }: any) => getWorkerLabel(row.original.worker_id) },
   { id: 'start_date', accessorKey: 'start_date', header: 'Inicio', cell: ({ row }: any) => new Date(row.original.start_date).toLocaleDateString() },
   { id: 'end_date', accessorKey: 'end_date', header: 'Fin', cell: ({ row }: any) => row.original.end_date ? new Date(row.original.end_date).toLocaleDateString() : '-' },
   { id: 'description', accessorKey: 'description', header: 'Descripción', cell: ({ row }: any) => row.original.description ?? '' },
+  {
+    id: 'actions',
+    header: 'Acciones',
+    cell: ({ row }: any) => h('div', { class: 'flex items-center gap-2' }, [
+      h(UButton, {
+        size: 'sm',
+        icon: 'i-lucide-edit',
+        color: 'neutral',
+        variant: 'ghost',
+        title: 'Editar',
+        to: `/incident/${row.original.id}`
+      }),
+      h(UButton, {
+        size: 'sm',
+        icon: 'i-lucide-trash-2',
+        color: 'neutral',
+        variant: 'ghost',
+        title: 'Eliminar',
+        onClick: () => handleDelete(row.original)
+      })
+    ]),
+    enableSorting: false,
+    enableHiding: false
+  }
 ]
 </script>
 
