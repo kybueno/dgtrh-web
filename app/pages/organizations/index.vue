@@ -11,7 +11,27 @@
             </div>
         </div>
         <div class="border border-muted bg-muted/70 rounded-md">
-            <Flex v-if="viewMode === 'table'" class="pt-2 px-2 justify-end">
+            <Flex v-if="viewMode === 'table'" class="pt-2 px-2 flex-wrap gap-2 justify-between">
+                <Flex class="gap-2 flex-wrap">
+                    <USelect v-model="selectedCode" :items="codeOptions" placeholder="Filtrar código" class="min-w-40" clearable />
+                    <USelect v-model="selectedAcronym" :items="acronymOptions" placeholder="Filtrar siglas" class="min-w-40" clearable />
+                    <USelect
+                        v-model="imageFilter"
+                        :items="[
+                            { value: 'all', label: 'Todas' },
+                            { value: 'with', label: 'Con imagen' },
+                            { value: 'without', label: 'Sin imagen' }
+                        ]"
+                        class="min-w-40"
+                    />
+                    <UButton
+                        variant="ghost"
+                        color="neutral"
+                        @click="() => { selectedCode = null; selectedAcronym = null; imageFilter = 'all'; }"
+                    >
+                        Limpiar
+                    </UButton>
+                </Flex>
                 <TableSearch :table="table" column-id="name" placeholder="Buscar organización" input-class="max-w-sm" />
                 <ColumnsControl :table="table" />
             </Flex>
@@ -19,16 +39,16 @@
                 v-if="viewMode === 'table'"
                 v-model:sorting="sorting"
                 ref="table"
-                :data="organizations"
+                :data="filteredOrganizations"
                 :columns="columns"
                 class="w-full h-full"
                 :paginate="true"
                 :page-size="10"
                 sticky
             />
-            <DataGrid v-else class="p-4" :data="organizations" :columns="columns" />
+            <DataGrid v-else class="p-4" :data="filteredOrganizations" :columns="columns" />
             <div v-if="viewMode === 'table'" class="flex justify-center py-4">
-                <UPagination v-model="page" :total="organizations.length" :page-size="10" />
+                <UPagination v-model="page" :total="filteredOrganizations.length" :page-size="10" />
             </div>
         </div>
     </div>
@@ -62,6 +82,34 @@ const { data } = defineProps<Props>()
 const viewMode = ref<'table' | 'grid'>('table')
 const table = useTemplateRef('table')
 const sorting = ref([])
+
+const selectedCode = ref<string | null>(null)
+const selectedAcronym = ref<string | null>(null)
+const imageFilter = ref<'all' | 'with' | 'without'>('all')
+
+const codeOptions = computed(() =>
+    organizations.value
+        .map((org) => org.code)
+        .filter((code): code is string => !!code)
+        .map((code) => ({ value: code, label: code }))
+)
+
+const acronymOptions = computed(() =>
+    organizations.value
+        .map((org) => org.acronym)
+        .filter((acronym): acronym is string => !!acronym)
+        .map((acronym) => ({ value: acronym, label: acronym }))
+)
+
+const filteredOrganizations = computed(() => {
+    return organizations.value.filter((org) => {
+        if (selectedCode.value && org.code !== selectedCode.value) return false
+        if (selectedAcronym.value && org.acronym !== selectedAcronym.value) return false
+        if (imageFilter.value === 'with' && !org.img) return false
+        if (imageFilter.value === 'without' && org.img) return false
+        return true
+    })
+})
 
 const columns: TableColumn<OrganizationInfo>[] = [
     {
