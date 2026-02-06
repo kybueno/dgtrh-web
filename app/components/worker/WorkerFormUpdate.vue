@@ -114,10 +114,10 @@ onMounted(() => {
                 <UFormField label="Cargo que ocupa" class="col-span-2">
                     <USelect required v-model="formData.position_code"
                         :items="positions.map(p => ({ value: p.code, label: p.description }))" class="w-full">
-                        <template #content-top>
+                        <!-- <template #content-top>
                             <UButton to="/positions/new" color="neutral" variant="ghost" icon="mdi:plus">Nuevo cargo
                             </UButton>
-                        </template>
+                        </template> -->
                     </USelect>
                 </UFormField>
 
@@ -125,6 +125,10 @@ onMounted(() => {
                 <UFormField label="Grupo de trabajo" class="col-span-2">
                     <USelect v-model="formData.group_id" :items="workGroups" class="w-full" value-key="id"
                         label-key="name">
+                        <template #content-top>
+                            <UButton to="/groups/new" color="neutral" variant="ghost" icon="mdi:plus">Nuevo grupo
+                            </UButton>
+                        </template>
                     </USelect>
                 </UFormField>
 
