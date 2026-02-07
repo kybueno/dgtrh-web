@@ -19,7 +19,7 @@ export async function printCertificadoModel(
   worker?: WorkerDetailed | WorkerInfo | null,
   dates?: CertificadoDates
 ) {
-  const logoData = await getImageDataUrl('/uci-logo-row.png')
+  const logoData = await getImageDataUrl('/uci-logo.png')
   const areaName =
     worker?.group?.name ||
     worker?.led_groups?.[0]?.name ||
