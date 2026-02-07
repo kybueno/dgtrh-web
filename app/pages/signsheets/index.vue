@@ -71,38 +71,31 @@ onMounted(handleLoadWorkers)
         <p class="text-sm text-muted">Genera hojas de firma mensuales por trabajador.</p>
       </div>
       <div class="flex items-center gap-2">
-        <UButton
-          icon="lucide:refresh-cw"
-          variant="ghost"
-          @click="handleLoadWorkers"
-          :loading="loading"
-          :disabled="loading"
-        >
+        <UButton icon="lucide:refresh-cw" variant="ghost" @click="handleLoadWorkers" :loading="loading"
+          :disabled="loading">
           Actualizar
         </UButton>
       </div>
     </div>
 
     <UCard class="bg-muted/60">
-      <div class="flex flex-wrap items-center gap-3">
-        <UInput
-          v-model="searchQuery"
-          placeholder="Buscar por nombre, expediente o correo"
-          icon="lucide:search"
-          class="min-w-72"
-        />
-        <UFormField label="Mes" class="min-w-44">
-          <USelect v-model="selectedMonth" :items="monthOptions" />
-        </UFormField>
-        <UFormField label="Año" class="min-w-28">
-          <UInput v-model="selectedYear" inputmode="numeric" placeholder="YYYY" />
-        </UFormField>
-        <div class="text-sm text-muted">
-          {{ filteredWorkers.length }} trabajadores
-        </div>
-      </div>
-    </UCard>
+      <stack-h class="items-end justify-between gap-3">
+        <UInput v-model="searchQuery" placeholder="Buscar por nombre, expediente o correo" icon="lucide:search"
+          class="min-w-80" />
+        <stack-h>
+          <UFormField label="Mes">
+            <USelect v-model="selectedMonth" :items="monthOptions" class="min-w-28" />
+          </UFormField>
+          <UFormField label="Año">
+            <UInput v-model="selectedYear" inputmode="numeric" placeholder="YYYY" class="w-28" />
+          </UFormField>
+        </stack-h>
 
+      </stack-h>
+    </UCard>
+    <div class="text-sm text-muted">
+      {{ filteredWorkers.length }} trabajadores
+    </div>
     <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       <USkeleton v-for="item in 6" :key="item" class="h-28" />
     </div>
