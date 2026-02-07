@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
       ? {
           group: true,
           position: true,
+          led_groups: true,
         }
       : undefined,
   })

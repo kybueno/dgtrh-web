@@ -1,3 +1,5 @@
+import type { Payroll } from '~/prisma/generated/browser'
+
 export type PayrollWithWorkers = PayrollInfo & {
   creator?: WorkerInfo | null
   reviewer?: WorkerInfo | null
@@ -6,7 +8,7 @@ export type PayrollWithWorkers = PayrollInfo & {
 export const payroll = ref<PayrollWithWorkers[]>([])
 
 export const payrollPending = ref(false)
-export interface PayrollInfo extends Tables<'payroll'> {}
+export type PayrollInfo = Payroll
 
 async function wrapFetch<T>(promise: Promise<T>) {
   try {

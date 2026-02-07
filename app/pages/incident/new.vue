@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import IncidentForm from '~/components/incident/IncidentForm.vue'
+import type { Prisma } from '~/prisma/generated/browser'
 
 definePageMeta({
   title: 'Nueva Incidencia'
@@ -10,7 +11,7 @@ useHead({
 
 const loading = ref(false)
 
-async function handleCreate(payload: TablesInsert<'incidents'>) {
+async function handleCreate(payload: Prisma.IncidentCreateInput) {
   if (loading.value) return
   loading.value = true
   const response = await createIncident(payload)

@@ -6,27 +6,27 @@
 
       <UFormField label="Código" name="code">
         <UInput placeholder="Introduzca el código del nuevo cargo" v-model="formData.code"
-          error="Please enter a valid code." type="number" inputmode="numeric" required />
+          error="Introduzca un código válido." type="number" inputmode="numeric" required />
       </UFormField>
 
       <UFormField label="Descripción" name="description">
         <UInput placeholder="Introduzca la descripción del cargo" v-model="formData.description"
-          error="Please enter a valid description." />
+          error="Introduzca una descripción válida." />
       </UFormField>
 
       <UFormField label="Categoría" name="category">
         <UInput placeholder="Introduzca la categoría" v-model="formData.category"
-          error="Please enter a valid category." required />
+          error="Introduzca una categoría válida." required />
       </UFormField>
 
       <UFormField label="Nivel de estudio" name="level">
-        <UInput placeholder="Introduzca el nivel" v-model="formData.level" error="Please enter a valid level."
+        <UInput placeholder="Introduzca el nivel" v-model="formData.level" error="Introduzca un nivel válido."
           required />
       </UFormField>
 
       <UFormField label="Grupo" name="group_escale">
         <UInput placeholder="Introduzca la escala a la que pertenece" v-model="formData.group_escale"
-          error="Please enter a valid escale." required />
+          error="Introduzca una escala válida." required />
       </UFormField>
       <UFormField label="Total" name="total">
         <UInput placeholder="Introduzca el monto salarial" v-model="formData.total" />
@@ -46,7 +46,9 @@
 
 <script setup lang="ts">
 
-const formData = ref<TablesInsert<"positions">>({
+import type { Prisma } from '~/prisma/generated/browser'
+
+const formData = ref<Prisma.PositionCreateInput>({
   code: 0,
   description: '',
   category: '',

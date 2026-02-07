@@ -45,7 +45,7 @@ const filteredWorkers = computed(() => {
         if (selectedGender.value && worker.gender !== selectedGender.value) return false
         if (selectedGroupId.value) {
             const isMember = worker.group_id === selectedGroupId.value
-            const isLeader = worker.leaderAtGroup?.id === selectedGroupId.value
+            const isLeader = worker.led_groups?.[0]?.id === selectedGroupId.value
             if (!isMember && !isLeader) return false
         }
         if (selectedPositionCode.value && worker.position_code !== selectedPositionCode.value) return false

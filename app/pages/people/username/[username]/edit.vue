@@ -29,8 +29,10 @@ useHead({
 const route = useRoute();
 const router = useRouter();
 
+import type { Prisma } from '~/prisma/generated/browser'
+
 const loading = ref(true);
-const worker = ref<Tables<'workers'> | null>(null);
+const worker = ref<WorkerDetailed | null>(null);
 
 onMounted(async () => {
   try {
@@ -40,7 +42,7 @@ onMounted(async () => {
     
     // Find worker by username (email prefix)
     if (!username) {
-      throw new Error('Username is required');
+      throw new Error('El nombre de usuario es obligatorio');
     }
     const workerData = await getWorkerByUsername(username);
     
@@ -54,13 +56,13 @@ onMounted(async () => {
   }
 });
 
-async function handleUpdateWorker(newWorkerData: TablesUpdate<'workers'>) {
+async function handleUpdateWorker(newWorkerData: Prisma.WorkerUpdateInput) {
     if (!worker.value) return;
     
     const { error } = await updateWorker(worker.value.id, newWorkerData);
 
     if (error) {
-      console.error('Error updating worker:', error);
+      console.error('Error al actualizar trabajador:', error);
       useToast().add({
         title: 'Error',
         description: 'Hubo un error al actualizar el trabajador.',

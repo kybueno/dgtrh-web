@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import IncidentForm from '~/components/incident/IncidentForm.vue'
+import type { Prisma } from '~/prisma/generated/browser'
 
 definePageMeta({
   title: 'Actualizar Incidencia'
@@ -28,7 +29,7 @@ onMounted(async () => {
   }
 })
 
-async function handleUpdate(payload: TablesUpdate<'incidents'>) {
+async function handleUpdate(payload: Prisma.IncidentUpdateInput) {
   if (!incident.value?.id || saving.value) return
   saving.value = true
   const response = await updateIncident(incident.value.id, payload)

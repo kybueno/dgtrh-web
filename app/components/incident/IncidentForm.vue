@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import WorkerSelect from '~/components/worker/WorkerSelect.vue'
 import { storeToRefs } from 'pinia'
+import type { Prisma, Incident } from '~/prisma/generated/browser'
 
 const props = defineProps<{
-  incident?: Tables<'incidents'> | null
+  incident?: Incident | null
   loading?: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: 'save', payload: TablesInsert<'incidents'> | TablesUpdate<'incidents'>): void
+  (e: 'save', payload: Prisma.IncidentCreateInput | Prisma.IncidentUpdateInput): void
   (e: 'cancel'): void
 }>()
 
@@ -21,7 +22,7 @@ function normalizeDate(value?: string | null) {
   return value ? value.split('T')[0] : today
 }
 
-const formData = ref<TablesInsert<'incidents'>>({
+const formData = ref<Prisma.IncidentCreateInput>({
   worker_id: props.incident?.worker_id || '',
   incident_code: (props.incident?.incident_code ?? null) as any,
   start_date: normalizeDate(props.incident?.start_date),

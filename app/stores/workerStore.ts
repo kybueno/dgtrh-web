@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import type { Prisma } from '~/prisma/generated/browser'
 
 export const useWorkerStore = defineStore('workerStore', {
   state: () => ({
@@ -9,7 +10,7 @@ export const useWorkerStore = defineStore('workerStore', {
       const data = await $fetch<WorkerDetailed[]>('/api/workers?detailed=true')
       this.workers = data
     },
-    async createWorker(newWorkerData: WorkerInsert) {
+    async createWorker(newWorkerData: Prisma.WorkerCreateInput) {
       const worker = await $fetch<WorkerDetailed>('/api/workers', {
         method: 'POST',
         body: newWorkerData,

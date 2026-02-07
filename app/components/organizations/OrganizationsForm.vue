@@ -50,6 +50,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { Prisma } from '~/prisma/generated/browser'
+
 interface Props {
   organization?: OrganizationInfo | null
 }
@@ -58,7 +60,7 @@ const props = defineProps<Props>()
 
 const isEdit = computed(() => !!props.organization)
 
-const formData = ref<TablesInsert<"organizations">>({
+const formData = ref<Prisma.OrganizationCreateInput>({
   name: "",
   code: "",
   description: "",

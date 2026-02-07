@@ -159,7 +159,7 @@ const payrollLabel = computed(() => {
 
 const groupOptions = computed(() =>
   (data.value?.workers ?? [])
-    .map((entry) => entry.worker.group?.name || entry.worker.leaderAtGroup?.name)
+    .map((entry) => entry.worker.group?.name || entry.worker.led_groups?.[0]?.name)
     .filter((value): value is string => !!value)
     .map((value) => ({ value, label: value }))
 )
@@ -175,7 +175,7 @@ const positionOptions = computed(() =>
 const filteredWorkers = computed(() => {
   const items = data.value?.workers ?? []
   return items.filter((entry) => {
-    const groupName = entry.worker.group?.name || entry.worker.leaderAtGroup?.name
+    const groupName = entry.worker.group?.name || entry.worker.led_groups?.[0]?.name
     if (selectedGroup.value && groupName !== selectedGroup.value) return false
     const positionLabel = entry.worker.position?.description ?? entry.worker.position_code
     if (selectedPosition.value && positionLabel !== selectedPosition.value) return false

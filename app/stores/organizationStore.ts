@@ -1,4 +1,6 @@
-export const organizations = useLocalStorage<OrganizationInfo[]>('organizations', [])
+import type { Organization, Prisma } from '~/prisma/generated/browser'
+
+export const organizations = useLocalStorage<Organization[]>('organizations', [])
 
 export const organizationsPending = ref<boolean>(false)
 
@@ -11,9 +13,9 @@ async function wrapFetch<T>(promise: Promise<T>) {
   }
 }
 
-export async function addOrganization(newOrganizationData: TablesInsert<'organizations'>) {
+export async function addOrganization(newOrganizationData: Prisma.OrganizationCreateInput) {
   const response = await wrapFetch(
-    $fetch<OrganizationInfo>('/api/organizations', {
+    $fetch<Organization>('/api/organizations', {
       method: 'POST',
       body: newOrganizationData,
     })
@@ -33,7 +35,7 @@ export async function loadOrganizations() {
   const hasCached = organizations.value.length > 0
   if (!hasCached) organizationsPending.value = true
 
-  const response = await wrapFetch($fetch<OrganizationInfo[]>('/api/organizations'))
+  const response = await wrapFetch($fetch<Organization[]>('/api/organizations'))
 
   const { data, error } = response
 
@@ -48,9 +50,9 @@ export async function loadOrganizations() {
   return response
 }
 
-export async function updateOrganization(existingOrganizationData: TablesUpdate<'organizations'>) {
+export async function updateOrganization(existingOrganizationData: Prisma.OrganizationUpdateInput & { id: number }) {
   const response = await wrapFetch(
-    $fetch<OrganizationInfo>(`/api/organizations/${existingOrganizationData.id}`, {
+    $fetch<Organization>(`/api/organizations/${existingOrganizationData.id}`, {
       method: 'PUT',
       body: existingOrganizationData,
     })

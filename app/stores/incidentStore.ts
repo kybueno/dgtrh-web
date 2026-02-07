@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import type { Prisma } from '~/prisma/generated/browser'
 
 export const incidents = ref<Incident[]>([])
 export const incidentsPending = ref<boolean>(false)
@@ -21,7 +22,7 @@ export async function queryIncidents() {
   return wrapFetch($fetch<Incident[]>('/api/incidents'))
 }
 
-export async function queryIncidentCreate(newIncidentData: TablesInsert<'incidents'>) {
+export async function queryIncidentCreate(newIncidentData: Prisma.IncidentCreateInput) {
   return wrapFetch(
     $fetch<Incident>('/api/incidents', {
       method: 'POST',
@@ -30,7 +31,7 @@ export async function queryIncidentCreate(newIncidentData: TablesInsert<'inciden
   )
 }
 
-export async function createIncident(newIncidentData: TablesInsert<'incidents'>) {
+export async function createIncident(newIncidentData: Prisma.IncidentCreateInput) {
   const response = await queryIncidentCreate(newIncidentData)
   const { data, error } = response
 
@@ -64,7 +65,7 @@ export async function loadIncidents() {
 
 export async function updateIncident(
   id: string,
-  updatedIncidentData: TablesUpdate<'incidents'>
+  updatedIncidentData: Prisma.IncidentUpdateInput
 ) {
   const response = await wrapFetch(
     $fetch<Incident>(`/api/incidents/${id}`, {

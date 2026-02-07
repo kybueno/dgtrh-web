@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
 
   const worker = await prisma.worker.create({
     data: pickWorkerData(body),
-    include: { group: true, position: true },
+    include: { group: true, position: true, led_groups: true },
   })
 
   return worker

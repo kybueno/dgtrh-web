@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { loadGroups, workGroups } from '@/stores/groupStore'
+import type { Prisma } from '~/prisma/generated/browser'
 const workerStore = useWorkerStore();
 
-const formData = ref<WorkerInsert>({
+const formData = ref<Prisma.WorkerCreateInput>({
     email: '',
     first_name: '',
     middle_name: '',

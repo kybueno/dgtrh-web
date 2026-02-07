@@ -1,16 +1,18 @@
 <script setup lang="ts">
 
+import type { Prisma } from '~/prisma/generated/browser'
+
 const props = defineProps<{
-    data: TablesUpdate<'workers'>;
+    data: Prisma.WorkerUpdateInput;
     loading?: boolean;
 }>();
 
 const emit = defineEmits<{
-    (e: 'save', worker: TablesUpdate<'workers'>): void;
+    (e: 'save', worker: Prisma.WorkerUpdateInput): void;
     (e: 'cancel'): void;
 }>();
 
-const formData = ref<TablesUpdate<'workers'>>({
+const formData = ref<Prisma.WorkerUpdateInput>({
     ...props.data
 });
 
