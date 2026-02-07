@@ -22,7 +22,7 @@ export async function printCertificadoModel(
   const logoData = await getImageDataUrl('/uci-logo-row.png')
   const areaName =
     worker?.group?.name ||
-    worker?.leaderAtGroup?.name ||
+    worker?.led_groups?.[0]?.name ||
     DEFAULT_AREA
   const workerName = worker ? getDisplayName(worker as any) : ''
   const recordNumber = worker?.record_number ?? ''

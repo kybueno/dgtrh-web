@@ -16,7 +16,7 @@ declare global {
   type WorkerInfo = Worker
   interface WorkerDetailed extends WorkerInfo {
     group?: Group | null
-    leaderAtGroup?: Group | null
+    led_groups?: Group[] | null
     position?: Position | null
   }
   type GroupInfo = Group

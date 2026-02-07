@@ -48,7 +48,7 @@ const workerItems = computed(() =>
 
 const groupOptions = computed(() =>
   (data.value ?? [])
-    .map((item) => item.worker?.group?.name || item.worker?.leaderAtGroup?.name)
+    .map((item) => item.worker?.group?.name || item.worker?.led_groups?.[0]?.name)
     .filter((group): group is string => !!group)
     .map((group) => ({ value: group, label: group }))
 )
@@ -63,7 +63,7 @@ const typeOptions = computed(() =>
 const filteredHolidays = computed(() => {
   return (data.value ?? []).filter((item) => {
     if (selectedWorkerId.value && item.worker?.id !== selectedWorkerId.value) return false
-    const groupName = item.worker?.group?.name || item.worker?.leaderAtGroup?.name
+    const groupName = item.worker?.group?.name || item.worker?.led_groups?.[0]?.name
     if (selectedGroup.value && groupName !== selectedGroup.value) return false
     const typeName = item.incident_type?.description || item.incident_type?.name
     if (selectedType.value && typeName !== selectedType.value) return false
@@ -90,7 +90,7 @@ const columns: TableColumn<HolidayIncident>[] = [
     header: 'Área',
     cell: ({ row }) =>
       row.original.worker?.group?.name ||
-      row.original.worker?.leaderAtGroup?.name ||
+      row.original.worker?.led_groups?.[0]?.name ||
       row.original.worker?.group_id ||
       '-'
   },

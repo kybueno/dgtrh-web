@@ -77,7 +77,7 @@ const getSignSheetDefinition = (worker: WorkerDetailed, date = new Date()) => {
   const year = date.getFullYear();
   const areaLabel =
     worker.group?.name ||
-    worker.leaderAtGroup?.name ||
+    worker.led_groups?.[0]?.name ||
     ""
 
   // Column widths matching the original HTML structure

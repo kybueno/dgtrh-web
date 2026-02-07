@@ -19,7 +19,7 @@ const selectedWorker = computed(() =>
 )
 const selectedArea = computed(() =>
   selectedWorker.value?.group?.name ||
-  selectedWorker.value?.leaderAtGroup?.name ||
+  selectedWorker.value?.led_groups?.[0]?.name ||
   'Dirección de Gestión Tecnológica'
 )
 const requestDate = ref<string>('')
@@ -64,28 +64,29 @@ onMounted(loadWorkers)
 
       </div>
     </div>
-
     <separator />
     <stack class="m-auto w-full max-w-3xl">
-      <div class="mt-6 grid grid-cols-1 items-end gap-4 md:grid-cols-2">
-        <UFormField label="Trabajador" class="md:col-span-2">
-          <SelectWorker
-            class="w-full"
-            v-model="selectedWorkerId"
-            :items="workerStore.workers"
-            :loading="loadingWorkers"
-            placeholder="Seleccione un trabajador"
-          />
-        </UFormField>
-        <UFormField label="Fecha de solicitud">
-          <UInput v-model="requestDate" type="date" />
-        </UFormField>
-        <UFormField label="Desde">
-          <UInput v-model="fromDate" type="date" />
-        </UFormField>
-        <UFormField label="Hasta">
-          <UInput v-model="toDate" type="date" />
-        </UFormField>
+      <stack class="mt-6 flex  gap-4">
+        <stack-h>
+          <UFormField label="Trabajador" class="flex-1">
+            <SelectWorker
+              class="w-full"
+              v-model="selectedWorkerId"
+              :items="workerStore.workers"
+              :loading="loadingWorkers"
+              placeholder="Seleccione un trabajador"
+            />
+          </UFormField>
+          <UFormField label="Fecha de solicitud">
+            <UInput v-model="requestDate" type="date" />
+          </UFormField>
+          <UFormField label="Desde">
+            <UInput v-model="fromDate" type="date" />
+          </UFormField>
+          <UFormField label="Hasta">
+            <UInput v-model="toDate" type="date" />
+          </UFormField>
+        </stack-h>
         <div class="flex flex-wrap justify-end gap-2 md:col-span-2">
           <UButton variant="subtle" color="neutral" icon="lucide:printer" @click="handlePrintBlank">
             Imprimir en blanco
@@ -94,7 +95,7 @@ onMounted(loadWorkers)
             Con datos
           </UButton>
         </div>
-      </div>
+      </stack>
       <u-card class="p-8 mt-6">
         <div class="flex justify-start">
           <img src="/uci-logo-row.png" alt="UCI" class="h-8" />

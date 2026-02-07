@@ -115,7 +115,7 @@ const table = useTemplateRef('table')
 
 const groupOptions = computed(() =>
   workers.value
-    .map((worker) => worker.group?.name || worker.leaderAtGroup?.name)
+    .map((worker) => worker.group?.name || worker.led_groups?.[0]?.name)
     .filter((value): value is string => !!value)
     .map((value) => ({ value, label: value }))
 )
@@ -130,7 +130,7 @@ const positionOptions = computed(() =>
 const filteredWorkers = computed(() => {
   return workers.value.filter((worker) => {
     if (selectedGender.value && worker.gender !== selectedGender.value) return false
-    const groupName = worker.group?.name || worker.leaderAtGroup?.name
+    const groupName = worker.group?.name || worker.led_groups?.[0]?.name
     if (selectedGroup.value && groupName !== selectedGroup.value) return false
     const positionLabel = worker.position?.description ?? worker.position_code
     if (selectedPosition.value && positionLabel !== selectedPosition.value) return false

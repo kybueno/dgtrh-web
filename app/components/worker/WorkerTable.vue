@@ -65,7 +65,10 @@ const columns: TableColumn<typeof data[0]>[] = [
         id:'group',
         accessorKey: 'group',
         header: "Grupo",
-        cell: ({ row }) => row.original.group?.name || row.original.leaderAtGroup?.name || row.original.group_id
+        cell: ({ row }) =>
+          row.original.group?.name ||
+          row.original.led_groups?.[0]?.name ||
+          row.original.group_id
     }, {
         id:'position',
         accessorKey: 'position',
