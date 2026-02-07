@@ -14,8 +14,6 @@ type PayrollSummaryPayload = {
   workers: PayrollSummaryWorker[]
 }
 
-const PAYROLL_INCIDENT_CODES = [12, 15, 21, 22, 23, 25, 26, 27, 32, 36]
-
 const formatMonthLabel = (month: number, year: number) => {
   const name = new Date(year, month - 1, 1).toLocaleDateString('es-ES', {
     month: 'long'
@@ -23,12 +21,13 @@ const formatMonthLabel = (month: number, year: number) => {
   return `${name} ${year}`
 }
 
-const buildTableRows = (payload: PayrollSummaryPayload) => {
+const buildTableRows = (payload: PayrollSummaryPayload, incidentCodes: number[]) => {
   const totals = { hours: 0, h060: 0, h115: 0 }
   const rows: any[] = []
 
   payload.workers.forEach((entry) => {
-    const incidentCells = PAYROLL_INCIDENT_CODES.map((code) => {
+    const incidentCells = incidentCodes.map((code) => {
+      if (!Number.isFinite(code)) return ''
       const value = entry.incidentDaysByType?.[code] ?? 0
       return value === 0 ? '' : value
     })
@@ -54,8 +53,8 @@ const buildTableRows = (payload: PayrollSummaryPayload) => {
   })
 
   rows.push([
-    { text: 'TOTALES', colSpan: 3 + PAYROLL_INCIDENT_CODES.length, bold: true },
-    ...Array(3 + PAYROLL_INCIDENT_CODES.length - 1).fill(''),
+    { text: 'TOTALES', colSpan: 3 + incidentCodes.length, bold: true },
+    ...Array(3 + incidentCodes.length - 1).fill(''),
     totals.hours ? totals.hours.toFixed(2) : '',
     totals.h060 ? totals.h060.toFixed(2) : '',
     totals.h115 ? totals.h115.toFixed(2) : '',
@@ -75,7 +74,23 @@ const getPrenominaDefinition = (payload: PayrollSummaryPayload) => {
   const createdBy = payroll.creator ? getDisplayName(payroll.creator) : '-'
   const reviewedBy = payroll.reviewer ? getDisplayName(payroll.reviewer) : '-'
 
-  const incidentHeaderCells = PAYROLL_INCIDENT_CODES.map((code) => String(code))
+  const incidentCodesWithData = payload.incidentTypes
+    .map((type) => type.code)
+    .filter((code) =>
+      payload.workers.some((entry) => (entry.incidentDaysByType?.[code] ?? 0) > 0)
+    )
+  const incidentCodes =
+    incidentCodesWithData.length > 0
+      ? incidentCodesWithData
+      : payload.incidentTypes.map((type) => type.code)
+
+  const maxIncidentColumns = 10
+  const incidentChunks: number[][] = []
+  for (let i = 0; i < incidentCodes.length; i += maxIncidentColumns) {
+    incidentChunks.push(incidentCodes.slice(i, i + maxIncidentColumns))
+  }
+
+  const tables = incidentChunks.length ? incidentChunks : [[Number.NaN]]
 
   return {
     pageOrientation: 'landscape',
@@ -110,55 +125,59 @@ const getPrenominaDefinition = (payload: PayrollSummaryPayload) => {
         layout: 'noBorders',
         margin: [0, 0, 0, 6]
       },
-      {
-        table: {
-          headerRows: 2,
-          widths: [
-            45,
-            150,
-            95,
-            ...Array(PAYROLL_INCIDENT_CODES.length).fill(24),
-            40,
-            40,
-            40,
-            90
-          ],
-          body: [
-            [
-              { text: 'No.Ex.', rowSpan: 2 },
-              { text: 'Nombres y Apellidos', rowSpan: 2 },
-              { text: 'Cargo', rowSpan: 2 },
-              { text: 'INCIDENCIAS DEL TIEMPO NO LABORADO', colSpan: PAYROLL_INCIDENT_CODES.length },
-              ...Array(PAYROLL_INCIDENT_CODES.length - 1).fill(''),
-              { text: 'TRABAJO EXTRAORDINARIO', colSpan: 3 },
-              '', '',
-              { text: 'Observaciones', rowSpan: 2 }
+      ...tables.map((chunk, index) => {
+        const incidentHeaderCells = chunk.map((code) => (Number.isFinite(code) ? String(code) : ''))
+        return {
+          table: {
+            headerRows: 2,
+            widths: [
+              45,
+              150,
+              95,
+              ...Array(chunk.length).fill(24),
+              40,
+              40,
+              40,
+              90
             ],
-            [
-              '',
-              '',
-              '',
-              ...incidentHeaderCells,
-              'Horas',
-              '0.60',
-              '1.15',
-              ''
-            ],
-            ...buildTableRows(payload)
-          ]
-        },
-        layout: {
-          hLineWidth: () => 1,
-          vLineWidth: () => 1,
-          hLineColor: () => '#000',
-          vLineColor: () => '#000',
-          paddingLeft: () => 3,
-          paddingRight: () => 3,
-          paddingTop: () => 2,
-          paddingBottom: () => 2
-        },
-        fontSize: 9
-      }
+            body: [
+              [
+                { text: 'No.Ex.', rowSpan: 2 },
+                { text: 'Nombres y Apellidos', rowSpan: 2 },
+                { text: 'Cargo', rowSpan: 2 },
+                { text: 'INCIDENCIAS DEL TIEMPO NO LABORADO', colSpan: chunk.length },
+                ...Array(Math.max(chunk.length - 1, 0)).fill(''),
+                { text: 'TRABAJO EXTRAORDINARIO', colSpan: 3 },
+                '', '',
+                { text: 'Observaciones', rowSpan: 2 }
+              ],
+              [
+                '',
+                '',
+                '',
+                ...incidentHeaderCells,
+                'Horas',
+                '0.60',
+                '1.15',
+                ''
+              ],
+              ...buildTableRows(payload, chunk)
+            ]
+          },
+          layout: {
+            hLineWidth: () => 1,
+            vLineWidth: () => 1,
+            hLineColor: () => '#000',
+            vLineColor: () => '#000',
+            paddingLeft: () => 3,
+            paddingRight: () => 3,
+            paddingTop: () => 2,
+            paddingBottom: () => 2
+          },
+          fontSize: 9,
+          pageBreak: index < tables.length - 1 ? 'after' : undefined
+        }
+      })
     ],
     defaultStyle: {
       fontSize: 9
