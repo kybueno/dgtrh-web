@@ -68,12 +68,23 @@ export const WORKER_QUERY = {
   basic: 'basic',
 }
 
+type SerializableError = {
+  message: string
+  statusCode?: number
+  statusMessage?: string
+}
+
 async function wrapFetch<T>(promise: Promise<T>) {
   try {
     const data = await promise
-    return { data, error: null as any }
-  } catch (error) {
-    return { data: null as any, error }
+    return { data, error: null as SerializableError | null }
+  } catch (error: any) {
+    const serialized: SerializableError = {
+      message: error?.message || 'Error inesperado',
+      statusCode: error?.statusCode || error?.status,
+      statusMessage: error?.statusMessage || error?.statusText
+    }
+    return { data: null as any, error: serialized }
   }
 }
 

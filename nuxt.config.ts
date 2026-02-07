@@ -5,6 +5,9 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
+  experimental: {
+    viewTransition: true,
+  },
   modules: [
     "shadcn-nuxt",
     "@pinia/nuxt",
@@ -39,6 +42,7 @@ export default defineNuxtConfig({
   },
   vite: { plugins: [tailwindcss()] },
   app: {
+    pageTransition: { name: "page", mode: "out-in" },
     head: {
       link: [{ rel: "icon", type: "x-icon/ico", href: "/favicon.ico" }], 
       titleTemplate: "%s | DGTRH"

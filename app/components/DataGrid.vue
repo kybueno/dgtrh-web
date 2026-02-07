@@ -2,14 +2,16 @@
 import { h, defineComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 
-type Column<T> = TableColumn<T> & {
+export type DataGridColumn<T> = TableColumn<T> & {
   accessorKey?: string
 }
 
 interface Props<T> {
   data: T[]
-  columns: Column<T>[]
+  columns: DataGridColumn<T>[]
   rowKey?: keyof T | ((row: T, index: number) => string | number)
+  rowTo?: (row: T, index: number) => string | null | undefined
+  viewTransitionName?: (row: T, index: number) => string | null | undefined
   emptyText?: string
 }
 
@@ -50,14 +52,34 @@ function getRowKey(row: any, index: number) {
   return index
 }
 
-function getLabel(col: Column<any>) {
+function getLabel(col: DataGridColumn<any>) {
   if (typeof col.header === 'string') return col.header
   if (typeof col.accessorKey === 'string') return col.accessorKey
   if (typeof col.id === 'string') return col.id
   return '—'
 }
 
-function renderCell(col: Column<any>, row: any) {
+function isInteractiveTarget(target: HTMLElement | null) {
+  return !!target?.closest('button, a, input, select, textarea, [role="button"]')
+}
+
+function handleRowClick(event: MouseEvent, row: any, rowIndex: number) {
+  const to = props.rowTo?.(row, rowIndex)
+  if (!to) return
+  if (isInteractiveTarget(event.target as HTMLElement)) return
+  navigateTo(to)
+}
+
+function handleRowKeydown(event: KeyboardEvent, row: any, rowIndex: number) {
+  const to = props.rowTo?.(row, rowIndex)
+  if (!to) return
+  if (event.key !== 'Enter' && event.key !== ' ') return
+  if (isInteractiveTarget(event.target as HTMLElement)) return
+  event.preventDefault()
+  navigateTo(to)
+}
+
+function renderCell(col: DataGridColumn<any>, row: any) {
   const rowApi = {
     original: row,
     getValue: (key: string) => row?.[key],
@@ -74,7 +96,17 @@ function renderCell(col: Column<any>, row: any) {
   <div>
     <div v-if="!data.length" class="text-sm text-gray-500">{{ emptyText || 'Sin datos' }}</div>
     <div v-else class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-      <UCard v-for="(row, rowIndex) in data" :key="getRowKey(row, rowIndex)" class="h-full">
+      <UCard
+        v-for="(row, rowIndex) in data"
+        :key="getRowKey(row, rowIndex)"
+        class="h-full"
+        :style="{ viewTransitionName: props.viewTransitionName?.(row, rowIndex) || undefined }"
+        :role="props.rowTo ? 'link' : undefined"
+        :tabindex="props.rowTo ? 0 : undefined"
+        :class="props.rowTo ? 'cursor-pointer' : undefined"
+        @click="handleRowClick($event, row, rowIndex)"
+        @keydown="handleRowKeydown($event, row, rowIndex)"
+      >
         <template v-if="nameColumn || avatarColumn" #header>
           <div class="flex items-center gap-3">
             <div v-if="avatarColumn" class="shrink-0">

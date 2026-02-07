@@ -79,7 +79,7 @@ interface Props {
 }
 const { data } = defineProps<Props>()
 
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('organizations.viewMode', 'table')
 const table = useTemplateRef('table')
 const sorting = ref([])
 

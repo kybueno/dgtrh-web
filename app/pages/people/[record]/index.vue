@@ -4,7 +4,7 @@
       Detalles del Trabajador
     </h1>
 
-    <UCard v-if="(loading && !worker)">
+    <UCard v-if="(loading && !worker)" :style="{ viewTransitionName: cardViewTransitionName }">
       <template #header>
         <Flex class="gap-4 mx-4 my-2">
           <USkeleton class="size-10 rounded-full" />
@@ -20,7 +20,7 @@
       </Grid>
     </UCard>
 
-    <UCard v-else-if="worker">
+    <UCard v-else-if="worker" :style="{ viewTransitionName: cardViewTransitionName }">
       <template #header>
         <Flex class="p-4 flex-col md:flex-row md:items-center md:justify-between gap-4">
           <Flex class="items-center gap-3">
@@ -102,6 +102,9 @@ useHead({
 
 const route = useRoute()
 const recordNumber = computed(() => Array.isArray(route?.params.record) ? route?.params.record[0] : route?.params.record);
+const cardViewTransitionName = computed(() =>
+  recordNumber.value ? `worker-${recordNumber.value}` : undefined
+);
 
 const worker = ref<WorkerDetailed | null>(null);
 const errorMessage = ref<string>('')

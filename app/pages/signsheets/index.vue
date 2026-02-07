@@ -112,7 +112,7 @@ onMounted(handleLoadWorkers)
             <p class="text-sm text-muted">No. Exp: {{ worker.record_number ?? '-' }}</p>
             <p class="text-sm text-muted" v-if="worker.email">{{ worker.email }}</p>
           </div>
-          <UButton size="sm" icon="lucide:printer" @click="handlePrint(worker)">
+          <UButton size="sm" variant="subtle" icon="lucide:printer" @click="handlePrint(worker)">
             PDF
           </UButton>
         </div>

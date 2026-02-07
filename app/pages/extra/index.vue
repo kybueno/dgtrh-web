@@ -28,10 +28,9 @@
 import { UButton } from '#components'
 import type { TableColumn } from '@nuxt/ui'
 import { loadExtraWorks } from '~/stores/extraWorkStore'
-import { fetchWorkersBasic } from '~/stores/workerStoreC'
 
 const table = useTemplateRef('table')
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('extra.viewMode', 'table')
 
 const selectedWorkerId = ref<string | null>(null)
 const dateFrom = ref<string>('')
@@ -44,8 +43,10 @@ const { data: extraWorks, pending, refresh } = await useAsyncData('extra-works',
   return response.data ?? []
 })
 
-const { data: workersResponse } = await useAsyncData('workers-basic', fetchWorkersBasic)
-const workers = computed(() => workersResponse.value?.data || [])
+const { data: workersResponse } = await useAsyncData('workers-basic', async () => {
+  return await $fetch<WorkerDetailed[]>('/api/workers')
+}, { server: false })
+const workers = computed(() => workersResponse.value || [])
 
 function handleReload() {
   refresh()

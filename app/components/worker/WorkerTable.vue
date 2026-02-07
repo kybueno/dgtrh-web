@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { page } from '#build/ui'
+import { resolveComponent } from 'vue'
 import { UAvatar, UButton, UCheckbox } from '#components'
 import type { TableColumn } from '@nuxt/ui'
 
@@ -10,18 +11,22 @@ interface Props {
 }
 const { data, loading, viewMode = 'table' } = defineProps<Props>()
 
+const NuxtLink = resolveComponent('NuxtLink')
+
 const columns: TableColumn<typeof data[0]>[] = [
     {
         id: 'select',
         header: ({ table }) => h(UCheckbox, {
             'modelValue': table.getIsSomePageRowsSelected() ? 'indeterminate' : table.getIsAllPageRowsSelected(),
             'onUpdate:modelValue': (value: boolean | 'indeterminate') => table.toggleAllPageRowsSelected(!!value),
-            'aria-label': 'Select all'
+            'aria-label': 'Select all',
+            onClick: (event: Event) => event.stopPropagation()
         }),
         cell: ({ row }) => h(UCheckbox, {
             'modelValue': row.getIsSelected(),
             'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
-            'aria-label': 'Select row'
+            'aria-label': 'Select row',
+            onClick: (event: Event) => event.stopPropagation()
         }),
         enableSorting: false,
         enableHiding: false
@@ -38,7 +43,19 @@ const columns: TableColumn<typeof data[0]>[] = [
         accessorKey: 'name',
         accessorFn: (row) => getDisplayName(row),
         header: "Nombre y Apellidos",
-        cell: ({ row }) => h('span', { class: "cursor-pointer", onClick: () => navigateTo(`/people/${row.original.record_number}`) }, getDisplayName(row.original))
+        cell: ({ row }) => {
+            const recordNumber = row.original.record_number
+            if (!recordNumber) return getDisplayName(row.original)
+
+            return h(
+                NuxtLink,
+                {
+                    to: `/people/${recordNumber}`,
+                    class: "text-primary hover:underline"
+                },
+                () => getDisplayName(row.original)
+            )
+        }
     }, {
         id: 'ci',
         accessorKey: 'ci',
@@ -128,6 +145,33 @@ const initialTableState = {
 
 const table = useTemplateRef('table')
 const sorting = ref([])
+
+const rowLink = (row: WorkerDetailed | undefined | null) => {
+    if (!row?.record_number) return null
+    return `/people/${row.record_number}`
+}
+
+const tableMeta = computed(() => {
+    if (viewMode !== 'table') return undefined
+
+    return {
+        class: {
+            tr: (row: any) => (row?.original?.record_number ? 'cursor-pointer' : undefined),
+        },
+        style: {
+            tr: (row: any) =>
+                row?.original?.record_number
+                    ? { viewTransitionName: `worker-${row.original.record_number}` }
+                    : undefined,
+        },
+    }
+})
+
+const handleRowSelect = (_event: Event, row: any) => {
+    const link = rowLink(row?.original)
+    if (!link) return
+    navigateTo(link)
+}
 </script>
 <template>
     <div class="border border-muted bg-muted/70 rounded-md">
@@ -143,12 +187,21 @@ const sorting = ref([])
             :loading="loading || workersPending"
             :data="data"
             :columns="columns"
+            :meta="tableMeta"
+            :on-select="viewMode === 'table' ? handleRowSelect : undefined"
             class="w-full h-full"
             :paginate="true"
             :page-size="10"
             sticky
         />
-        <DataGrid v-else class="p-4" :data="data" :columns="columns" />
+        <DataGrid
+            v-else
+            class="p-4"
+            :data="data"
+            :columns="columns"
+            :row-to="(row) => rowLink(row)"
+            :view-transition-name="viewMode === 'grid' ? (row) => row?.record_number ? `worker-${row.record_number}` : undefined : undefined"
+        />
         <div v-if="viewMode === 'table'" class="flex justify-center py-4">
             <UPagination v-model="page" :total="data.length" :page-size="10" />
         </div>

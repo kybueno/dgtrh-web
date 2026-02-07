@@ -1,4 +1,5 @@
 import { defaultRhTableStyles } from "~/lib/documents-generation/styles";
+import { getImageDataUrl } from "~/lib/documents-generation/pdfmake";
 
 export const exportSignSheet = (
   worker: WorkerDetailed,
@@ -67,10 +68,18 @@ export const exportSignSheet = (
   };
   usePDFMake().createPdf(signSheetDocumentDefinition).open();
 };
-export function generateSignSheet(worker: WorkerDetailed, date: Date = new Date()) {
-  usePDFMake().createPdf(getSignSheetDefinition(worker, date)).open();
+export async function generateSignSheet(
+  worker: WorkerDetailed,
+  date: Date = new Date()
+) {
+  const logoData = await getImageDataUrl("/uci-logo.png");
+  usePDFMake().createPdf(getSignSheetDefinition(worker, date, logoData)).open();
 }
-const getSignSheetDefinition = (worker: WorkerDetailed, date = new Date()) => {
+const getSignSheetDefinition = (
+  worker: WorkerDetailed,
+  date = new Date(),
+  logoData?: string
+) => {
   const monthName = date
     .toLocaleDateString("es-ES", { month: "long" })
     .toUpperCase();
@@ -175,10 +184,8 @@ const getSignSheetDefinition = (worker: WorkerDetailed, date = new Date()) => {
       {
         columns: [
           {
-            image: "https://www.uci.cu/themes/custom/uci/logo.png", // You would need to provide the logo image data
-            text: "Logo UCI",
-            width: 127,
-            height: 50,
+            image: logoData,
+            width: 80,
           },
           {
             text: "REGISTRO DE ASISTENCIA",

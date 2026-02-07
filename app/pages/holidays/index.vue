@@ -14,7 +14,7 @@ type HolidayIncident = Incident & {
   incident_type: IncidentType
 }
 
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('holidays.viewMode', 'table')
 const sorting = ref([])
 
 const selectedWorkerId = ref<string | null>(null)

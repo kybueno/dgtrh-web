@@ -98,7 +98,7 @@ onMounted(loadWorkers)
       </stack>
       <u-card class="p-8 mt-6">
         <div class="flex justify-start">
-          <img src="/uci-logo-row.png" alt="UCI" class="h-8" />
+          <img src="/uci-logo.png" alt="UCI" class="w-12" />
         </div>
         <div class="mt-6 space-y-4 text-sm">
           <p><strong>Área</strong> {{ selectedWorker ? selectedArea : '________________________________________' }}</p>

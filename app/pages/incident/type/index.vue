@@ -15,7 +15,7 @@ const incidentTypeStore = useIncidentTypeStore()
 onMounted(() => incidentTypeStore.loadIncidentTypes())
 
 const table = useTemplateRef('table')
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('incident-type.viewMode', 'table')
 const sorting = ref([])
 
 const selectedClassification = ref<string | null>(null)

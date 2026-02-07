@@ -9,7 +9,7 @@ useHead({
     title: 'Trabajadores'
 })
 
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('people.viewMode', 'table')
 const selectedStatus = ref<WorkerStatus | null>('active')
 const selectedGender = ref<GenderValue | null>(null)
 const selectedGroupId = ref<number | null>(null)
