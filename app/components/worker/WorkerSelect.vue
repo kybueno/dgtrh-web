@@ -38,12 +38,14 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const {data,error,pending} = await useAsyncData("workers-basic",fetchWorkersBasic)
+const {data,pending} = await useAsyncData("workers-basic", async () => {
+  return await $fetch<WorkerDetailed[]>('/api/workers')
+}, { server: false })
 
 // Filter workers based on optional filter function
 const filteredWorkers = computed<WorkerInfo[]>(() => {
 
-  const workers = data?.value?.data || []
+  const workers = data?.value || []
 
   if (typeof props.filterFn === 'function') {
     return workers.filter(props.filterFn);

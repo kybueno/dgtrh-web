@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { incidents, loadIncidents, incidentsPending, deleteIncident } from '~/stores/incidentStore'
-import { fetchWorkersBasic } from '~/stores/workerStoreC'
 import { storeToRefs } from 'pinia'
 import { UButton } from '#components'
 import { page } from '#build/ui'
@@ -15,14 +14,16 @@ useHead({
 const incidentTypeStore = useIncidentTypeStore()
 const { incidentTypes } = storeToRefs(incidentTypeStore)
 
-const { data: workersResponse } = await useAsyncData('workers-basic', fetchWorkersBasic)
+const { data: workersResponse } = await useAsyncData('workers-basic', async () => {
+  return await $fetch<WorkerDetailed[]>('/api/workers')
+}, { server: false })
 
 onMounted(() => {
   if (!incidentsPending.value && !incidents.value.length) loadIncidents()
   if (!incidentTypes.value.length) incidentTypeStore.loadIncidentTypes()
 })
 
-const workers = computed(() => workersResponse.value?.data || [])
+const workers = computed(() => workersResponse.value || [])
 
 const selectedWorkerId = ref<string | null>(null)
 const selectedIncidentCode = ref<number | null>(null)

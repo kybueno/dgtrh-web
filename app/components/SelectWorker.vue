@@ -23,9 +23,9 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string | number | null): void
 }>()
 
-const { data, pending } = await useAsyncData('workers-basic', () =>
-  $fetch<WorkerInfo[]>('/api/workers')
-)
+const { data, pending } = await useAsyncData('workers-basic', async () => {
+  return await $fetch<WorkerDetailed[]>('/api/workers')
+}, { server: false })
 
 const resolvedItems = computed<WorkerInfo[]>(() => {
   const source = props.items ?? data.value ?? []
