@@ -11,7 +11,7 @@ import type { TableColumn } from '@nuxt/ui';
 
 onMounted(() => loadWorkers())
 
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('people.14-b.viewMode', 'table')
 const selectedGender = ref<string | null>(null)
 const selectedGroup = ref<string | null>(null)
 const selectedPosition = ref<string | number | null>(null)

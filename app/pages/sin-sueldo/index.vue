@@ -15,7 +15,7 @@ const workerStore = useWorkerStore()
 
 onMounted(() => workerStore.loadWorkers())
 
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('sin-sueldo.viewMode', 'table')
 const columns: TableColumn<WorkerInfo>[] = [
   {
     id: 'select',

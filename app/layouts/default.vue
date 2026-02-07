@@ -119,7 +119,7 @@ const protectedLinks = [{
   }, {
     label: 'Organizaciones',
     to: '/organizations',
-    icon:'lucide:file',
+    icon:'lucide:globe',
     role: [UserRole.hr_manager, UserRole.system_admin],
     onSelect: () => {
       open.value = false

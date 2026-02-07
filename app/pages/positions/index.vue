@@ -25,7 +25,7 @@ interface Props {
 }
 const { data } = defineProps<Props>()
 
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('positions.viewMode', 'table')
 const selectedCategory = ref<string | null>(null)
 const selectedLevel = ref<string | null>(null)
 const selectedGroup = ref<string | null>(null)

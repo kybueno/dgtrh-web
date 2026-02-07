@@ -38,7 +38,17 @@ const columns: TableColumn<typeof data[0]>[] = [
         accessorKey: 'name',
         accessorFn: (row) => getDisplayName(row),
         header: "Nombre y Apellidos",
-        cell: ({ row }) => h('span', { class: "cursor-pointer", onClick: () => navigateTo(`/people/${row.original.record_number}`) }, getDisplayName(row.original))
+        cell: ({ row }) => h(
+            'span',
+            {
+                class: "cursor-pointer",
+                style: viewMode === 'table' && row.original.record_number
+                    ? { viewTransitionName: `worker-${row.original.record_number}` }
+                    : undefined,
+                onClick: () => navigateTo(`/people/${row.original.record_number}`)
+            },
+            getDisplayName(row.original)
+        )
     }, {
         id: 'ci',
         accessorKey: 'ci',
@@ -148,7 +158,13 @@ const sorting = ref([])
             :page-size="10"
             sticky
         />
-        <DataGrid v-else class="p-4" :data="data" :columns="columns" />
+        <DataGrid
+            v-else
+            class="p-4"
+            :data="data"
+            :columns="columns"
+            :view-transition-name="(row) => row?.record_number ? `worker-${row.record_number}` : undefined"
+        />
         <div v-if="viewMode === 'table'" class="flex justify-center py-4">
             <UPagination v-model="page" :total="data.length" :page-size="10" />
         </div>

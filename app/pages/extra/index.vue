@@ -30,7 +30,7 @@ import type { TableColumn } from '@nuxt/ui'
 import { loadExtraWorks } from '~/stores/extraWorkStore'
 
 const table = useTemplateRef('table')
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('extra.viewMode', 'table')
 
 const selectedWorkerId = ref<string | null>(null)
 const dateFrom = ref<string>('')

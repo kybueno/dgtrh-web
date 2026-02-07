@@ -13,8 +13,9 @@ import type { TableColumn } from '@nuxt/ui'
 import { page } from '#build/ui'
 import { createPayroll, loadPayroll, payroll } from '~/stores/payrollStore'
 import { UserRole } from '~~/prisma/generated/enums'
+import type { DataGridColumn } from '~/components/DataGrid.vue'
 
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('payroll.viewMode', 'table')
 const sorting = ref([])
 const creatingPayroll = ref(false)
 const loadingPayroll = ref(false)
@@ -125,7 +126,7 @@ const filteredPayroll = computed(() => {
   })
 })
 
-const columns: TableColumn<PayrollInfo>[] = [
+const columns: DataGridColumn<PayrollInfo>[] = [
   {
     id: 'month',
     accessorKey: 'month',
@@ -172,10 +173,11 @@ const columns: TableColumn<PayrollInfo>[] = [
     id: 'actions',
     header: '',
     cell: ({ row }) => h(UButton, {
-      label: 'Ver',
-      size: 'xs',
-      variant: 'ghost',
-      onClick: () => navigateTo(`/payroll/${row.original.id}`)
+      label: 'Ver detalles',
+      size: 'sm',
+      variant: 'subtle',
+      trailingIcon: 'lucide:arrow-right',
+      onClick: () => {navigateTo(`/payroll/${row.original.id}`)}
     })
   }
 ]

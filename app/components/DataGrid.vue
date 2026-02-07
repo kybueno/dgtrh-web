@@ -2,14 +2,15 @@
 import { h, defineComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 
-type Column<T> = TableColumn<T> & {
+export type DataGridColumn<T> = TableColumn<T> & {
   accessorKey?: string
 }
 
 interface Props<T> {
   data: T[]
-  columns: Column<T>[]
+  columns: DataGridColumn<T>[]
   rowKey?: keyof T | ((row: T, index: number) => string | number)
+  viewTransitionName?: (row: T, index: number) => string | null | undefined
   emptyText?: string
 }
 
@@ -50,14 +51,14 @@ function getRowKey(row: any, index: number) {
   return index
 }
 
-function getLabel(col: Column<any>) {
+function getLabel(col: DataGridColumn<any>) {
   if (typeof col.header === 'string') return col.header
   if (typeof col.accessorKey === 'string') return col.accessorKey
   if (typeof col.id === 'string') return col.id
   return '—'
 }
 
-function renderCell(col: Column<any>, row: any) {
+function renderCell(col: DataGridColumn<any>, row: any) {
   const rowApi = {
     original: row,
     getValue: (key: string) => row?.[key],
@@ -74,7 +75,12 @@ function renderCell(col: Column<any>, row: any) {
   <div>
     <div v-if="!data.length" class="text-sm text-gray-500">{{ emptyText || 'Sin datos' }}</div>
     <div v-else class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-      <UCard v-for="(row, rowIndex) in data" :key="getRowKey(row, rowIndex)" class="h-full">
+      <UCard
+        v-for="(row, rowIndex) in data"
+        :key="getRowKey(row, rowIndex)"
+        class="h-full"
+        :style="{ viewTransitionName: props.viewTransitionName?.(row, rowIndex) || undefined }"
+      >
         <template v-if="nameColumn || avatarColumn" #header>
           <div class="flex items-center gap-3">
             <div v-if="avatarColumn" class="shrink-0">

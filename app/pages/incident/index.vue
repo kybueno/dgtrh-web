@@ -67,7 +67,7 @@ async function handleDelete(incident: Incident) {
 }
 
 const table = useTemplateRef('table')
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = useLocalStorage<'table' | 'grid'>('incident.viewMode', 'table')
 const sorting = ref([])
 
 const workerOptions = computed(() =>

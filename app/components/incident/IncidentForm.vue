@@ -90,7 +90,7 @@ onMounted(() => {
     >
       <div class="grid grid-cols-2 gap-4 p-2">
         <UFormField label="Trabajador *" class="col-span-2">
-          <WorkerSelect v-model="formData.worker_id" required />
+          <WorkerSelect v-model="formData.worker_id" required class="w-full" />
         </UFormField>
 
         <UFormField label="Tipo de incidencia *" class="col-span-2">
