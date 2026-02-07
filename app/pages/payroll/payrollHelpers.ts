@@ -64,11 +64,11 @@ const buildTableRows = (payload: PayrollSummaryPayload, incidentCodes: number[])
   return rows
 }
 
-export function generatePrenomina(payload: PayrollSummaryPayload) {
-  usePDFMake().createPdf(getPrenominaDefinition(payload)).open()
+export function generatePrenomina(payload: PayrollSummaryPayload, incidentCodesOverride?: number[]) {
+  usePDFMake().createPdf(getPrenominaDefinition(payload, incidentCodesOverride)).open()
 }
 
-const getPrenominaDefinition = (payload: PayrollSummaryPayload) => {
+const getPrenominaDefinition = (payload: PayrollSummaryPayload, incidentCodesOverride?: number[]) => {
   const payroll = payload.payroll
   const monthLabel = formatMonthLabel(payroll.month, payroll.year)
   const createdBy = payroll.creator ? getDisplayName(payroll.creator) : '-'
@@ -80,9 +80,11 @@ const getPrenominaDefinition = (payload: PayrollSummaryPayload) => {
       payload.workers.some((entry) => (entry.incidentDaysByType?.[code] ?? 0) > 0)
     )
   const incidentCodes =
-    incidentCodesWithData.length > 0
-      ? incidentCodesWithData
-      : payload.incidentTypes.map((type) => type.code)
+    incidentCodesOverride?.length
+      ? incidentCodesOverride
+      : incidentCodesWithData.length > 0
+        ? incidentCodesWithData
+        : payload.incidentTypes.map((type) => type.code)
 
   const maxIncidentColumns = 10
   const incidentChunks: number[][] = []

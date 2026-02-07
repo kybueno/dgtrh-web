@@ -92,9 +92,21 @@ const saveObservation = async (workerId: string) => {
   }
 }
 
+const selectedIncidentCodes = ref<number[]>([])
+
+const incidentTypeOptions = computed(() =>
+  (data.value?.incidentTypes ?? []).map((type) => ({
+    value: type.code,
+    label: `${type.code} - ${type.description || type.name}`
+  }))
+)
+
 const handlePrint = () => {
   if (!data.value) return
-  generatePrenomina(data.value)
+  const selectedCodes = selectedIncidentCodes.value.length
+    ? selectedIncidentCodes.value
+    : undefined
+  generatePrenomina(data.value, selectedCodes)
 }
 
 const statusLabel = computed(() => {
@@ -307,6 +319,24 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
           @click="() => { selectedGroup = null; selectedPosition = null; minIncidentDays = ''; minExtraHours = ''; }"
         >
           Limpiar
+        </UButton>
+      </div>
+      <div class="flex flex-wrap gap-2 px-2 pb-2">
+        <UFormField label="Incidencias para imprimir" class="min-w-80">
+          <USelect
+            v-model="selectedIncidentCodes"
+            multiple
+            :items="incidentTypeOptions"
+            placeholder="Seleccionar incidencias (opcional)"
+          />
+        </UFormField>
+        <UButton
+          variant="ghost"
+          color="neutral"
+          class="self-end"
+          @click="() => { selectedIncidentCodes = [] }"
+        >
+          Limpiar selección
         </UButton>
       </div>
       <UTable :data="filteredWorkers" :columns="columns" class="w-full h-full min-h-96" :paginate="true"
