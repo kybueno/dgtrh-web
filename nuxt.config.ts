@@ -39,6 +39,7 @@ export default defineNuxtConfig({
   },
   vite: { plugins: [tailwindcss()] },
   app: {
+    pageTransition: { name: "page", mode: "out-in" },
     head: {
       link: [{ rel: "icon", type: "x-icon/ico", href: "/favicon.ico" }], 
       titleTemplate: "%s | DGTRH"

@@ -40,7 +40,7 @@ const observationDrafts = ref<Record<string, string>>({})
 const observationSaving = ref<Record<string, boolean>>({})
 const observationStatus = ref<Record<string, 'saved' | 'error' | null>>({})
 
-const selectedGroup = ref<string | null>(null)
+const selectedGroup = ref<number | null>(null)
 const selectedPosition = ref<string | number | null>(null)
 const minIncidentDays = ref<string>('')
 const minExtraHours = ref<string>('')
@@ -169,12 +169,14 @@ const payrollLabel = computed(() => {
   return `Prenómina ${month} ${payroll.year}`
 })
 
-const groupOptions = computed(() =>
-  (data.value?.workers ?? [])
-    .map((entry) => entry.worker.group?.name || entry.worker.led_groups?.[0]?.name)
-    .filter((value): value is string => !!value)
-    .map((value) => ({ value, label: value }))
-)
+// const groupOptions = computed(() =>
+//   (data.value?.workers ?? [])
+//     .map((entry) => entry.worker.group?.name || entry.worker.led_groups?.[0]?.name)
+//     .filter((value): value is string => !!value)
+//     .map((value) => ({ value, label: value }))
+// )
+const groupOptions = computed(() => workGroups.value.map((group) => ({ value: group.id, label: group.name || `Grupo ${group.id}` })))
+
 
 const positionOptions = computed(() =>
   (data.value?.workers ?? [])
@@ -187,8 +189,8 @@ const positionOptions = computed(() =>
 const filteredWorkers = computed(() => {
   const items = data.value?.workers ?? []
   return items.filter((entry) => {
-    const groupName = entry.worker.group?.name || entry.worker.led_groups?.[0]?.name
-    if (selectedGroup.value && groupName !== selectedGroup.value) return false
+    const groupId = entry.worker.group_id ?? entry.worker.led_groups?.[0]?.id ?? null
+    if (selectedGroup.value && groupId !== selectedGroup.value) return false
     const positionLabel = entry.worker.position?.description ?? entry.worker.position_code
     if (selectedPosition.value && positionLabel !== selectedPosition.value) return false
     if (minIncidentDays.value && entry.totalIncidentDays < Number(minIncidentDays.value)) return false
@@ -205,21 +207,21 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
   }))
 
   return [
-    {
-      id: 'record_number',
-      header: 'No.Exp',
-      cell: ({ row }) => row.original.worker.record_number
-    },
+    // {
+    //   id: 'record_number',
+    //   header: 'No.Exp',
+    //   cell: ({ row }) => row.original.worker.record_number
+    // },
     {
       id: 'name',
       header: 'Nombre y Apellidos',
       cell: ({ row }) => getDisplayName(row.original.worker)
     },
-    {
-      id: 'position',
-      header: 'Cargo',
-      cell: ({ row }) => row.original.worker.position?.description ?? row.original.worker.position_code
-    },
+    // {
+    //   id: 'position',
+    //   header: 'Cargo',
+    //   cell: ({ row }) => row.original.worker.position?.description ?? row.original.worker.position_code
+    // },
     ...incidentColumns,
     {
       id: 'total_incidents',
@@ -309,8 +311,8 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
 
     <div class="border border-muted bg-muted/70 rounded-md">
       <div class="flex flex-wrap gap-2 p-2">
-        <ClearableSelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar área" class="min-w-44" />
-        <ClearableSelect v-model="selectedPosition" :items="positionOptions" placeholder="Filtrar cargo" class="min-w-56" />
+        <ClearableSelect v-model="selectedGroup" :items="groupOptions" placeholder="Filtrar por grupo" class="min-w-44" />
+        <ClearableSelect v-model="selectedPosition" :items="positionOptions" placeholder="Filtrar por cargo" class="min-w-56" />
         <UInput v-model="minIncidentDays" type="number" min="0" placeholder="Mín. días" class="max-w-32" />
         <UInput v-model="minExtraHours" type="number" min="0" placeholder="Mín. horas extra" class="max-w-40" />
         <UButton
