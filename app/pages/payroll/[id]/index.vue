@@ -324,13 +324,19 @@ const columns = computed<TableColumn<PayrollWorkerSummary>[]>(() => {
         </UButton>
       </div>
       <div class="flex flex-wrap gap-2 px-2 pb-2">
-        <UFormField label="Incidencias para imprimir" class="min-w-80">
-          <USelect
+        <UFormField label="Claves a imprimir">
+          <USelect class="min-w-44 max-w-80"
             v-model="selectedIncidentCodes"
             multiple
             :items="incidentTypeOptions"
             placeholder="Seleccionar incidencias (opcional)"
-          />
+          >
+        <template #default="{ modelValue }">
+          <stack-h class="overflow-auto gap-1 min-h-5">
+            <UBadge color="neutral" v-for="v in modelValue" variant="subtle">{{ v }}</UBadge>
+          </stack-h>
+        </template>
+        </USelect>
         </UFormField>
         <UButton
           variant="ghost"
